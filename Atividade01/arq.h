@@ -17,4 +17,7 @@ int cadastrarLivro(Livro **raiz, char *isbn, char *titulo, char *autor, char *ed
 
 // Função para cadastrar um novo gênero na lista estática ordenada
 int cadastrarGenero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arvoreLivros);
+
+// Função para cadastrar uma nova forma de assinatura na lista dinâmica
+int cadastrarFormaAssinatura(FormaDaAssi **inicio, int qtdGenerosCadastrados, int codigo, int livrosMensais, int generosMensais, int *vetorGeneros, char *tipoEncadern, float valorMensal, float valorAnual);
 #endif

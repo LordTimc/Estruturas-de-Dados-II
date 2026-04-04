@@ -1,5 +1,6 @@
 #ifndef ARQ_h
 #define ARQ_H
+#define MAXGENEROS 20
 
 typedef struct usuario Usuario;
 typedef struct formaAss FormaDaAssi;
@@ -13,4 +14,7 @@ int cadastrarAssinante(Usuario **raiz, char *cpf, char *nome, char *endereco, ch
 
 // Função para cadastrar um novo livro na árvore binária
 int cadastrarLivro(Livro **raiz, char *isbn, char *titulo, char *autor, char *editora, int edicao, int anoPublica);
+
+// Função para cadastrar um novo gênero na lista estática ordenada
+int cadastrarGenero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arvoreLivros);
 #endif

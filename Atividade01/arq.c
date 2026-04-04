@@ -248,6 +248,5 @@ int cadastrarGenero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arv
         }
     }
 
-    // Único ponto de saída da função
     return statusInsercao;
 }

@@ -20,4 +20,7 @@ int cadastrarGenero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arv
 
 // Função para cadastrar uma nova forma de assinatura na lista dinâmica
 int cadastrarFormaAssinatura(FormaDaAssi **inicio, int qtdGenerosCadastrados, int codigo, int livrosMensais, int generosMensais, int *vetorGeneros, char *tipoEncadern, float valorMensal, float valorAnual);
+
+// Função para cadastrar uma assinatura na árvore binária
+int cadastrarAssinatura(Assin **raiz, Usuario *raizUsuarios, FormaDaAssi *listaFormas, char *cpf, int codigoForma, char *dataAssinatura, char *dataVencimento, float valor);
 #endif

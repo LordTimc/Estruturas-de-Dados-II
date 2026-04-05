@@ -440,3 +440,63 @@ int cadastrarAssinatura(Assin **raiz, Usuario *raizUsuarios, FormaDaAssi *listaF
 
     return statusInsercao;
 }
+
+/*
+ 
+ * Percorre a árvore binária de assinantes utilizando o método "Em Ordem" (Esquerda -> Raiz -> Direita).
+ ordenados pelo CPF.
+ 
+ * Parâmetros:
+ * - Usuario *raiz: Ponteiro simples para a raiz da árvore. Escolhemos a passagem 
+ * por valor (cópia do ponteiro) porque esta função serve apenas para LEITURA. 
+ * Não vamos inserir ou remover nós, logo, não precisamos modificar a árvore original.
+*/
+void mostrarAssinantes(Usuario *raiz) {
+    // Verifica se o nó atual não é nulo
+    if (raiz != NULL) {
+        
+        // 1º Passo: Desce tudo que pode para a subárvore esquerda (CPFs menores)
+        mostrarAssinantes(raiz->esq);
+        
+        // 2º Passo: Visita a "raiz" atual (Imprime os dados do usuário)
+        printf("--------------------------------------------------\n");
+        printf("CPF: %s\n", raiz->cpf);
+        printf("Nome: %s\n", raiz->nome);
+        printf("Endereco: %s\n", raiz->endereco);
+        printf("Data de Nascimento: %s\n", raiz->dataNasc);
+        
+        // 3º Passo: Desce para a subárvore direita (CPFs maiores)
+        mostrarAssinantes(raiz->dir);
+    }
+}
+
+/*
+
+ * Percorre a árvore binária de assinaturas utilizando o método "Em Ordem" (Esquerda -> Raiz -> Direita).
+ ordenadas pelo CPF do assinante.
+ *
+ * Parâmetros:
+  - Assin *raiz: Ponteiro simples para a raiz da árvore de assinaturas. Usamos passagem 
+ por valor (cópia do ponteiro) porque o objetivo é apenas exibir os dados na tela (LEITURA),
+ sem alterar a estrutura ou os nós da árvore original.
+ 
+ */
+void mostrarAssinaturas(Assin *raiz) {
+    
+    if (raiz != NULL) {
+        
+        // 1º Passo: Visita a subárvore esquerda (CPFs menores)
+        mostrarAssinaturas(raiz->esq);
+        
+        // 2º Passo: Imprime os dados do nó atual (a raiz deste momento)
+        printf("--------------------------------------------------\n");
+        printf("CPF do Assinante: %s\n", raiz->cpfUsuario);
+        printf("Codigo da Forma: %d\n", raiz->codigoForma);
+        printf("Data da Assinatura: %s\n", raiz->dataAssinatura);
+        printf("Data de Vencimento: %s\n", raiz->dataVencimento);
+        printf("Valor: R$ %.2f\n", raiz->valor);
+        
+        // 3º Passo: Visita a subárvore direita (CPFs maiores)
+        mostrarAssinaturas(raiz->dir);
+    }
+}

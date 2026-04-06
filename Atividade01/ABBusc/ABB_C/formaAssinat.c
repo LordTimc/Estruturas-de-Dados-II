@@ -86,3 +86,66 @@ int cadastrarFormaAssinatura(FormaDaAssi **inicio, int qtdGenerosCadastrados, in
     
     return statusInsercao;
 }
+
+/*
+ * Percorre toda a árvore binária de assinaturas (método Em Ordem) e imprime 
+ apenas os nós cujo 'codigoForma' seja igual ao informado pelo usuário.
+ 
+ Parâmetros:
+ - Assin *raiz: Ponteiro simples para a raiz da árvore (passagem por valor). 
+ Escolhido porque a função fará apenas LEITURA dos dados, não precisando 
+ alterar a árvore original no 'main'.
+  int codigoForma: O código numérico da forma que queremos filtrar (passagem por valor).
+*/
+
+void mostrarAssinaturasPorForma(Assin *raiz, int codigoForma) {
+    
+    if (raiz != NULL) {
+        
+        // 1º Passo: Visita toda a subárvore esquerda
+        mostrarAssinaturasPorForma(raiz->esq, codigoForma);
+        
+        // 2º Passo: Verifica se o nó atual (raiz deste momento) possui o código desejado
+        if (raiz->codigoForma == codigoForma) {
+            printf("--------------------------------------------------\n");
+            printf("CPF do Assinante: %s\n", raiz->cpfUsuario);
+            printf("Data da Assinatura: %s\n", raiz->dataAssinatura);
+            printf("Data de Vencimento: %s\n", raiz->dataVencimento);
+            printf("Valor: R$ %.2f\n", raiz->valor);
+        }
+        
+        // 3º Passo: Visita toda a subárvore direita
+        mostrarAssinaturasPorForma(raiz->dir, codigoForma);
+    }
+}
+
+/*
+
+ Percorre a lista dinâmica de Formas de Assinatura do início ao fim de forma iterativa.
+ Imprime o código da forma, o valor mensal e o valor anual.
+ 
+ * Parâmetros:
+ - FormaDaAssi *inicio: Ponteiro simples para o primeiro elemento da lista (passagem por value).
+ Escolhemos a passagem por value porque a função serve apenas para LEITURA. 
+ * Usar uma cópia do ponteiro nos permite percorrer a lista sem perder a referência original no 'main'.
+ 
+ */
+void mostrarFormasAssinatura(FormaDaAssi *inicio) {
+    // Verifica se a lista está vazia antes de tentar imprimir
+    if (inicio == NULL) {
+        printf("Nenhuma forma de assinatura cadastrada no momento.\n");
+    } else {
+        // Cria um ponteiro auxiliar para percorrer a lista
+        FormaDaAssi *atual = inicio;
+
+        while (atual != NULL) {
+            printf("--------------------------------------------------\n");
+            printf("Codigo da Forma: %d\n", atual->codigo);
+            printf("Valor Mensal: R$ %.2f\n", atual->valorMensal);
+            printf("Valor Anual: R$ %.2f\n", atual->valorAnual);
+            
+    
+            atual = atual->prox;
+        }
+    }
+}

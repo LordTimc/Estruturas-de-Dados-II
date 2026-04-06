@@ -69,3 +69,30 @@ int cadastrarGenero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arv
 
     return statusInsercao;
 }
+
+
+/*
+ Percorre o vetor estático de gêneros do início até a quantidade atual cadastrada.
+ Imprime o código e o nome de cada gênero.
+ 
+  Parâmetros:
+  - Genero lista[]: O vetor estático onde os gêneros estão armazenados. Em C, 
+  passar o vetor dessa forma já passa o endereço inicial para leitura.
+  - int qtd: A quantidade atual de gêneros cadastrados (passagem por valor). 
+ *Escolhemos a passagem por valor porque a função serve apenas para LEITURA. 
+  Não vamos incrementar ou alterar a quantidade, então não precisamos de ponteiro.
+ *
+ */
+void mostrarGeneros(Genero lista[], int qtd) {
+
+    if (qtd == 0) {
+        printf("Nenhum genero cadastrado no momento.\n");
+    } else {
+        // Percorre o vetor da posição 0 até a última posição preenchida (qtd - 1)
+        for (int i = 0; i < qtd; i++) {
+            printf("--------------------------------------------------\n");
+            printf("Codigo do Genero: %d\n", lista[i].codigo);
+            printf("Nome do Genero: %s\n", lista[i].nome);
+        }
+    }
+}

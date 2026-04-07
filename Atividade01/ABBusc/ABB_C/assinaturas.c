@@ -143,3 +143,45 @@ void mostrarAssinaturas(Assin *raiz) {
         mostrarAssinaturas(raiz->dir);
     }
 }
+
+
+/*
+ Realiza uma busca binária iterativa na árvore de assinaturas utilizando o CPF.
+  Se encontrar, imprime a data de vencimento. Se não, avisa que não encontrou.
+ 
+  Parâmetros:
+  - Assin *raiz: Ponteiro simples para a raiz da árvore de assinaturas (passagem por valor).
+  - char *cpf: O CPF (string) informado pelo usuário para a busca.
+ 
+ */
+void mostrarVencimentoAssinatura(Assin *raiz, char *cpf) {
+    Assin *atual = raiz;
+    int encontrou = 0; // Flag para saber se achou o assinante
+
+    while (atual != NULL) {
+        // Compara o CPF procurado com o CPF do nó atual
+        int comparacao = strcmp(cpf, atual->cpfUsuario);
+
+        if (comparacao == 0) {
+            // Encontrou a assinatura do usuário!
+            printf("--------------------------------------------------\n");
+            printf("Assinante CPF: %s\n", atual->cpfUsuario);
+            printf("Data de Vencimento: %s\n", atual->dataVencimento);
+            
+            encontrou = 1;
+            break; // Pode parar o laço, pois já achamos o que queríamos e não há CPFs repetidos
+            
+        } else if (comparacao < 0) {
+            // Se o CPF buscado for "menor", vai para a esquerda
+            atual = atual->esq;
+        } else {
+            // Se o CPF buscado for "maior", vai para a direita
+            atual = atual->dir;
+        }
+    }
+
+    // Se o laço terminou e a flag continua 0, a assinatura não existe
+    if (encontrou == 0) {
+        printf("Aviso: Nenhuma assinatura encontrada para o CPF %s.\n", cpf);
+    }
+}

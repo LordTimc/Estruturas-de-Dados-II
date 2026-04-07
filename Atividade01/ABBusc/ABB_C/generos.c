@@ -96,3 +96,85 @@ void mostrarGeneros(Genero lista[], int qtd) {
         }
     }
 }
+
+
+/*
+  Função Auxiliar: marcarGenerosAssinados
+ 
+ Percorre a árvore de assinaturas. Para cada assinatura, busca a forma correspondente 
+ na lista dinâmica e "marca" com 1 (no vetor 'marcados') a posição dos gêneros escolhidos.
+ 
+  Parâmetros:
+ - Assin *raiz: Ponteiro para a árvore de assinaturas (passagem por valor, só leitura).
+ - FormaDaAssi *listaFormas: Ponteiro para a lista de formas (passagem por valor, só leitura).
+ - Genero listaGeneros[]: Vetor de gêneros (passagem do ponteiro base, só leitura).
+ - int qtdGeneros: Quantidade total de gêneros (passagem por valor).
+ - int marcados[]: Vetor de inteiros passado por REFERÊNCIA (ponteiro). Usamos ele para 
+ alterar as flags (0 ou 1) que serão lidas depois pela função principal.
+ 
+ */
+void marcarGenerosAssinados(Assin *raiz, FormaDaAssi *listaFormas, Genero listaGeneros[], int qtdGeneros, int marcados[]) {
+    if (raiz != NULL) {
+        // 1. Desce pela esquerda
+        marcarGenerosAssinados(raiz->esq, listaFormas, listaGeneros, qtdGeneros, marcados);
+        
+        // 2. Processa a raiz atual (Assinatura)
+        FormaDaAssi *formaAtual = listaFormas;
+        
+        // Busca a forma vinculada a esta assinatura
+        while (formaAtual != NULL) {
+            if (formaAtual->codigo == raiz->codigoForma) {
+                // Encontrou a forma! Agora pega os gêneros dela e marca no vetor
+                for (int i = 0; i < formaAtual->generosMensais; i++) {
+                    int codigoGeneroEscolhido = formaAtual->generosEscolhidos[i];
+                    
+                    // Procura o índice deste código no vetor estático de gêneros
+                    for (int j = 0; j < qtdGeneros; j++) {
+                        if (listaGeneros[j].codigo == codigoGeneroEscolhido) {
+                            marcados[j] = 1; // Marca o gênero como "assinado"
+                            break; // Sai do loop interno, pois já achou e marcou
+                        }
+                    }
+                }
+                break; // Sai do loop da forma, pois já encontrou a que procurava
+            }
+            formaAtual = formaAtual->prox;
+        }
+
+        // 3. Desce pela direita
+        marcarGenerosAssinados(raiz->dir, listaFormas, listaGeneros, qtdGeneros, marcados);
+    }
+}
+
+/*
+ * Função Principal: mostrarGenerosAssinados
+ Cria um vetor de marcação zerado, chama a função auxiliar para preenchê-lo e, em seguida,
+ imprime apenas os gêneros que receberam a marcação '1'.
+ 
+ Parâmetros:
+  - Assin *raizAssinaturas, FormaDaAssi *listaFormas, Genero listaGeneros[], int qtdGeneros:
+ Estruturas bases passadas por valor (ou ponteiro base para arrays) apenas para leitura.
+ 
+ */
+void mostrarGenerosAssinados(Assin *raizAssinaturas, FormaDaAssi *listaFormas, Genero listaGeneros[], int qtdGeneros) {
+    // Cria um vetor local com o tamanho máximo de gêneros e inicializa tudo com 0 (não assinado)
+    int marcados[MAXGENEROS] = {0}; 
+    int encontrouAlgum = 0;
+
+    // Chama a função auxiliar passando o vetor 'marcados' por referência para ser modificado
+    marcarGenerosAssinados(raizAssinaturas, listaFormas, listaGeneros, qtdGeneros, marcados);
+
+    printf("--- Generos Atualmente Assinados ---\n");
+    
+    // Percorre a lista estática de gêneros baseando-se no vetor de marcação
+    for (int i = 0; i < qtdGeneros; i++) {
+        if (marcados[i] == 1) { // Se a flag for 1, significa que alguém assina esse gênero
+            printf("Codigo: %d | Nome: %s\n", listaGeneros[i].codigo, listaGeneros[i].nome);
+            encontrouAlgum = 1;
+        }
+    }
+
+    if (encontrouAlgum == 0) {
+        printf("Nenhum genero esta sendo assinado no momento.\n");
+    }
+}

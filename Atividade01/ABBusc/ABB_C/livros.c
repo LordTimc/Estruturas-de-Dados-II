@@ -60,3 +60,75 @@ int cadastrarLivro(Livro **raiz, char *isbn, char *titulo, char *autor, char *ed
 
     return statusInsercao;
 }
+
+
+/*
+ * Função Auxiliar: mostrarLivrosDaArvore
+ 
+  Percorre uma árvore binária de livros utilizando o percurso "Em Ordem" 
+  (Esquerda -> Raiz -> Direita), garantindo que sejam impressos ordenados pelo ISBN.
+ 
+  Parâmetros:
+ - Livro *raiz: Ponteiro simples para a raiz da árvore de livros (passagem por valor).
+ 
+ */
+void mostrarLivrosDaArvore(Livro *raiz) {
+    
+    if (raiz != NULL) {
+        // 1. Visita a subárvore esquerda
+        mostrarLivrosDaArvore(raiz->esq);
+        
+        // 2. Imprime os dados do livro atual
+        printf("--------------------------------------------------\n");
+        printf("ISBN: %s\n", raiz->isbn);
+        printf("Titulo: %s\n", raiz->titulo);
+        printf("Autor: %s\n", raiz->autor);
+        printf("Editora: %s\n", raiz->editora);
+        printf("Edicao: %d\n", raiz->edicao);
+        printf("Ano de Publicacao: %d\n", raiz->anoPublica);
+        
+        // 3. Visita a subárvore direita
+        mostrarLivrosDaArvore(raiz->dir);
+    }
+}
+
+/*
+ * Função Principal: mostrarLivrosPorGenero
+ Percorre a lista estática de gêneros procurando pelo código informado.
+ Se encontrar, chama a função auxiliar para imprimir a árvore de livros dele.
+ 
+ *Parâmetros:
+  - Genero lista[]: O vetor de gêneros (passagem para leitura).
+  - int qtd: Quantidade atual de gêneros cadastrados (passagem por valor).
+  - int codigoGenero: O código do gênero que o usuário deseja buscar (passagem por valor).
+ 
+ */
+void mostrarLivrosPorGenero(Genero lista[], int qtd, int codigoGenero) {
+    int encontrouGenero = 0;
+
+    // Percorre o vetor de gêneros
+    for (int i = 0; i < qtd; i++) {
+        // Verifica se é o gênero que estamos procurando
+        if (lista[i].codigo == codigoGenero) {
+            encontrouGenero = 1;
+            
+            printf("\n--- Livros do Genero: %s ---\n", lista[i].nome);
+            
+            // Verifica se a árvore de livros deste gênero está vazia
+            if (lista[i].arvoreLivros == NULL) {
+                printf("Nenhum livro cadastrado nesta arvore.\n");
+            } else {
+                // Chama a função auxiliar para imprimir os livros
+                mostrarLivrosDaArvore(lista[i].arvoreLivros);
+            }
+            
+            // Como já encontrou o gênero, podemos parar a busca no vetor
+            break; 
+        }
+    }
+
+    // Se o laço terminar e a flag continuar 0, o gênero não existe
+    if (encontrouGenero == 0) {
+        printf("Erro: Genero com o codigo %d nao foi encontrado.\n", codigoGenero);
+    }
+}

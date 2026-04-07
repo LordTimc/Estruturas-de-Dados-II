@@ -11,4 +11,7 @@ int cadastrarAssinatura(Assin **raiz, Usuario *raizUsuarios, FormaDaAssi *listaF
 
 // Função para mostrar todas as assinaturas cadastradas na árvore (Em Ordem)
 void mostrarAssinaturas(Assin *raiz);
+
+// Função para buscar e mostrar a data de vencimento de uma assinatura específica
+void mostrarVencimentoAssinatura(Assin *raiz, char *cpf);
 #endif

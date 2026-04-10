@@ -2,10 +2,10 @@
 
 
 // Função para cadastrar uma nova forma de assinatura na lista dinâmica
-int cadastrarFormaAssinatura(FormaDaAssi **inicio, int qtdGenerosCadastrados, int codigo, int livrosMensais, int generosMensais, int *vetorGeneros, char *tipoEncadern, float valorMensal, float valorAnual);
+int cadastrar_forma_assinatura(forma_da_ass **inicio, int qtd_generos_cadastrados, int codigo, int livros_mensais, int generos_mensais, int *vetor_generos, char *tipo_encadern, float valor_mensal, float valor_anual);
 
 // Função para mostrar assinaturas filtradas por um código de forma específico
-void mostrarAssinaturasPorForma(Assin *raiz, int codigoForma);
+void mostrar_assinaturas_por_forma(Assinatura *raiz, int codigo_forma);
 
 // Função para mostrar todas as formas de assinatura cadastradas
-void mostrarFormasAssinatura(FormaDaAssi *inicio);
+void mostrar_formas_assinatura(forma_da_ass *inicio);

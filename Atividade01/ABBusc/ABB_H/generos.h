@@ -1,14 +1,14 @@
 #include "structs.h"
 
 // Função para cadastrar um novo gênero na lista estática ordenada
-int cadastrarGenero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arvoreLivros);
+int cadastrar_genero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arvore_livros);
 
 // Função para mostrar todos os gêneros cadastrados na lista estática
-void mostrarGeneros(Genero lista[], int qtd);
+void mostrar_generos(Genero lista[], int qtd);
 
 
 // Função auxiliar para varrer a árvore de assinaturas e marcar os gêneros encontrados
-void marcarGenerosAssinados(Assin *raiz, FormaDaAssi *listaFormas, Genero listaGeneros[], int qtdGeneros, int marcados[]);
+void marcar_generos_assinados(Assinatura *raiz, forma_da_ass *lista_formas, Genero lista_generos[], int qtd_generos, int marcados[]);
 
 // Função principal para exibir os gêneros assinados
-void mostrarGenerosAssinados(Assin *raizAssinaturas, FormaDaAssi *listaFormas, Genero listaGeneros[], int qtdGeneros);
+void mostrar_generos_assinados(Assinatura *raiz_assinaturas, forma_da_ass *lista_formas, Genero lista_generos[], int qtd_generos);

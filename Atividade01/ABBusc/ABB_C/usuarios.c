@@ -3,35 +3,35 @@
 #include <string.h>
 
 #include "../ABB_H/structs.h"
-#include "../ABB_H/assinantes.h"
+#include "../ABB_H/usuarios.h"
 #include "../ABB_H/auxiliares.h"
 
 /* **raiz: Ponteiro duplo para a raiz da árvore. Escolhido (passagem por referência) 
   porque precisamos modificar o ponteiro real da árvore no `main` quando alocamos um novo nó.
  * - char *cpf, *nome, *endereco, *dataNasc: Dados do usuário a serem inseridos (passagem por valor/ponteiro de array).*/
-int cadastrarAssinante(Usuario **raiz, char *cpf, char *nome, char *endereco, char *dataNasc) {
+int cadastrar_assinante(Usuario **raiz, char *cpf, char *nome, char *endereco, char *data_nasc) {
     // Variável única de retorno para saber se deu certo cadastrar.
-    int statusInsercao = 0; 
+    int status_insercao = 0; 
 
     // Verifica se chegamos em um nó folha/vazio
     if (*raiz == NULL) {
         // Aloca espaço na memória para o novo usuário
-        Usuario *novoUsuario = (Usuario *)malloc(sizeof(Usuario));
+        Usuario *novo_usuario = (Usuario *)malloc(sizeof(Usuario));
         
-        if (novoUsuario != NULL) {
-            strcpy(novoUsuario->cpf, cpf);
-            strcpy(novoUsuario->nome, nome);
-            strcpy(novoUsuario->endereco, endereco);
-            strcpy(novoUsuario->dataNasc, dataNasc);
+        if (novo_usuario != NULL) {
+            strcpy(novo_usuario->cpf, cpf);
+            strcpy(novo_usuario->nome, nome);
+            strcpy(novo_usuario->endereco, endereco);
+            strcpy(novo_usuario->data_nasc, data_nasc);
             
-            novoUsuario->esq = NULL;
-            novoUsuario->dir = NULL;
+            novo_usuario->esq = NULL;
+            novo_usuario->dir = NULL;
 
             // Modifica o ponteiro da árvore original (por referência) para apontar para o novo nó
-            *raiz = novoUsuario; 
+            *raiz = novo_usuario; 
             
             // Define o status como sucesso
-            statusInsercao = 1;  
+            status_insercao = 1;  
         }
     } else {
         // A árvore não está vazia.
@@ -40,18 +40,18 @@ int cadastrarAssinante(Usuario **raiz, char *cpf, char *nome, char *endereco, ch
 
         if (comparacao < 0) {
             // O CPF é "menor" alfabeticamente, vai para a subárvore esquerda
-            statusInsercao = cadastrarAssinante(&((*raiz)->esq), cpf, nome, endereco, dataNasc);
+            status_insercao = cadastrar_assinante(&((*raiz)->esq), cpf, nome, endereco, data_nasc);
         } else if (comparacao > 0) {
             // O CPF é "maior" alfabeticamente, vai para a subárvore direita
-            statusInsercao = cadastrarAssinante(&((*raiz)->dir), cpf, nome, endereco, dataNasc);
+            status_insercao = cadastrar_assinante(&((*raiz)->dir), cpf, nome, endereco, data_nasc);
         } else {
             // comparacao == 0 significa que o CPF já existe na árvore
             // Não permite cadastro repetido, logo, o status se mantém 0 (falha)
-            statusInsercao = 0; 
+            status_insercao = 0; 
         }
     }
 
-    return statusInsercao; 
+    return status_insercao; 
 }
 
 
@@ -65,22 +65,22 @@ int cadastrarAssinante(Usuario **raiz, char *cpf, char *nome, char *endereco, ch
  * por valor (cópia do ponteiro) porque esta função serve apenas para LEITURA. 
  * Não vamos inserir ou remover nós, logo, não precisamos modificar a árvore original.
 */
-void mostrarAssinantes(Usuario *raiz) {
+void mostrar_assinantes(Usuario *raiz) {
     // Verifica se o nó atual não é nulo
     if (raiz != NULL) {
         
         // 1º Passo: Desce tudo que pode para a subárvore esquerda (CPFs menores)
-        mostrarAssinantes(raiz->esq);
+        mostrar_assinantes(raiz->esq);
         
         // 2º Passo: Visita a "raiz" atual (Imprime os dados do usuário)
         printf("--------------------------------------------------\n");
         printf("CPF: %s\n", raiz->cpf);
         printf("Nome: %s\n", raiz->nome);
         printf("Endereco: %s\n", raiz->endereco);
-        printf("Data de Nascimento: %s\n", raiz->dataNasc);
+        printf("Data de Nascimento: %s\n", raiz->data_nasc);
         
         // 3º Passo: Desce para a subárvore direita (CPFs maiores)
-        mostrarAssinantes(raiz->dir);
+        mostrar_assinantes(raiz->dir);
     }
 }
 

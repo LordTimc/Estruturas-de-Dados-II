@@ -5,8 +5,8 @@
 // ÁRVORE DE USUÁRIOS (ASSINANTES)
 
 typedef struct usuario Usuario;
-typedef struct formaAss FormaDaAssi;
-typedef struct assinatura Assin;
+typedef struct formaAss forma_da_ass;
+typedef struct assinatura Assinatura;
 typedef struct livro Livro;
 typedef struct genero Genero;
 
@@ -14,7 +14,7 @@ typedef struct usuario {
     char cpf[15];
     char nome[100];
     char endereco[150];
-    char dataNasc[11];
+    char data_nasc[11];
 
     struct usuario *esq;
     struct usuario *dir;
@@ -23,42 +23,45 @@ typedef struct usuario {
 
 // LISTA DINÂMICA DE FORMAS DE ASSINATURA
 
-typedef struct formaAss {
-    int codigo;
-    int livrosMensais;
-    int generosMensais;
-    int *generosEscolhidos; //Ponteiro para armazenar o vetor com os códigos dos gêneros
-    char tipoEncadern[50];
-    float valorMensal;
-    float valorAnual;
+typedef struct forma_da_ass {
 
-    struct formaAss *prox;
-} FormaDaAssi;
+    int codigo;
+    int livros_mensais;
+    int generos_mensais;
+    int *generos_escolhidos; //Ponteiro para armazenar o vetor com os códigos dos gêneros
+    char tipo_encadern[50];
+    float valor_mensal;
+    float valor_anual;
+
+    struct forma_da_ass *prox;
+} forma_da_ass;
 
 
 // ÁRVORE DE ASSINATURAS
 
 typedef struct assinatura {
-    char cpfUsuario[15];              // referência ao usuário
-    int codigoForma;                 // referência à forma de assinatura
-    char dataAssinatura[11];
-    char dataVencimento[11];
+
+    char cpf_usuario[15];              // referência ao usuário
+    int codigo_forma;                 // referência à forma de assinatura
+    char data_assinatura[11];
+    char data_vencimento[11];
     float valor;
 
     struct assinatura *esq;
     struct assinatura *dir;
-} Assin;
+} Assinatura;
 
 
 // ÁRVORE DE LIVROS
 
 typedef struct livro {
+
     char isbn[20];
     char titulo[100];
     char autor[100];
     char editora[100];
     int edicao;
-    int anoPublica;
+    int ano_publica;
 
     struct livro *esq;
     struct livro *dir;
@@ -67,14 +70,14 @@ typedef struct livro {
 
 // LISTA ESTÁTICA DE GÊNEROS (VETOR FIXO)
 
-#define MAXGENEROS 5
+#define MAX_GENEROS 5
 
 typedef struct genero {
     int codigo;
     char nome[50];
-    Livro *arvoreLivros;   // ponteiro para árvore de livros daquele gênero
+    Livro *arvore_livros;   // ponteiro para árvore de livros daquele gênero
 } Genero;
 
-Genero listaGeneros[MAXGENEROS];
+Genero lista_generos[MAX_GENEROS];
 
 #endif

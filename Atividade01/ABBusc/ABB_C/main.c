@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../ABB_H/assinantes.h"
+#include "../ABB_H/usuarios.h"
 #include "../ABB_H/assinaturas.h"
 #include "../ABB_H/formaAssinat.h"
 #include "../ABB_H/generos.h"

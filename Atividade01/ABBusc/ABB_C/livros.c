@@ -15,30 +15,30 @@ Parâmetros:
  * - int edicao, anoPublica: Dados numéricos do livro passados por valor.
  */
 
-int cadastrarLivro(Livro **raiz, char *isbn, char *titulo, char *autor, char *editora, int edicao, int anoPublica) {
-    int statusInsercao = 0;
+int cadastrar_livro(Livro **raiz, char *isbn, char *titulo, char *autor, char *editora, int edicao, int ano_publica) {
+    int status_insercao = 0;
 
     // Se o ponteiro atual for NULL, encontramos a posição correta para inserir
     if (*raiz == NULL) {
         // Aloca memória para o novo livro
-        Livro *novoLivro = (Livro *)malloc(sizeof(Livro));
+        Livro *novo_livro = (Livro *)malloc(sizeof(Livro));
         
         // Verifica se a memória foi alocada com sucesso
-        if (novoLivro != NULL) {
-            strcpy(novoLivro->isbn, isbn);
-            strcpy(novoLivro->titulo, titulo);
-            strcpy(novoLivro->autor, autor);
-            strcpy(novoLivro->editora, editora);
-            novoLivro->edicao = edicao;
-            novoLivro->anoPublica = anoPublica;
+        if (novo_livro != NULL) {
+            strcpy(novo_livro->isbn, isbn);
+            strcpy(novo_livro->titulo, titulo);
+            strcpy(novo_livro->autor, autor);
+            strcpy(novo_livro->editora, editora);
+            novo_livro->edicao = edicao;
+            novo_livro->ano_publica = ano_publica;
             
             // Como é um nó folha recém-criado, seus filhos são NULL
-            novoLivro->esq = NULL;
-            novoLivro->dir = NULL;
+            novo_livro->esq = NULL;
+            novo_livro->dir = NULL;
 
-            *raiz = novoLivro;
+            *raiz = novo_livro;
                       
-            statusInsercao = 1;
+            status_insercao = 1;
         }
     } else {
         // Se a árvore não estiver vazia
@@ -47,18 +47,18 @@ int cadastrarLivro(Livro **raiz, char *isbn, char *titulo, char *autor, char *ed
 
         if (comparacao < 0) {
             // Se o ISBN for "menor", desce para a subárvore esquerda
-            statusInsercao = cadastrarLivro(&((*raiz)->esq), isbn, titulo, autor, editora, edicao, anoPublica);
+            status_insercao = cadastrar_livro(&((*raiz)->esq), isbn, titulo, autor, editora, edicao, ano_publica);
         } else if (comparacao > 0) {
             // Se o ISBN for "maior", desce para a subárvore direita
-            statusInsercao = cadastrarLivro(&((*raiz)->dir), isbn, titulo, autor, editora, edicao, anoPublica);
+            status_insercao = cadastrar_livro(&((*raiz)->dir), isbn, titulo, autor, editora, edicao, ano_publica);
         } else {
             // Se a comparação for 0, os ISBNs são iguais. 
             // O cadastro é repetido, então a função não insere nada e o status continua 0.
-            statusInsercao = 0;
+            status_insercao = 0;
         }
     }
 
-    return statusInsercao;
+    return status_insercao;
 }
 
 
@@ -72,11 +72,11 @@ int cadastrarLivro(Livro **raiz, char *isbn, char *titulo, char *autor, char *ed
  - Livro *raiz: Ponteiro simples para a raiz da árvore de livros (passagem por valor).
  
  */
-void mostrarLivrosDaArvore(Livro *raiz) {
+void mostrar_livros_da_arvore(Livro *raiz) {
     
     if (raiz != NULL) {
         // 1. Visita a subárvore esquerda
-        mostrarLivrosDaArvore(raiz->esq);
+        mostrar_livros_da_arvore(raiz->esq);
         
         // 2. Imprime os dados do livro atual
         printf("--------------------------------------------------\n");
@@ -85,10 +85,10 @@ void mostrarLivrosDaArvore(Livro *raiz) {
         printf("Autor: %s\n", raiz->autor);
         printf("Editora: %s\n", raiz->editora);
         printf("Edicao: %d\n", raiz->edicao);
-        printf("Ano de Publicacao: %d\n", raiz->anoPublica);
+        printf("Ano de Publicacao: %d\n", raiz->ano_publica);
         
         // 3. Visita a subárvore direita
-        mostrarLivrosDaArvore(raiz->dir);
+        mostrar_livros_da_arvore(raiz->dir);
     }
 }
 
@@ -103,23 +103,23 @@ void mostrarLivrosDaArvore(Livro *raiz) {
   - int codigoGenero: O código do gênero que o usuário deseja buscar (passagem por valor).
  
  */
-void mostrarLivrosPorGenero(Genero lista[], int qtd, int codigoGenero) {
-    int encontrouGenero = 0;
+void mostrar_livros_por_genero(Genero lista[], int qtd, int codigo_genero) {
+    int encontrou_genero = 0;
 
     // Percorre o vetor de gêneros
     for (int i = 0; i < qtd; i++) {
         // Verifica se é o gênero que estamos procurando
-        if (lista[i].codigo == codigoGenero) {
-            encontrouGenero = 1;
+        if (lista[i].codigo == codigo_genero) {
+            encontrou_genero = 1;
             
             printf("\n--- Livros do Genero: %s ---\n", lista[i].nome);
             
             // Verifica se a árvore de livros deste gênero está vazia
-            if (lista[i].arvoreLivros == NULL) {
+            if (lista[i].arvore_livros == NULL) {
                 printf("Nenhum livro cadastrado nesta arvore.\n");
             } else {
                 // Chama a função auxiliar para imprimir os livros
-                mostrarLivrosDaArvore(lista[i].arvoreLivros);
+                mostrar_livros_da_arvore(lista[i].arvore_livros);
             }
             
             // Como já encontrou o gênero, podemos parar a busca no vetor
@@ -128,7 +128,7 @@ void mostrarLivrosPorGenero(Genero lista[], int qtd, int codigoGenero) {
     }
 
     // Se o laço terminar e a flag continuar 0, o gênero não existe
-    if (encontrouGenero == 0) {
-        printf("Erro: Genero com o codigo %d nao foi encontrado.\n", codigoGenero);
+    if (encontrou_genero == 0) {
+        printf("Erro: Genero com o codigo %d nao foi encontrado.\n", codigo_genero);
     }
 }

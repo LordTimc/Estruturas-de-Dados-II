@@ -19,24 +19,24 @@
  * Retorno:
  * - int: 1 se a inserção foi sucesso, 0 se falhou.
  */
-int cadastrarGenero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arvoreLivros) {
-    int statusInsercao = 0;
+int cadastrar_genero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arvore_livros) {
+    int status_insercao = 0;
     int i, j;
 
     // 1ª Validação: Verifica se ainda há espaço no vetor
-    if (*qtd < MAXGENEROS) {
+    if (*qtd < MAX_GENEROS) {
         
         // 2ª Validação: a árvore de livros passada não pode ser vazia
-        if (arvoreLivros != NULL) {
+        if (arvore_livros != NULL) {
             
-            int posicaoInserir = 0;
-            int codigoExiste = 0;
+            int posicao_inserir = 0;
+            int codigo_existe = 0;
 
             // Percorre os gêneros já cadastrados para encontrar a posição correta
             // e também verifica se o código já existe
             for (i = 0; i < *qtd; i++) {
                 if (lista[i].codigo == codigo) {
-                    codigoExiste = 1; // Encontrou código repetido
+                    codigo_existe = 1; // Encontrou código repetido
                     break;
                 }
                 
@@ -44,30 +44,30 @@ int cadastrarGenero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arv
                 if (lista[i].codigo > codigo) {
                     break; 
                 }
-                posicaoInserir++; // Vai avançando até achar o ponto certo
+                posicao_inserir++; // Vai avançando até achar o ponto certo
             }
 
             // 3ª Validação: Só insere se não encontrou um código repetido
-            if (codigoExiste == 0) {
+            if (codigo_existe == 0) {
                 // Desloca todos os elementos à direita da 'posicaoInserir' uma casa para frente
-                for (j = *qtd; j > posicaoInserir; j--) {
+                for (j = *qtd; j > posicao_inserir; j--) {
                     lista[j] = lista[j - 1];
                 }
 
                 // Insere os dados do novo gênero na posição correta
-                lista[posicaoInserir].codigo = codigo;
-                strcpy(lista[posicaoInserir].nome, nome);
-                lista[posicaoInserir].arvoreLivros = arvoreLivros;
+                lista[posicao_inserir].codigo = codigo;
+                strcpy(lista[posicao_inserir].nome, nome);
+                lista[posicao_inserir].arvore_livros = arvore_livros;
 
                 // Incrementa a quantidade de gêneros usando o ponteiro (altera lá no main)
                 (*qtd)++;
 
-                statusInsercao = 1; 
+                status_insercao = 1; 
             }
         }
     }
 
-    return statusInsercao;
+    return status_insercao;
 }
 
 
@@ -83,7 +83,7 @@ int cadastrarGenero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arv
   Não vamos incrementar ou alterar a quantidade, então não precisamos de ponteiro.
  *
  */
-void mostrarGeneros(Genero lista[], int qtd) {
+void mostrar_generos(Genero lista[], int qtd) {
 
     if (qtd == 0) {
         printf("Nenhum genero cadastrado no momento.\n");
@@ -113,24 +113,24 @@ void mostrarGeneros(Genero lista[], int qtd) {
  alterar as flags (0 ou 1) que serão lidas depois pela função principal.
  
  */
-void marcarGenerosAssinados(Assin *raiz, FormaDaAssi *listaFormas, Genero listaGeneros[], int qtdGeneros, int marcados[]) {
+void marcar_generos_assinados(Assinatura *raiz, forma_da_ass *lista_formas, Genero lista_generos[], int qtd_generos, int marcados[]) {
     if (raiz != NULL) {
         // 1. Desce pela esquerda
-        marcarGenerosAssinados(raiz->esq, listaFormas, listaGeneros, qtdGeneros, marcados);
+        marcar_generos_assinados(raiz->esq, lista_formas, lista_generos, qtd_generos, marcados);
         
         // 2. Processa a raiz atual (Assinatura)
-        FormaDaAssi *formaAtual = listaFormas;
+        forma_da_ass *forma_atual = lista_formas;
         
         // Busca a forma vinculada a esta assinatura
-        while (formaAtual != NULL) {
-            if (formaAtual->codigo == raiz->codigoForma) {
+        while (forma_atual != NULL) {
+            if (forma_atual->codigo == raiz->codigo_forma) {
                 // Encontrou a forma! Agora pega os gêneros dela e marca no vetor
-                for (int i = 0; i < formaAtual->generosMensais; i++) {
-                    int codigoGeneroEscolhido = formaAtual->generosEscolhidos[i];
+                for (int i = 0; i < forma_atual->generos_mensais; i++) {
+                    int codigo_genero_escolhido = forma_atual->generos_escolhidos[i];
                     
                     // Procura o índice deste código no vetor estático de gêneros
-                    for (int j = 0; j < qtdGeneros; j++) {
-                        if (listaGeneros[j].codigo == codigoGeneroEscolhido) {
+                    for (int j = 0; j < qtd_generos; j++) {
+                        if (lista_generos[j].codigo == codigo_genero_escolhido) {
                             marcados[j] = 1; // Marca o gênero como "assinado"
                             break; // Sai do loop interno, pois já achou e marcou
                         }
@@ -138,11 +138,11 @@ void marcarGenerosAssinados(Assin *raiz, FormaDaAssi *listaFormas, Genero listaG
                 }
                 break; // Sai do loop da forma, pois já encontrou a que procurava
             }
-            formaAtual = formaAtual->prox;
+            forma_atual = forma_atual->prox;
         }
 
         // 3. Desce pela direita
-        marcarGenerosAssinados(raiz->dir, listaFormas, listaGeneros, qtdGeneros, marcados);
+        marcar_generos_assinados(raiz->dir, lista_formas, lista_generos, qtd_generos, marcados);
     }
 }
 
@@ -156,25 +156,25 @@ void marcarGenerosAssinados(Assin *raiz, FormaDaAssi *listaFormas, Genero listaG
  Estruturas bases passadas por valor (ou ponteiro base para arrays) apenas para leitura.
  
  */
-void mostrarGenerosAssinados(Assin *raizAssinaturas, FormaDaAssi *listaFormas, Genero listaGeneros[], int qtdGeneros) {
+void mostrar_generos_assinados(Assinatura *raiz_assinaturas, forma_da_ass *lista_formas, Genero lista_generos[], int qtd_generos) {
     // Cria um vetor local com o tamanho máximo de gêneros e inicializa tudo com 0 (não assinado)
-    int marcados[MAXGENEROS] = {0}; 
-    int encontrouAlgum = 0;
+    int marcados[MAX_GENEROS] = {0}; 
+    int encontrou = 0;
 
     // Chama a função auxiliar passando o vetor 'marcados' por referência para ser modificado
-    marcarGenerosAssinados(raizAssinaturas, listaFormas, listaGeneros, qtdGeneros, marcados);
+    marcar_generos_assinados(raiz_assinaturas, lista_formas, lista_generos, qtd_generos, marcados);
 
     printf("--- Generos Atualmente Assinados ---\n");
     
     // Percorre a lista estática de gêneros baseando-se no vetor de marcação
-    for (int i = 0; i < qtdGeneros; i++) {
+    for (int i = 0; i < qtd_generos; i++) {
         if (marcados[i] == 1) { // Se a flag for 1, significa que alguém assina esse gênero
-            printf("Codigo: %d | Nome: %s\n", listaGeneros[i].codigo, listaGeneros[i].nome);
-            encontrouAlgum = 1;
+            printf("Codigo: %d | Nome: %s\n", lista_generos[i].codigo, lista_generos[i].nome);
+            encontrou = 1;
         }
     }
 
-    if (encontrouAlgum == 0) {
+    if (encontrou == 0) {
         printf("Nenhum genero esta sendo assinado no momento.\n");
     }
 }

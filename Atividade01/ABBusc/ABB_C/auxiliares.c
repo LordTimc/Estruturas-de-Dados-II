@@ -38,7 +38,9 @@ char *leitura_de_string(){
     return (string);
 }
 
-// Data de Nascimento
+// ------------- Data de Nascimento -----
+
+// essa função vai pegar a data de hoje
 void pegar_data_de_hoje (data_nasci *data_hoje){
     //pega o tempo atual em segundos desde 1970
     time_t agora = time(NULL);
@@ -46,4 +48,17 @@ void pegar_data_de_hoje (data_nasci *data_hoje){
     data_hoje->dia = time->tm_mday; 
     data_hoje->mes = time->tm_mon + 1; //ficará sendo 1 até 12 meses
     data_hoje->ano = time->tm_year + 1900; // ano desde 1900
+}
+
+int dias_de_um_mes(int mes, int ano){
+    int dias;
+
+    if (mes == 4 || mes == 6 || mes == 9 || mes == 11)
+        dias = 30;
+    else if (mes == 2)
+        dias = 28;
+    else
+        dias = 31;
+
+    return dias;
 }

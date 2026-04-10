@@ -5,3 +5,7 @@
 #include <stdbool.h>
 #include "../ABB_H/structs.h"
 #include "../ABB_H/auxiliares.h"
+
+char *leitura_de_string(){
+    
+}

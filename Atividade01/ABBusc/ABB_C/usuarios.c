@@ -6,33 +6,41 @@
 #include "../ABB_H/usuarios.h"
 #include "../ABB_H/auxiliares.h"
 
+Usuario *aloca_usuario (char *cpf, char *nome, char *endereco, char *data_nasc){ 
+    // Aloca espaço na memória para o novo usuário
+    Usuario *novo_usuario = (Usuario *)malloc(sizeof(Usuario));
+        
+    if (novo_usuario != NULL) {
+        strcpy(novo_usuario->cpf, cpf);
+        strcpy(novo_usuario->nome, nome);
+        strcpy(novo_usuario->endereco, endereco);
+        strcpy(novo_usuario->data_nasc, data_nasc);
+        
+        novo_usuario->esq = NULL;
+        novo_usuario->dir = NULL;
+    }
+    return (novo_usuario);
+}
+
 /* **raiz: Ponteiro duplo para a raiz da árvore. Escolhido (passagem por referência) 
   porque precisamos modificar o ponteiro real da árvore no `main` quando alocamos um novo nó.
  * - char *cpf, *nome, *endereco, *dataNasc: Dados do usuário a serem inseridos (passagem por valor/ponteiro de array).*/
-int cadastrar_assinante(Usuario **raiz, char *cpf, char *nome, char *endereco, char *data_nasc) {
+Usuario *cadastrar_assinante(Usuario *raiz) {
+
+    char *cpf, *nome, *endereco, *data_nasc;
     // Variável única de retorno para saber se deu certo cadastrar.
-    int status_insercao = 0; 
+    int cadastrou = 0; 
+
+    printf("Digite o cpf: ");
+    cpf = leitura_de_string();
 
     // Verifica se chegamos em um nó folha/vazio
-    if (*raiz == NULL) {
-        // Aloca espaço na memória para o novo usuário
-        Usuario *novo_usuario = (Usuario *)malloc(sizeof(Usuario));
+    if (raiz == NULL) {
+        // Modifica o ponteiro da árvore original (por referência) para apontar para o novo nó
+        raiz = aloca_usuario(cpf, nome, endereco, data_nasc); 
         
-        if (novo_usuario != NULL) {
-            strcpy(novo_usuario->cpf, cpf);
-            strcpy(novo_usuario->nome, nome);
-            strcpy(novo_usuario->endereco, endereco);
-            strcpy(novo_usuario->data_nasc, data_nasc);
-            
-            novo_usuario->esq = NULL;
-            novo_usuario->dir = NULL;
-
-            // Modifica o ponteiro da árvore original (por referência) para apontar para o novo nó
-            *raiz = novo_usuario; 
-            
-            // Define o status como sucesso
-            status_insercao = 1;  
-        }
+        // Define o status como sucesso
+        cadastrou = 1;  
     } else {
         // A árvore não está vazia.
         // A função strcmp compara duas strings. Retorna < 0 se a primeira for menor, > 0 se for maior, e 0 se forem iguais.

@@ -1,28 +1,24 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-
-// ÁRVORE DE USUÁRIOS (ASSINANTES)
-
 typedef struct usuario Usuario;
 typedef struct formaAss forma_da_ass;
 typedef struct assinatura Assinatura;
 typedef struct livro Livro;
 typedef struct genero Genero;
 
+// ÁRVORE DE USUÁRIOS (ASSINANTES)
 typedef struct usuario {
     char cpf[15];
     char nome[100];
     char endereco[150];
     char data_nasc[11];
 
-    struct usuario *esq;
-    struct usuario *dir;
+    struct usuario *esq, *dir;
 } Usuario;
 
 
 // LISTA DINÂMICA DE FORMAS DE ASSINATURA
-
 typedef struct forma_da_ass {
 
     int codigo;
@@ -38,7 +34,6 @@ typedef struct forma_da_ass {
 
 
 // ÁRVORE DE ASSINATURAS
-
 typedef struct assinatura {
 
     char cpf_usuario[15];              // referência ao usuário
@@ -47,13 +42,11 @@ typedef struct assinatura {
     char data_vencimento[11];
     float valor;
 
-    struct assinatura *esq;
-    struct assinatura *dir;
+    struct assinatura *esq, *dir;
 } Assinatura;
 
 
 // ÁRVORE DE LIVROS
-
 typedef struct livro {
 
     char isbn[20];
@@ -63,13 +56,11 @@ typedef struct livro {
     int edicao;
     int ano_publica;
 
-    struct livro *esq;
-    struct livro *dir;
+    struct livro *esq, *dir;
 } Livro;
 
 
 // LISTA ESTÁTICA DE GÊNEROS (VETOR FIXO)
-
 #define MAX_GENEROS 5
 
 typedef struct genero {

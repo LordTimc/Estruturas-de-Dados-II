@@ -1,18 +1,27 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+typedef struct data_nasci data_nasci;
 typedef struct usuario Usuario;
-typedef struct formaAss forma_da_ass;
+typedef struct forma_da_ass forma_da_ass;
 typedef struct assinatura Assinatura;
 typedef struct livro Livro;
 typedef struct genero Genero;
+
+
+// STRUCT DA DATA DE NASCIMENTO
+typedef struct data_nasci {
+    int dia;
+    int mes;
+    int ano;
+} data_nasci;
 
 // ÁRVORE DE USUÁRIOS (ASSINANTES)
 typedef struct usuario {
     char cpf[15];
     char nome[100];
     char endereco[150];
-    char data_nasc[11];
+    data_nasci data;
 
     struct usuario *esq, *dir;
 } Usuario;
@@ -20,7 +29,6 @@ typedef struct usuario {
 
 // LISTA DINÂMICA DE FORMAS DE ASSINATURA
 typedef struct forma_da_ass {
-
     int codigo;
     int livros_mensais;
     int generos_mensais;

@@ -37,3 +37,13 @@ char *leitura_de_string(){
     }
     return (string);
 }
+
+// Data de Nascimento
+void pegar_data_de_hoje (data_nasci *data_hoje){
+    //pega o tempo atual em segundos desde 1970
+    time_t agora = time(NULL);
+    struct tm * time = localtime(&agora); // converte esse tempo para uma struct tm com dia, mes, ano, hora, minutos, segundos, etc...
+    data_hoje->dia = time->tm_mday; 
+    data_hoje->mes = time->tm_mon + 1; //ficará sendo 1 até 12 meses
+    data_hoje->ano = time->tm_year + 1900; // ano desde 1900
+}

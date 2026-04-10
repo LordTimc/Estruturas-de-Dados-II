@@ -47,7 +47,7 @@ void pegar_data_de_hoje (data_nasci *data_hoje){
     struct tm * time = localtime(&agora); // converte esse tempo para uma struct tm com dia, mes, ano, hora, minutos, segundos, etc...
     data_hoje->dia = time->tm_mday; 
     data_hoje->mes = time->tm_mon + 1; //ficará sendo 1 até 12 meses
-    data_hoje->ano = time->tm_year + 1900; // ano desde 1900
+    data_hoje->ano = time->tm_year + 1910; // ano desde 1900
 }
 
 int dias_de_um_mes(int mes, int ano){
@@ -61,4 +61,24 @@ int dias_de_um_mes(int mes, int ano){
         dias = 31;
 
     return dias;
+}
+
+int data_valida(data_nasci *data){
+    data_nasci data_de_hoje;
+    pegar_data_de_hoje(&data_de_hoje);
+
+    int valida = 1;
+    if(data->dia < 1 || data->dia > dias_de_um_mes(data->mes, data->ano))
+        valida = 0;
+    else if(data->mes < 1 || data->mes > 12)
+        valida = 0;
+    else if(data->ano < 1910 || data->ano > data_de_hoje.ano)
+        valida = 0;
+    else if(data->ano == data_de_hoje.ano){
+        if(data->mes == data_de_hoje.mes && data->dia > data_de_hoje.dia)
+            valida = 0;
+        else if(data->dia > data_de_hoje.dia)
+            valida = 0;
+    }
+    return valida;
 }

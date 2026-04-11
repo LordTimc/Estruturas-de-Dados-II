@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h> 
+#include <ctype.h>
 #include <stdbool.h>
 #include "../ABB_H/structs.h"
 #include "../ABB_H/auxiliares.h"
@@ -95,10 +96,17 @@ int verificar_data(data_nasci *data){
 int ler_string_info(char *buffer, int tam){
     // Se NÃO deu certo, recebe 0
     int deu_certo = 0;
-    if (fgets(buffer, tam, stdin)) {
-        buffer[strcspn(buffer, "\n")] = '\0';
-        // Se deu certo, recebe 1
-        deu_certo = 1;
+    if (fgets(buffer, tam, stdin)){
+        // se strchr leu até o final da linha, retorne um ponteiro. 
+        // SE NÂO leu, retorne NULL. 
+        // Basicamente, vai limpar os dados do buffer caso tenha extrapolado o espaço reservado para aquele ponteiro.
+        if(strchr(buffer, '\n') == NULL)
+            limpa_dados_buffer();
+        else{
+            buffer[strcspn(buffer, "\n")] = '\0';
+            // Se deu certo, recebe 1
+            deu_certo = 1;
+        }
     }
     return deu_certo;
 }
@@ -125,7 +133,7 @@ int validar_data_com_mensagem(data_nasci *data){
 // Essa função pega a data de nascimento do usuário (assinante)
 int pega_data_nasci(data_nasci *data_usuario){
     
-    char dados_nasci[11];
+    char dados_nasci[12];
     int nasci_valido = 0;
 
     do {
@@ -165,6 +173,30 @@ int cpf_eh_valido(const char *cpf){
                 valido = 0;
             }
         }
-    }
+    } 
+        
     return valido;
+}
+
+int pega_cpf(char *cpf){
+    
+    char dados_cpf[12];
+    int cpf_valido = 0;
+
+    do {
+        printf("Entre com os dados do cpf nesse formato (xxxxxxxxxxx): ");
+        int leu = ler_string_info(dados_cpf, sizeof(dados_cpf));
+
+        if(leu){
+            if(cpf_eh_valido(dados_cpf)){
+                strcpy(cpf, dados_cpf);
+                cpf_valido = 1;
+            }else {
+                printf("Erro no CPF! O CPF tem que possuir 11 digitos e que sejam numeros.\n");
+            }
+        } else{
+            printf("Erro na leitura!\n");
+        }
+    } while(!cpf_valido); // enquanto o cpf_valido for igual a zero
+    return cpf_valido;
 }

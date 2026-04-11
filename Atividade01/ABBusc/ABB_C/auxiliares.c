@@ -85,6 +85,18 @@ int data_valida(data_nasci *data){
     return valida;
 }
 
+// Função para ler a string da informação
+int ler_string_info(char *buffer, int tam){
+    // Se NÃO deu certo, recebe 0
+    int deu_certo = 0;
+    if (fgets(buffer, tam, stdin)) {
+        buffer[strcspn(buffer, "\n")] = '\0';
+        // Se deu certo, recebe 1
+        deu_certo = 1;
+    }
+    return deu_certo;
+}
+
 // Essa função pega a data de nascimento do usuário (assinante)
 int pega_data_nasci(data_nasci *data_usuario){
     

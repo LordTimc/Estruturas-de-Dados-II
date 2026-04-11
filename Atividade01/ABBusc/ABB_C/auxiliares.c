@@ -64,7 +64,7 @@ int dias_de_um_mes(int mes, int ano){
 }
 
 // Essa função vê se a data é válida
-int data_valida(data_nasci *data){
+int verificar_data(data_nasci *data){
     data_nasci data_de_hoje;
     pegar_data_de_hoje(&data_de_hoje);
 
@@ -102,6 +102,16 @@ int converte_data(const *entrada, data_nasci *data){
     // Esse função tenta interpretar a string como uma data nesse formato
     return sscanf(entrada, "%2d/%2d/%4d", &data->dia, &data->mes, &data->ano) == 3;
     // Por fim, se conseguiu ler exatamente 3 valores, returna 1 (verdadeiro).
+}
+// Essa função printa se a data informada deu errado
+int validar_data_com_mensagem(data_nasci *data){
+    int deu_certo = 1;
+    if(!data_valida(data)){
+        limpa_dados();
+        printf("Erro! Data de Nascimento invalida.\n");
+        deu_certo = 0;
+    }
+    return deu_certo;
 }
 
 // Essa função pega a data de nascimento do usuário (assinante)

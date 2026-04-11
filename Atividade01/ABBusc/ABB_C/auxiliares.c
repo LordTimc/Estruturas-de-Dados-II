@@ -63,10 +63,12 @@ int dias_de_um_mes(int mes, int ano){
     return dias;
 }
 
+// Essa função vê se a data é válida
 int data_valida(data_nasci *data){
     data_nasci data_de_hoje;
     pegar_data_de_hoje(&data_de_hoje);
 
+    // se a data for válida, então retornará 1
     int valida = 1;
     if(data->dia < 1 || data->dia > dias_de_um_mes(data->mes, data->ano))
         valida = 0;
@@ -81,4 +83,29 @@ int data_valida(data_nasci *data){
             valida = 0;
     }
     return valida;
+}
+
+// Essa função pega a data de nascimento do usuário (assinante)
+int pega_data_nasci(data_nasci *data_usuario){
+    
+    char dados_nasci[11];
+    int nasci_valido = 0;
+
+    do {
+        printf("Entre com os dados da data de nascimento nesse formato (dd/mm/aaaa): ");
+        if(fgets(dados_nasci, sizeof(dados_nasci), stdin)){
+            dados_nasci[strspn(dados_nasci, "\n")] = '\0';
+            if(sscanf(dados_nasci, "%2d/%2d/%4d", &data_usuario->dia, &data_usuario->mes, &data_usuario->ano) == 3){
+                if(data_valida(data_usuario))
+                    nasci_valido = 1;
+                else{
+                    limpa_dados();
+                    printf("Erro! Data de Nascimento invalida.\n");
+                }
+            }else{
+                printf("Erro nos dados! Formato inadequado\n");
+            }
+        }
+    } while(nasci_valido == 0);
+    return nasci_valido;
 }

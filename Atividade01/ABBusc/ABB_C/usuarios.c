@@ -14,7 +14,7 @@ Usuario *aloca_usuario (char *cpf, char *nome, char *endereco, char *data){
         strcpy(novo_usuario->cpf, cpf);
         strcpy(novo_usuario->nome, nome);
         strcpy(novo_usuario->endereco, endereco);
-        strcpy(novo_usuario->data_nasc, data);
+        strcpy(novo_usuario->data, data);
         
         novo_usuario->esq = NULL;
         novo_usuario->dir = NULL;

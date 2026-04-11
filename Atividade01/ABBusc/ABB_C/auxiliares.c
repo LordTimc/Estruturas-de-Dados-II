@@ -103,7 +103,8 @@ int ler_string_info(char *buffer, int tam){
     return deu_certo;
 }
 
-// Essa função converte a data digitada pelo usuario no formato esperado
+// Essa função converte a data digitada pelo usuario
+// no formato esperado (**/**/****)
 int converte_data(const char *entrada, data_nasci *data){
     // Esse função tenta interpretar a string como uma data nesse formato
     return sscanf(entrada, "%2d/%2d/%4d", &data->dia, &data->mes, &data->ano) == 3;
@@ -114,7 +115,7 @@ int converte_data(const char *entrada, data_nasci *data){
 int validar_data_com_mensagem(data_nasci *data){
     int deu_certo = 1;
     if(!verificar_data(data)){
-        limpa_dados();
+        limpa_dados_buffer();
         printf("Erro! Data de Nascimento invalida.\n");
         deu_certo = 0;
     }
@@ -145,4 +146,25 @@ int pega_data_nasci(data_nasci *data_usuario){
         }
     } while(nasci_valido == 0);
     return nasci_valido;
+}
+
+// ------ cpf ----------
+
+// A função valida se o for cpf tiver 11 números, retornando 1 se verdade
+int cpf_eh_valido(const char *cpf){
+    int valido = 0;
+
+    // se o cpf nao for nulo e tiver 11 caracteres
+    if (cpf && strlen(cpf) == 11){
+        // assume que tudo é valido
+        valido = 1; 
+
+        for (int i = 0; i < 11 && valido; i++){
+            if (!isdigit(cpf[i])){
+                // se algum caractere não for dígito, então deixa de ser valido
+                valido = 0;
+            }
+        }
+    }
+    return valido;
 }

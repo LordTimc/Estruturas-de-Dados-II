@@ -6,7 +6,7 @@
 #include "../ABB_H/usuarios.h"
 #include "../ABB_H/auxiliares.h"
 
-Usuario *aloca_usuario (char *cpf, char *nome, char *endereco, char *data){ 
+Usuario *aloca_usuario (char *cpf, char *nome, char *endereco, data_nasci data){ 
     // Aloca espaço na memória para o novo usuário
     Usuario *novo_usuario = (Usuario *)malloc(sizeof(Usuario));
         
@@ -14,7 +14,7 @@ Usuario *aloca_usuario (char *cpf, char *nome, char *endereco, char *data){
         strcpy(novo_usuario->cpf, cpf);
         strcpy(novo_usuario->nome, nome);
         strcpy(novo_usuario->endereco, endereco);
-        strcpy(novo_usuario->data, data);
+        novo_usuario->data = data;
         
         novo_usuario->esq = NULL;
         novo_usuario->dir = NULL;
@@ -27,7 +27,9 @@ Usuario *aloca_usuario (char *cpf, char *nome, char *endereco, char *data){
  * - char *cpf, *nome, *endereco, *dataNasc: Dados do usuário a serem inseridos (passagem por valor/ponteiro de array).*/
 Usuario *cadastrar_assinante(Usuario *raiz) {
 
-    char *cpf, *nome, *endereco, *data;
+    char cpf[12], *nome, *endereco; 
+    data_nasci data;
+    nome = NULL;
     // Variável única de retorno para saber se deu certo cadastrar.
     int cadastrou = 0; 
 

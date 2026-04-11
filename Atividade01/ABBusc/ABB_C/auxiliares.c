@@ -97,6 +97,13 @@ int ler_string_info(char *buffer, int tam){
     return deu_certo;
 }
 
+// Essa função converte a data digitada pelo usuario no formato esperado
+int converte_data(const *entrada, data_nasci *data){
+    // Esse função tenta interpretar a string como uma data nesse formato
+    return sscanf(entrada, "%2d/%2d/%4d", &data->dia, &data->mes, &data->ano) == 3;
+    // Por fim, se conseguiu ler exatamente 3 valores, returna 1 (verdadeiro).
+}
+
 // Essa função pega a data de nascimento do usuário (assinante)
 int pega_data_nasci(data_nasci *data_usuario){
     

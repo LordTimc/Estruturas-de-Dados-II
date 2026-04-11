@@ -38,7 +38,11 @@ char *leitura_de_string(){
     return (string);
 }
 
-// ------------- Data de Nascimento -----
+void limpa_dados_buffer(){
+    while(getchar() != '\n');
+}
+
+// ---------- Data de Nascimento --------
 
 // essa função vai pegar a data de hoje
 void pegar_data_de_hoje (data_nasci *data_hoje){
@@ -47,9 +51,10 @@ void pegar_data_de_hoje (data_nasci *data_hoje){
     struct tm * time = localtime(&agora); // converte esse tempo para uma struct tm com dia, mes, ano, hora, minutos, segundos, etc...
     data_hoje->dia = time->tm_mday; 
     data_hoje->mes = time->tm_mon + 1; //ficará sendo 1 até 12 meses
-    data_hoje->ano = time->tm_year + 1910; // ano desde 1900
+    data_hoje->ano = time->tm_year + 1900; // ano desde 1900
 }
 
+// Essa função verifica os dias atuais
 int dias_de_um_mes(int mes, int ano){
     int dias;
 
@@ -63,25 +68,26 @@ int dias_de_um_mes(int mes, int ano){
     return dias;
 }
 
-// Essa função vê se a data é válida
+// Essa função verifica se a data é válida
 int verificar_data(data_nasci *data){
     data_nasci data_de_hoje;
     pegar_data_de_hoje(&data_de_hoje);
 
-    // se a data for válida, então retornará 1
     int valida = 1;
-    if(data->dia < 1 || data->dia > dias_de_um_mes(data->mes, data->ano))
+
+    if(data->mes < 1 || data->mes > 12)
         valida = 0;
-    else if(data->mes < 1 || data->mes > 12)
+    else if(data->dia < 1 || data->dia > dias_de_um_mes(data->mes, data->ano))
         valida = 0;
-    else if(data->ano < 1910 || data->ano > data_de_hoje.ano)
+    else if(data->ano < 1900 || data->ano > data_de_hoje.ano)
         valida = 0;
     else if(data->ano == data_de_hoje.ano){
-        if(data->mes == data_de_hoje.mes && data->dia > data_de_hoje.dia)
+        if(data->mes > data_de_hoje.mes)
             valida = 0;
-        else if(data->dia > data_de_hoje.dia)
+        else if(data->mes == data_de_hoje.mes && data->dia > data_de_hoje.dia)
             valida = 0;
     }
+
     return valida;
 }
 
@@ -98,15 +104,16 @@ int ler_string_info(char *buffer, int tam){
 }
 
 // Essa função converte a data digitada pelo usuario no formato esperado
-int converte_data(const *entrada, data_nasci *data){
+int converte_data(const char *entrada, data_nasci *data){
     // Esse função tenta interpretar a string como uma data nesse formato
     return sscanf(entrada, "%2d/%2d/%4d", &data->dia, &data->mes, &data->ano) == 3;
     // Por fim, se conseguiu ler exatamente 3 valores, returna 1 (verdadeiro).
 }
+
 // Essa função printa se a data informada deu errado
 int validar_data_com_mensagem(data_nasci *data){
     int deu_certo = 1;
-    if(!data_valida(data)){
+    if(!verificar_data(data)){
         limpa_dados();
         printf("Erro! Data de Nascimento invalida.\n");
         deu_certo = 0;
@@ -122,18 +129,19 @@ int pega_data_nasci(data_nasci *data_usuario){
 
     do {
         printf("Entre com os dados da data de nascimento nesse formato (dd/mm/aaaa): ");
-        if(fgets(dados_nasci, sizeof(dados_nasci), stdin)){
-            dados_nasci[strspn(dados_nasci, "\n")] = '\0';
-            if(sscanf(dados_nasci, "%2d/%2d/%4d", &data_usuario->dia, &data_usuario->mes, &data_usuario->ano) == 3){
-                if(data_valida(data_usuario))
-                    nasci_valido = 1;
-                else{
-                    limpa_dados();
-                    printf("Erro! Data de Nascimento invalida.\n");
-                }
-            }else{
-                printf("Erro nos dados! Formato inadequado\n");
+        int leu = ler_string_info(dados_nasci, sizeof(dados_nasci));
+
+        if(leu){
+            
+            int convertido = converte_data(dados_nasci, data_usuario);
+
+            if(convertido){
+                nasci_valido = validar_data_com_mensagem(data_usuario);
+            }else {
+                printf("Erro nos dados! Formato inadequado.\n");
             }
+        } else{
+            printf("Erro na leitura!\n");
         }
     } while(nasci_valido == 0);
     return nasci_valido;

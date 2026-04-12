@@ -6,6 +6,27 @@
 #include "../ABB_H/livros.h"
 #include "../ABB_H/auxiliares.h"
 
+
+Livro *aloca_livro(char *isbn, char *titulo, char *autor, char *editora, int edicao, int ano_publica){
+    // Aloca espaço na memória para o novo livro
+    Livro *novo_livro = (Livro *)malloc(sizeof(Livro));
+        
+    // Verifica se a memória foi alocada com sucesso
+    if (novo_livro != NULL) {
+        strcpy(novo_livro->isbn, isbn);
+        strcpy(novo_livro->titulo, titulo);
+        strcpy(novo_livro->autor, autor);
+        strcpy(novo_livro->editora, editora);
+        novo_livro->edicao = edicao;
+        novo_livro->ano_publica = ano_publica;
+        
+        // Como é um nó folha recém-criado, seus filhos são NULL
+        novo_livro->esq = NULL;
+        novo_livro->dir = NULL;
+    }
+    return(novo_livro);
+}
+
 /*
  * Insere um novo livro na Árvore Binária de Busca utilizando o ISBN como chave.
 Parâmetros:
@@ -21,20 +42,7 @@ int cadastrar_livro(Livro **raiz, char *isbn, char *titulo, char *autor, char *e
     // Se o ponteiro atual for NULL, encontramos a posição correta para inserir
     if (*raiz == NULL) {
         // Aloca memória para o novo livro
-        Livro *novo_livro = (Livro *)malloc(sizeof(Livro));
         
-        // Verifica se a memória foi alocada com sucesso
-        if (novo_livro != NULL) {
-            strcpy(novo_livro->isbn, isbn);
-            strcpy(novo_livro->titulo, titulo);
-            strcpy(novo_livro->autor, autor);
-            strcpy(novo_livro->editora, editora);
-            novo_livro->edicao = edicao;
-            novo_livro->ano_publica = ano_publica;
-            
-            // Como é um nó folha recém-criado, seus filhos são NULL
-            novo_livro->esq = NULL;
-            novo_livro->dir = NULL;
 
             *raiz = novo_livro;
                       

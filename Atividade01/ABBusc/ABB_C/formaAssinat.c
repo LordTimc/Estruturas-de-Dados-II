@@ -18,7 +18,7 @@
   - float valorMensal, valorAnual
  
  */
-int cadastrar_forma_assinatura(forma_da_ass **inicio, int qtd_generos_cadastrados, int codigo, int livros_mensais, int generos_mensais, int *vetor_generos, char *tipo_encadern, float valor_mensal, float valor_anual) {
+int cadastrar_forma_assinatura(forma_ass **inicio, int qtd_generos_cadastrados, int codigo, int livros_mensais, int generos_mensais, int *vetor_generos, char *tipo_encadern, float valor_mensal, float valor_anual) {
     
     int status_insercao = 0;
 
@@ -27,7 +27,7 @@ int cadastrar_forma_assinatura(forma_da_ass **inicio, int qtd_generos_cadastrado
         
         // 2ª Validação: Não permitir cadastro repetido (verificando o código da forma)
         int codigo_existe = 0;
-        forma_da_ass *atual = *inicio;
+        forma_ass *atual = *inicio;
         
         // Percorre a lista para procurar se o código já existe
         while (atual != NULL) {
@@ -41,7 +41,7 @@ int cadastrar_forma_assinatura(forma_da_ass **inicio, int qtd_generos_cadastrado
         // Se o código não existe, prossegue com a criação
         if (codigo_existe == 0) {
             
-            forma_da_ass *nova_forma = (forma_da_ass *)malloc(sizeof(forma_da_ass));
+            forma_ass *nova_forma = (forma_ass *)malloc(sizeof(forma_ass));
             
             if (nova_forma != NULL) {
                 
@@ -68,7 +68,7 @@ int cadastrar_forma_assinatura(forma_da_ass **inicio, int qtd_generos_cadastrado
                         *inicio = nova_forma;
                     } else {
                         // Se não estiver vazia, percorre até o final e conecta
-                        forma_da_ass *temp = *inicio;
+                        forma_ass *temp = *inicio;
                         while (temp->prox != NULL) {
                             temp = temp->prox;
                         }
@@ -130,13 +130,13 @@ void mostrar_assinaturas_por_forma(Assinatura *raiz, int codigo_forma) {
  * Usar uma cópia do ponteiro nos permite percorrer a lista sem perder a referência original no 'main'.
  
  */
-void mostrar_formas_assinatura(forma_da_ass *inicio) {
+void mostrar_formas_assinatura(forma_ass *inicio) {
     // Verifica se a lista está vazia antes de tentar imprimir
     if (inicio == NULL) {
         printf("Nenhuma forma de assinatura cadastrada no momento.\n");
     } else {
         // Cria um ponteiro auxiliar para percorrer a lista
-        forma_da_ass *atual = inicio;
+        forma_ass *atual = inicio;
 
         while (atual != NULL) {
             printf("--------------------------------------------------\n");

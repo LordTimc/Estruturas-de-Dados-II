@@ -28,7 +28,7 @@ typedef struct usuario {
 
 
 // LISTA DINÂMICA DE FORMAS DE ASSINATURA
-typedef struct forma_da_ass {
+typedef struct forma_ass {
     int codigo;
     int livros_mensais;
     int generos_mensais;
@@ -37,8 +37,8 @@ typedef struct forma_da_ass {
     float valor_mensal;
     float valor_anual;
 
-    struct forma_da_ass *prox;
-} forma_da_ass;
+    struct forma_ass *prox;
+} forma_ass;
 
 
 // ÁRVORE DE ASSINATURAS

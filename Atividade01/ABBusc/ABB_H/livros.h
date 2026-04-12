@@ -1,5 +1,8 @@
 #include "structs.h"
 
+// Funçao para alocar um novo livro
+Livro *aloca_livro(char *isbn, char *titulo, char *autor, char *editora, int edicao, int ano_publica);
+
 // Função para cadastrar um novo livro na árvore binária
 int cadastrar_livro(Livro **raiz, char *isbn, char *titulo, char *autor, char *editora, int edicao, int ano_publica);
 

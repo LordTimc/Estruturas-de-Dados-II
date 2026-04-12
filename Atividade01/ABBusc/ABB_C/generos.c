@@ -113,13 +113,13 @@ void mostrar_generos(Genero lista[], int qtd) {
  alterar as flags (0 ou 1) que serão lidas depois pela função principal.
  
  */
-void marcar_generos_assinados(Assinatura *raiz, forma_da_ass *lista_formas, Genero lista_generos[], int qtd_generos, int marcados[]) {
+void marcar_generos_assinados(Assinatura *raiz, forma_ass *lista_formas, Genero lista_generos[], int qtd_generos, int marcados[]) {
     if (raiz != NULL) {
         // 1. Desce pela esquerda
         marcar_generos_assinados(raiz->esq, lista_formas, lista_generos, qtd_generos, marcados);
         
         // 2. Processa a raiz atual (Assinatura)
-        forma_da_ass *forma_atual = lista_formas;
+        forma_ass *forma_atual = lista_formas;
         
         // Busca a forma vinculada a esta assinatura
         while (forma_atual != NULL) {

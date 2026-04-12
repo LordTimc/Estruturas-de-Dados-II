@@ -18,9 +18,9 @@ typedef struct data_nasci {
 
 // ÁRVORE DE USUÁRIOS (ASSINANTES)
 typedef struct usuario {
-    char cpf[15];
+    char cpf[12];
     char nome[100];
-    char endereco[150];
+    char endereco[100];
     data_nasci data;
 
     struct usuario *esq, *dir;
@@ -57,7 +57,7 @@ typedef struct assinatura {
 // ÁRVORE DE LIVROS
 typedef struct livro {
 
-    char isbn[20];
+    char isbn[2];
     char titulo[100];
     char autor[100];
     char editora[100];

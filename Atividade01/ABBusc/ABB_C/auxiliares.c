@@ -231,16 +231,16 @@ char *pega_endereco() {
 
 // ------ ISBN --------
 
-int isbn_eh_valido(const char *codigo){
+int num_eh_valido(const char *num){
     int valido = 0;
 
-    // se o isbn nao for nulo e tiver menos de 3 caracteres
-    if (codigo && strlen(codigo) == 2){
+    // se o NUM nao for nulo e tiver menos de 3 caracteres
+    if (num && strlen(num) == 2){
         // assume que tudo é valido
         valido = 1; 
 
-        for (int i = 0; i < strlen(codigo) && valido; i++){
-            if (!isdigit(codigo[i])){
+        for (int i = 0; i < strlen(num) && valido; i++){
+            if (!isdigit(num[i])){
                 // se algum caractere não for dígito, então deixa de ser valido
                 valido = 0;
             }
@@ -259,7 +259,7 @@ int pega_isbn(char *codigo){
         int leu = ler_string_info(dados_isbn, sizeof(dados_isbn));
 
         if(leu){
-            if(isbn_eh_valido(dados_isbn)){
+            if(num_eh_valido(dados_isbn)){
                 strcpy(codigo, dados_isbn);
                 isbn_valido = 1;
             }else {
@@ -270,4 +270,28 @@ int pega_isbn(char *codigo){
         }
     } while(!isbn_valido); // enquanto o cpf_valido for igual a zero
     return isbn_valido;
+}
+
+
+int pega_edicao(char *codigo){
+    
+    char dados_edicao[3];
+    int valido = 0;
+
+    do {
+        printf("Entre com o num da edicao nesse formato (xx): ");
+        int leu = ler_string_info(dados_edicao, sizeof(dados_edicao));
+
+        if(leu){
+            if(num_eh_valido(dados_edicao)){
+                strcpy(codigo, dados_edicao);
+                valido = 1;
+            }else {
+                printf("Erro no num da edicao! O num tem que possuir 2 digitos numericos.\n");
+            }
+        } else{
+            printf("Erro na leitura do num da edicao!\n");
+        }
+    } while(!valido); // enquanto o cpf_valido for igual a zero
+    return valido;
 }

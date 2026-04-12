@@ -27,14 +27,6 @@ Livro *aloca_livro(char *isbn, char *titulo, char *autor, char *editora, int edi
     return(novo_livro);
 }
 
-/*
- * Insere um novo livro na Árvore Binária de Busca utilizando o ISBN como chave.
-Parâmetros:
- * - Livro **raiz: Ponteiro duplo para a raiz da árvore de livros. Usamos passagem 
- * por referência para que a modificação do ponteiro (ao adicionar um novo nó) reflita diretamente na variável original lá no `main`.
- * - char *isbn, *titulo, *autor, *editora: Strings com os dados textuais do livro.
- * - int edicao, anoPublica: Dados numéricos do livro passados por valor.
- */
 
 Livro *cadastrar_livro(Livro *livro){
     char isbn[3];
@@ -54,9 +46,9 @@ Livro *cadastrar_livro(Livro *livro){
         titulo = leitura_de_string();
         
         if(titulo != NULL){
-            autor = pega_autor(); //endreco
-            editora = pega_editora(); // endereco
-            edicao = pega_edicao(); // isdigit
+            autor = leitura_de_string(); //endreco
+            editora = leitura_de_string(); // endereco
+            edicao = pega_edicao(edicao); // isdigit
             ano_publica = pega_ano_publica(); // digitar_ano
             if(autor != NULL && editora != NULL){
                 livro = aloca_livro(isbn, titulo, autor, editora, edicao, ano_publica);
@@ -76,34 +68,35 @@ Livro *cadastrar_livro(Livro *livro){
     }
     return livro;
 }
+
+/*
+ * Insere um novo livro na Árvore Binária de Busca utilizando o ISBN como chave.
+Parâmetros:
+ * - Livro **r: Ponteiro duplo para a raiz da árvore de livros. Usamos passagem 
+ * por referência para que a modificação do ponteiro (ao adicionar um novo nó) reflita diretamente na variável original lá no `main`.
+ * - char *isbn, *titulo, *autor, *editora: Strings com os dados textuais do livro.
+ * - int edicao, anoPublica: Dados numéricos do livro passados por valor.
+ */
+int inserir_livro(Livro **r, Livro *novo){
+    int inseriu = 1;
     // Se o ponteiro atual for NULL, encontramos a posição correta para inserir
-    if (*raiz == NULL) {
-        // Aloca memória para o novo livro
-        
-
-            *raiz = novo_livro;
-                      
-            status_insercao = 1;
-        }
-    } else {
-        // Se a árvore não estiver vazia
-        // Compara o ISBN recebido com o ISBN do nó atual
-        int comparacao = strcmp(isbn, (*raiz)->isbn);
-
-        if (comparacao < 0) {
-            // Se o ISBN for "menor", desce para a subárvore esquerda
-            status_insercao = cadastrar_livro(&((*raiz)->esq), isbn, titulo, autor, editora, edicao, ano_publica);
-        } else if (comparacao > 0) {
-            // Se o ISBN for "maior", desce para a subárvore direita
-            status_insercao = cadastrar_livro(&((*raiz)->dir), isbn, titulo, autor, editora, edicao, ano_publica);
-        } else {
-            // Se a comparação for 0, os ISBNs são iguais. 
-            // O cadastro é repetido, então a função não insere nada e o status continua 0.
-            status_insercao = 0;
-        }
+    if (*r == NULL) 
+        *r = novo;
+    else if(strcmp(novo->isbn, (*r)->isbn) == 0){
+        // A função strcmp compara os dois ISBN. Retorna < 0 se a primeira for menor, > 0 se for maior, e 0 se forem iguais.
+        // comparacao == 0 significa que o ISBN já existe na árvore
+        // Não permite cadastro repetido, logo, o inseriu se mantém 0 (falha)
+        free(novo);
+        novo = NULL;
+        inseriu = 0;
+    } else if(strcmp(novo->isbn, (*r)->isbn) < 0){
+        // Se a árvore não está vazia e o ISBN é "menor", vai para a subárvore esquerda.
+        inseriu = inserir_assinante(&(*r)->esq, novo);
+    } else if (strcmp(novo->isbn, (*r)->isbn) > 0){
+        // Se o ISBN é "maior", vai para a subárvore direita
+        inseriu = inserir_assinante(&(*r)->dir, novo);
     }
-
-    return status_insercao;
+    return inseriu;
 }
 
 
@@ -117,24 +110,26 @@ Livro *cadastrar_livro(Livro *livro){
  - Livro *raiz: Ponteiro simples para a raiz da árvore de livros (passagem por valor).
  
  */
-void mostrar_livros_da_arvore(Livro *raiz) {
-    
-    if (raiz != NULL) {
+int mostrar_livros_da_arvore(Livro *r){
+    int mostrou = 0;
+    if (r != NULL) {
         // 1. Visita a subárvore esquerda
-        mostrar_livros_da_arvore(raiz->esq);
+        mostrou = mostrar_livros_da_arvore(r->esq);
         
         // 2. Imprime os dados do livro atual
         printf("--------------------------------------------------\n");
-        printf("ISBN: %s\n", raiz->isbn);
-        printf("Titulo: %s\n", raiz->titulo);
-        printf("Autor: %s\n", raiz->autor);
-        printf("Editora: %s\n", raiz->editora);
-        printf("Edicao: %d\n", raiz->edicao);
-        printf("Ano de Publicacao: %d\n", raiz->ano_publica);
+        printf("ISBN: %s\n", r->isbn);
+        printf("Titulo: %s\n", r->titulo);
+        printf("Autor: %s\n", r->autor);
+        printf("Editora: %s\n", r->editora);
+        printf("Edicao: %d\n", r->edicao);
+        printf("Ano de Publicacao: %dª\n", r->ano_publica);
         
         // 3. Visita a subárvore direita
-        mostrar_livros_da_arvore(raiz->dir);
+        mostrou = mostrar_livros_da_arvore(r->dir);
+        mostrou = 1;
     }
+    return mostrou;
 }
 
 /*

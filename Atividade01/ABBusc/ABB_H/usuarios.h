@@ -13,3 +13,6 @@ int mostrar_assinantes(Usuario *raiz);
 
 // Função verifica se o nó é folha
 int no_sem_filho(Usuario *raiz);
+
+// Função verifica se é só um filho
+Usuario *so_um_filho(Usuario *r);

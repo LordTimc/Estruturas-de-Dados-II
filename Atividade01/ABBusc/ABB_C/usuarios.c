@@ -125,3 +125,16 @@ int no_sem_filho(Usuario *raiz){
     }
     return eh_folha;
 }
+
+Usuario *so_um_filho(Usuario *r){
+    Usuario *no;
+    no = NULL;
+
+    if(r != NULL){
+        if(r->esq == NULL && r->dir != NULL)
+            no = r->dir;
+        else if(r->esq != NULL && r->dir == NULL)
+            no = r->esq;
+    }
+    return(no);
+}

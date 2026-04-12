@@ -4,14 +4,14 @@
 char *leitura_de_string();
 void limpa_dados_buffer();
 
-void pegar_data_de_hoje (data_nasci *data_hoje);
+void pegar_data_de_hoje (Data *data_hoje);
 int dias_de_um_mes(int mes, int ano);
-int verificar_data(data_nasci *data);
+int verificar_data(Data *data);
 
 int ler_string_info(char *buffer, int tam);
-int converte_data(const char *entrada, data_nasci *data);
-int validar_data_com_mensagem(data_nasci *data);
-int pega_data_nasci(data_nasci *data_usuario);
+int converte_data(const char *entrada, Data *data);
+int validar_data_com_mensagem(Data *data);
+int pega_data_nasci(Data *data_usuario);
 
 int cpf_eh_valido(const char *cpf);
 int pega_cpf(char *cpf);

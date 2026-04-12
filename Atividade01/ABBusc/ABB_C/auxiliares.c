@@ -46,7 +46,7 @@ void limpa_dados_buffer(){
 // ---------- Data de Nascimento --------
 
 // essa função vai pegar a data de hoje
-void pegar_data_de_hoje (data_nasci *data_hoje){
+void pegar_data_de_hoje (Data *data_hoje){
     //pega o tempo atual em segundos desde 1970
     time_t agora = time(NULL);
     struct tm * time = localtime(&agora); // converte esse tempo para uma struct tm com dia, mes, ano, hora, minutos, segundos, etc...
@@ -70,8 +70,8 @@ int dias_de_um_mes(int mes, int ano){
 }
 
 // Essa função verifica se a data é válida
-int verificar_data(data_nasci *data){
-    data_nasci data_de_hoje;
+int verificar_data(Data *data){
+    Data data_de_hoje;
     pegar_data_de_hoje(&data_de_hoje);
 
     int valida = 1;
@@ -113,14 +113,14 @@ int ler_string_info(char *buffer, int tam){
 
 // Essa função converte a data digitada pelo usuario
 // no formato esperado (**/**/****)
-int converte_data(const char *entrada, data_nasci *data){
+int converte_data(const char *entrada, Data *data){
     // Esse função tenta interpretar a string como uma data nesse formato
     return sscanf(entrada, "%2d/%2d/%4d", &data->dia, &data->mes, &data->ano) == 3;
     // Por fim, se conseguiu ler exatamente 3 valores, returna 1 (verdadeiro).
 }
 
 // Essa função printa se a data informada deu errado
-int validar_data_com_mensagem(data_nasci *data){
+int validar_data_com_mensagem(Data *data){
     int deu_certo = 1;
     if(!verificar_data(data)){
         limpa_dados_buffer();
@@ -131,7 +131,7 @@ int validar_data_com_mensagem(data_nasci *data){
 }
 
 // Essa função pega a data de nascimento do usuário (assinante)
-int pega_data_nasci(data_nasci *data_usuario){
+int pega_data_nasci(Data *data_usuario){
     
     char dados_nasci[12];
     int nasci_valido = 0;

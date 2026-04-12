@@ -19,7 +19,7 @@
  * - int codigoForma, float valor: Dados numéricos (passagem por valor).
 */
 
-int cadastrar_assinatura(Assinatura **raiz, Usuario *raiz_usuarios, forma_da_ass *lista_formas, char *cpf, int codigo_forma, char *data_assinatura, char *data_vencimento, float valor) {
+int cadastrar_assinatura(Assinatura **raiz, Usuario *raiz_usuarios, forma_ass *lista_formas, char *cpf, int codigo_forma, char *data_assinatura, char *data_vencimento, float valor) {
 
     int status_insercao = 0;
     

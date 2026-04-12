@@ -6,7 +6,7 @@
 #include "../ABB_H/usuarios.h"
 #include "../ABB_H/auxiliares.h"
 
-Usuario *aloca_assinante (char *cpf, char *nome, char *endereco, data_nasci data){ 
+Usuario *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nascimento){ 
     // Aloca espaço na memória para o novo usuário
     Usuario *novo_usuario = (Usuario *)malloc(sizeof(Usuario));
         
@@ -14,7 +14,7 @@ Usuario *aloca_assinante (char *cpf, char *nome, char *endereco, data_nasci data
         strcpy(novo_usuario->cpf, cpf);
         strcpy(novo_usuario->nome, nome);
         strcpy(novo_usuario->endereco, endereco);
-        novo_usuario->data = data;
+        novo_usuario->nascimento = data_nascimento;
         
         novo_usuario->esq = NULL;
         novo_usuario->dir = NULL;
@@ -29,7 +29,7 @@ Usuario *cadastrar_assinante(Usuario *usuario) {
     char cpf[12];
     char *nome = NULL;
     char *endereco = NULL; 
-    data_nasci data;
+    Data nascimento;
     // Variável única de retorno para saber se deu certo cadastrar.
     int cadastrou = 0; 
 
@@ -42,8 +42,8 @@ Usuario *cadastrar_assinante(Usuario *usuario) {
         
         if(nome != NULL){
             endereco = pega_endereco();    
-            if(endereco != NULL && pega_data_nasci(&data)){
-                usuario = aloca_usuario(cpf, nome, endereco, data);
+            if(endereco != NULL && pega_data_nasci(&nascimento)){
+                usuario = aloca_usuario(cpf, nome, endereco, nascimento);
                 cadastrou = 1;
 
                 free(nome);
@@ -105,7 +105,7 @@ int mostrar_assinantes(Usuario *raiz) {
         printf("CPF: %s\n", raiz->cpf);
         printf("Nome: %s\n", raiz->nome);
         printf("Endereco: %s\n", raiz->endereco);
-        printf("Data de Nascimento: %02d/%02d/%04d\n", raiz->data.dia, raiz->data.mes, raiz->data.ano);
+        printf("Data de Nascimento: %02d/%02d/%04d\n", raiz->nascimento.dia, raiz->nascimento.mes, raiz->nascimento.ano);
         
         // 3º Passo: Desce para a subárvore direita (CPFs maiores)
         mostrou = mostrar_assinantes(raiz->dir);

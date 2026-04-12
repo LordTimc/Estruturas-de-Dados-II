@@ -1,6 +1,6 @@
 #include "structs.h"
 // Função para alocar um novo usuario (assinante)
-Usuario *aloca_assinante(char *cpf, char *nome, char *endereco, data_nasci data_nasc);
+Usuario *aloca_assinante(char *cpf, char *nome, char *endereco, Data data_nascimento);
 
 // Função para cadastrar um novo assinante na árvore binária
 Usuario *cadastrar_assinante(Usuario *raiz);

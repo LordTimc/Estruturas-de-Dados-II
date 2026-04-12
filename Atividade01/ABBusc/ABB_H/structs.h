@@ -1,7 +1,7 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-typedef struct data_nasci data_nasci;
+typedef struct data_nasci Data;
 typedef struct usuario Usuario;
 typedef struct forma_da_ass forma_da_ass;
 typedef struct assinatura Assinatura;
@@ -14,45 +14,17 @@ typedef struct data_nasci {
     int dia;
     int mes;
     int ano;
-} data_nasci;
+} Data;
 
 // ÁRVORE DE USUÁRIOS (ASSINANTES)
 typedef struct usuario {
     char cpf[12];
     char nome[100];
     char endereco[100];
-    data_nasci data;
+    Data nascimento;
 
     struct usuario *esq, *dir;
 } Usuario;
-
-
-// LISTA DINÂMICA DE FORMAS DE ASSINATURA
-typedef struct forma_ass {
-    int codigo;
-    int qtd_livros_mensais;
-    int qtd_generos_mensais;
-    int *generos_escolhidos; //Ponteiro para armazenar o vetor com os códigos dos gêneros
-    char tipo_encadern[50];
-    float valor_mensal;
-    float valor_anual;
-
-    struct forma_ass *prox;
-} forma_ass;
-
-
-// ÁRVORE DE ASSINATURAS
-typedef struct assinatura {
-
-    char cpf_usuario[15];              // referência ao usuário
-    int codigo_forma;                 // referência à forma de assinatura
-    char data_assinatura[11];
-    char data_vencimento[11];
-    float valor;
-
-    struct assinatura *esq, *dir;
-} Assinatura;
-
 
 // ÁRVORE DE LIVROS
 typedef struct livro {
@@ -78,6 +50,35 @@ typedef struct genero {
 } Genero;
 
 Genero lista_generos[MAX_GENEROS];
+
+// LISTA DINÂMICA DE FORMAS DE ASSINATURA
+typedef struct forma_ass {
+    int codigo;
+    int qtd_livros_mensais;
+    int qtd_generos_mensais;
+    int *generos_escolhidos; //Ponteiro para armazenar o vetor com os códigos dos gêneros
+    char tipo_encadern[50];
+    float valor_mensal;
+    float valor_anual;
+
+    struct forma_ass *prox;
+} forma_ass;
+
+
+// ÁRVORE DE ASSINATURAS
+typedef struct assinatura {
+
+    char cpf_usuario[12];              // referência ao usuário
+    int codigo_forma;                 // referência à forma de assinatura
+    Data data_assinatura;
+    Data data_vencimento;
+    float valor;
+
+    struct assinatura *esq, *dir;
+} Assinatura;
+
+
+
 
 #endif
 

@@ -152,7 +152,7 @@ int pega_data_nasci(data_nasci *data_usuario){
         } else{
             printf("Erro na leitura!\n");
         }
-    } while(nasci_valido == 0);
+    } while(!nasci_valido); // enquanto o nasci_valido for igual a zero
     return nasci_valido;
 }
 
@@ -199,4 +199,10 @@ int pega_cpf(char *cpf){
         }
     } while(!cpf_valido); // enquanto o cpf_valido for igual a zero
     return cpf_valido;
+}
+
+// ------- endereço-----------
+
+int endereco_eh_valido(const char *endereco){
+    return (endereco && strlen(endereco) > 0);
 }

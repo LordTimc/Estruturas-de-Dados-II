@@ -7,6 +7,23 @@
 #include "../ABB_H/auxiliares.h"
 #include "../ABB_H/formaAssinat.h"
 
+forma_ass *aloca_forma_assinatura(){
+    forma_ass *novo = (forma_ass *) malloc(sizeof(forma_ass));
+            
+    if (novo == NULL){ 
+        printf("Erro na forma de assinatura! Falha naa alocacao memoria.\n");
+    }else{
+        novo->codigo = 0;
+        novo->qtd_livros_mensais = 0;
+        novo->qtd_generos_mensais = 0;
+        novo->valor_mensal = 0.0;
+        novo->valor_anual = 0.0;
+
+        novo->generos_escolhidos = NULL;
+        novo->prox = NULL; // Como vai para o final da lista, o próximo é NULL
+    }
+    return novo;           
+}
 /* Insere uma nova forma de assinatura no final da lista dinâmica, Valida se existe pelo menos um gênero cadastrado e impede códigos de forma repetidos.
  
  Parâmetros:
@@ -18,74 +35,45 @@
   - float valorMensal, valorAnual
  
  */
-int cadastrar_forma_assinatura(forma_ass **inicio, int qtd_generos_cadastrados, int codigo, int livros_mensais, int generos_mensais, int *vetor_generos, char *tipo_encadern, float valor_mensal, float valor_anual) {
-    
-    int status_insercao = 0;
 
-    // 1ª Validação: O usuário já deve ter cadastrado pelo menos um tipo de gênero 
-    if (qtd_generos_cadastrados > 0) {
+forma_ass* cad_forma_assinatura(forma_ass *lista, int qtd_generos_existentes) {
+    // Validação: precisa ter pelo menos um gênero no sistema
+    if (qtd_generos_existentes){
+        forma_ass *novo = alocar_forma_assinatura();
+        if (novo == NULL) return lista;
+
+        printf("Codigo da Assinatura: ");
+        scanf("%d", &novo->codigo);
         
-        // 2ª Validação: Não permitir cadastro repetido (verificando o código da forma)
-        int codigo_existe = 0;
-        forma_ass *atual = *inicio;
+        printf("Qtd. Livros Mensais: ");
+        scanf("%d", &novo->qtd_livros_mensais);
         
-        // Percorre a lista para procurar se o código já existe
-        while (atual != NULL) {
-            if (atual->codigo == codigo) {
-                codigo_existe = 1; // Encontrou duplicata
-                break;
-            }
-            atual = atual->prox;
+        printf("Qtd. Generos Mensais: ");
+        scanf("%d", &novo->qtd_generos_mensais);
+
+        // Alocação do vetor dinâmico de códigos de gêneros dentro da assinatura
+        novo->generos_escolhidos = (int*) malloc(novo->qtd_generos_mensais * sizeof(int));
+        
+        for (int i = 0; i < novo->qtd_generos_mensais; i++) {
+            printf("Digite o codigo do %do genero: ", i + 1);
+            scanf("%d", &novo->generos_escolhidos[i]);
         }
 
-        // Se o código não existe, prossegue com a criação
-        if (codigo_existe == 0) {
-            
-            forma_ass *nova_forma = (forma_ass *)malloc(sizeof(forma_ass));
-            
-            if (nova_forma != NULL) {
-                
-                nova_forma->codigo = codigo;
-                nova_forma->livros_mensais = livros_mensais;
-                nova_forma->generos_mensais = generos_mensais;
-                strcpy(nova_forma->tipo_encadern, tipo_encadern);
-                nova_forma->valor_mensal = valor_mensal;
-                nova_forma->valor_anual = valor_anual;
-                nova_forma->prox = NULL; // Como vai para o final da lista, o próximo é NULL
+        printf("Tipo de encadernacao: ");
+        scanf(" %[^\n]", novo->tipo_encadern); // Lê string com espaços
+        
+        printf("Valor Mensal: ");
+        scanf("%f", &novo->valor_mensal);
+        novo->valor_anual = novo->valor_mensal * 12; // Cálculo automático
 
-                // Aloca dinamicamente o vetor de gêneros escolhidos com base na quantidade informada
-                nova_forma->generos_escolhidos = (int *)malloc(generos_mensais * sizeof(int));
-                
-                if (nova_forma->generos_escolhidos != NULL) {
-                    // Copia os códigos do vetor passado por parâmetro para a struct
-                    for (int i = 0; i < generos_mensais; i++) {
-                        nova_forma->generos_escolhidos[i] = vetor_generos[i];
-                    }
-
-                    // Lógica para inserir na lista dinâmica
-                    if (*inicio == NULL) {
-                        // Se a lista estiver vazia, a nova forma será o primeiro elemento (modifica no main)
-                        *inicio = nova_forma;
-                    } else {
-                        // Se não estiver vazia, percorre até o final e conecta
-                        forma_ass *temp = *inicio;
-                        while (temp->prox != NULL) {
-                            temp = temp->prox;
-                        }
-                        temp->prox = nova_forma;
-                    }
-                    
-                    status_insercao = 1;
-                } else {
-                    free(nova_forma);
-                }
-            }
-        }
+        // Inserção no início da lista (mais simples em lista encadeada)
+        novo->prox = lista;
+        return novo;
     }
-
-    
-    return status_insercao;
+       
 }
+
+
 
 /*
  * Percorre toda a árvore binária de assinaturas (método Em Ordem) e imprime 

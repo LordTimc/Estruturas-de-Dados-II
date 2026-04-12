@@ -81,30 +81,3 @@ Genero lista_generos[MAX_GENEROS];
 
 #endif
 
-// ----- Ver se encaixa no main: EXISTE_LIVRO_CAD ---- 
-// // No seu código principal:
-// if (!existe_codigo(lista_generos, total_generos, novo_codigo)) {
-//     cadastrar_genero_estatico(lista_generos, &total_generos, novo_codigo, "Nome");
-// } else {
-//     printf("Erro: Código duplicado!");
-// }
-
-// ----- Ver se encaixa no main: INSERIR_GENERO_ESTATICO ----
-// ... dentro do main ou de uma função de controle
-// Genero g1 = criar_genero(1, "Ficcao Cientifica");
-
-// if (inserir_genero_estatico(meu_vetor, &quantidade, g1)) {
-//     printf("Genero inserido com sucesso!\n");
-// }
-
-// ----- Ver se encaixa no main: MOSTRAR_GENEROS ----
-/*int main() {
-    Genero meus_generos[MAX_GENEROS];
-    int total = 0;
-
-    // ... após realizar alguns cadastros ...
-    
-    listar_generos(meus_generos, total);
-
-    return 0;
-}*/ 

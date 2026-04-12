@@ -147,12 +147,12 @@ int mostrar_livros_da_arvore(Livro *r){
  * Função Principal: mostrar_livros_por_genero
  * Versão sem comandos de salto (break/continue).
  */
-void mostrar_livros_por_genero(Genero lista[], int qtd, int codigo_genero) {
+void mostrar_livros_por_genero(Genero lista[], int qtd_genero, int codigo_genero) {
     int encontrou_genero = 0;
     int i = 0;
 
     // O laço continua enquanto não percorrer todo o vetor E não encontrar o gênero
-    while (i < qtd && !encontrou_genero) {
+    while (i < qtd_genero && !encontrou_genero) {
         
         // Verifica se o código atual corresponde ao buscado
         if (lista[i].codigo == codigo_genero) {
@@ -169,8 +169,7 @@ void mostrar_livros_por_genero(Genero lista[], int qtd, int codigo_genero) {
                 printf("Nenhum livro cadastrado neste genero.\n");
             }
         }
-        
-        i++; // Incremento manual do índice
+        i++; 
     }
 
     // Validação final caso o gênero não exista no cadastro

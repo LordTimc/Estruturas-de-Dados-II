@@ -19,56 +19,49 @@
  * Retorno:
  * - int: 1 se a inserção foi sucesso, 0 se falhou.
  */
-int cadastrar_genero(Genero lista[], int *qtd, int codigo, char *nome, Livro *arvore_livros) {
-    int status_insercao = 0;
-    int i, j;
+/* * Função: cadastrar_genero_estatico
 
-    // 1ª Validação: Verifica se ainda há espaço no vetor
-    if (*qtd < MAX_GENEROS) {
-        
-        // 2ª Validação: a árvore de livros passada não pode ser vazia
-        if (arvore_livros != NULL) {
-            
-            int posicao_inserir = 0;
-            int codigo_existe = 0;
+ * Equivalente à alocação de um nó, mas aplicada a um vetor fixo.
 
-            // Percorre os gêneros já cadastrados para encontrar a posição correta
-            // e também verifica se o código já existe
-            for (i = 0; i < *qtd; i++) {
-                if (lista[i].codigo == codigo) {
-                    codigo_existe = 1; // Encontrou código repetido
-                    break;
-                }
-                
-                // Se o código da lista for maior que o código novo, achamos o ponto de inserção
-                if (lista[i].codigo > codigo) {
-                    break; 
-                }
-                posicao_inserir++; // Vai avançando até achar o ponto certo
-            }
+ */
 
-            // 3ª Validação: Só insere se não encontrou um código repetido
-            if (codigo_existe == 0) {
-                // Desloca todos os elementos à direita da 'posicaoInserir' uma casa para frente
-                for (j = *qtd; j > posicao_inserir; j--) {
-                    lista[j] = lista[j - 1];
-                }
+ // Função para criar um novo gênero na lista estática não ordenada
+Genero criar_genero(int codigo_livro, char *nome_genero){
+    Genero novo;
+    
+    novo.codigo = codigo_livro;
+    strcpy(novo.nome, nome_genero);
+    // Todo gênero nasce com uma árvore de livros vazia
+    novo.colecao_livros = NULL; 
+    
+    return novo; // Retorna a struct preenchida
+}
 
-                // Insere os dados do novo gênero na posição correta
-                lista[posicao_inserir].codigo = codigo;
-                strcpy(lista[posicao_inserir].nome, nome);
-                lista[posicao_inserir].arvore_livros = arvore_livros;
+// Função para inserir o genero na lista estática
+int inserir_genero(Genero lista[], int *qtd_gen, Genero novo_genero){
+    int inseriu = 0;
+    if (*qtd_gen < MAX_GENEROS) {
+        // A inserção é apenas copiar a struct para a vaga livre
+        lista[*qtd_gen] = novo_genero;
+        (*qtd_gen)++;
+        inseriu = 1; // Sucesso
+    }
+    
+    printf("Erro! Limite maximo atingido.\n");
+    return inseriu; // Falha
+}
 
-                // Incrementa a quantidade de gêneros usando o ponteiro (altera lá no main)
-                (*qtd)++;
-
-                status_insercao = 1; 
-            }
+// Função para verificar se o genero já existe
+int existe_livro_cad(Genero lista[], int qtd_gen, int codigo_livro){
+    int existe = 0;
+    for (int i = 0; i < qtd_gen; i++) {
+        if (lista[i].codigo == codigo_livro) {
+            existe = 1;
         }
     }
-
-    return status_insercao;
+    return existe;
 }
+
 
 
 /*
@@ -83,13 +76,14 @@ int cadastrar_genero(Genero lista[], int *qtd, int codigo, char *nome, Livro *ar
   Não vamos incrementar ou alterar a quantidade, então não precisamos de ponteiro.
  *
  */
-void mostrar_generos(Genero lista[], int qtd) {
+void mostrar_generos(Genero lista[], int qtd_gen){
+    printf("\n--- Lista de Generos Cadastrados ---\n");
 
-    if (qtd == 0) {
+    if (qtd_gen == 0) {
         printf("Nenhum genero cadastrado no momento.\n");
     } else {
-        // Percorre o vetor da posição 0 até a última posição preenchida (qtd - 1)
-        for (int i = 0; i < qtd; i++) {
+        // Percorre o vetor da posição 0 até o limite da quantidade de genero atual
+        for (int i = 0; i < qtd_gen; i++) {
             printf("--------------------------------------------------\n");
             printf("Codigo do Genero: %d\n", lista[i].codigo);
             printf("Nome do Genero: %s\n", lista[i].nome);
@@ -99,7 +93,7 @@ void mostrar_generos(Genero lista[], int qtd) {
 
 
 /*
-  Função Auxiliar: marcarGenerosAssinados
+  Função Auxiliar: marcar_generos_assinados
  
  Percorre a árvore de assinaturas. Para cada assinatura, busca a forma correspondente 
  na lista dinâmica e "marca" com 1 (no vetor 'marcados') a posição dos gêneros escolhidos.
@@ -125,7 +119,7 @@ void marcar_generos_assinados(Assinatura *raiz, forma_ass *lista_formas, Genero 
         while (forma_atual != NULL) {
             if (forma_atual->codigo == raiz->codigo_forma) {
                 // Encontrou a forma! Agora pega os gêneros dela e marca no vetor
-                for (int i = 0; i < forma_atual->generos_mensais; i++) {
+                for (int i = 0; i < forma_atual->qtd_generos_mensais; i++) {
                     int codigo_genero_escolhido = forma_atual->generos_escolhidos[i];
                     
                     // Procura o índice deste código no vetor estático de gêneros
@@ -147,7 +141,7 @@ void marcar_generos_assinados(Assinatura *raiz, forma_ass *lista_formas, Genero 
 }
 
 /*
- * Função Principal: mostrarGenerosAssinados
+ * Função Principal: mostrar_generos_assinados
  Cria um vetor de marcação zerado, chama a função auxiliar para preenchê-lo e, em seguida,
  imprime apenas os gêneros que receberam a marcação '1'.
  
@@ -156,7 +150,7 @@ void marcar_generos_assinados(Assinatura *raiz, forma_ass *lista_formas, Genero 
  Estruturas bases passadas por valor (ou ponteiro base para arrays) apenas para leitura.
  
  */
-void mostrar_generos_assinados(Assinatura *raiz_assinaturas, forma_da_ass *lista_formas, Genero lista_generos[], int qtd_generos) {
+void mostrar_generos_assinados(Assinatura *raiz_assinaturas, forma_ass *lista_formas, Genero lista_generos[], int qtd_generos) {
     // Cria um vetor local com o tamanho máximo de gêneros e inicializa tudo com 0 (não assinado)
     int marcados[MAX_GENEROS] = {0}; 
     int encontrou = 0;

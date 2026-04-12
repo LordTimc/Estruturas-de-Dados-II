@@ -69,7 +69,6 @@ int inserir_assinante(Usuario **raiz, Usuario *novo){
         // A função strcmp compara os dois CPFs. Retorna < 0 se a primeira for menor, > 0 se for maior, e 0 se forem iguais.
         // comparacao == 0 significa que o CPF já existe na árvore
         // Não permite cadastro repetido, logo, o inseriu se mantém 0 (falha)
-        limpar_dados(novo);
         free(novo);
         novo = NULL;
         inseriu = 0;
@@ -84,9 +83,7 @@ int inserir_assinante(Usuario **raiz, Usuario *novo){
 }
 
 
-/*
- 
- * Percorre a árvore binária de assinantes utilizando o método "Em Ordem" (Esquerda -> Raiz -> Direita).
+/* Percorre a árvore binária de assinantes utilizando o método "Em Ordem" (Esquerda -> Raiz -> Direita).
  ordenados pelo CPF.
  
  * Parâmetros:
@@ -94,22 +91,37 @@ int inserir_assinante(Usuario **raiz, Usuario *novo){
  * por valor (cópia do ponteiro) porque esta função serve apenas para LEITURA. 
  * Não vamos inserir ou remover nós, logo, não precisamos modificar a árvore original.
 */
-void mostrar_assinantes(Usuario *raiz) {
+int mostrar_assinantes(Usuario *raiz) {
+    int mostrou = 0;
+
     // Verifica se o nó atual não é nulo
     if (raiz != NULL) {
         
         // 1º Passo: Desce tudo que pode para a subárvore esquerda (CPFs menores)
-        mostrar_assinantes(raiz->esq);
+        mostrou = mostrar_assinantes(raiz->esq);
         
         // 2º Passo: Visita a "raiz" atual (Imprime os dados do usuário)
         printf("--------------------------------------------------\n");
         printf("CPF: %s\n", raiz->cpf);
         printf("Nome: %s\n", raiz->nome);
         printf("Endereco: %s\n", raiz->endereco);
-        printf("Data de Nascimento: %s\n", raiz->data_nasc);
+        printf("Data de Nascimento: %02d/%02d/%04d\n", raiz->data.dia, raiz->data.mes, raiz->data.ano);
         
         // 3º Passo: Desce para a subárvore direita (CPFs maiores)
-        mostrar_assinantes(raiz->dir);
+        mostrou = mostrar_assinantes(raiz->dir);
+        mostrou = 1;
     }
+    return mostrou;
 }
 
+// ------ Remoção ----------
+
+int no_sem_filho(Usuario *raiz){
+    int eh_folha = 0;
+
+    if(raiz != NULL){
+        if(raiz->esq == NULL & raiz->dir == NULL)
+            eh_folha = 1;
+    }
+    return eh_folha;
+}

@@ -212,7 +212,7 @@ char *pega_endereco() {
     char *ender = NULL;
 
     do {
-        printf("Entre com o endereco: ");
+        printf("Entre com o nome da rua: ");
         ender = leitura_de_string();
 
         if (ender != NULL) {

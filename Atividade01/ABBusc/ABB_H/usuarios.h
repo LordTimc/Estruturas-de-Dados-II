@@ -9,4 +9,7 @@ Usuario *cadastrar_assinante(Usuario *raiz);
 int inserir_assinante(Usuario **raiz, Usuario *novo);
 
 // Função para mostrar todos os assinantes cadastrados na árvore (Em Ordem)
-void mostrar_assinantes(Usuario *raiz);
+int mostrar_assinantes(Usuario *raiz);
+
+// Função verifica se o nó é folha
+int no_sem_filho(Usuario *raiz);

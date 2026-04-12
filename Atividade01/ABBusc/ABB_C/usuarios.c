@@ -6,7 +6,7 @@
 #include "../ABB_H/usuarios.h"
 #include "../ABB_H/auxiliares.h"
 
-Usuario *aloca_usuario (char *cpf, char *nome, char *endereco, data_nasci data){ 
+Usuario *aloca_assinante (char *cpf, char *nome, char *endereco, data_nasci data){ 
     // Aloca espaço na memória para o novo usuário
     Usuario *novo_usuario = (Usuario *)malloc(sizeof(Usuario));
         
@@ -58,32 +58,29 @@ Usuario *cadastrar_assinante(Usuario *usuario) {
     }
     return usuario;
 }
-/* **raiz: Ponteiro duplo para a raiz da árvore. Escolhido (passagem por referência) 
-  porque precisamos modificar o ponteiro real da árvore no `main` quando alocamos um novo nó.*/
-  
+/* **raiz: Ponteiro duplo para a raiz da árvore. Escolhido (passagem por referência), pois precisamos modificar o ponteiro real da árvore no `main` quando alocamos um novo nó.*/
+int inserir_assinante(Usuario **raiz, Usuario *novo){
+    int inseriu = 1;
+
     // Verifica se chegamos em um nó folha/vazio
-    if (raiz == NULL) {
-        // Define o status como sucesso
-        cadastrou = 1;  
-    } else {
-        // A árvore não está vazia.
-        // A função strcmp compara duas strings. Retorna < 0 se a primeira for menor, > 0 se for maior, e 0 se forem iguais.
-        int comparacao = strcmp(cpf, (*raiz)->cpf);
-
-        if (comparacao < 0) {
-            // O CPF é "menor" alfabeticamente, vai para a subárvore esquerda
-            status_insercao = cadastrar_assinante(&((*raiz)->esq), cpf, nome, endereco, data_nasc);
-        } else if (comparacao > 0) {
-            // O CPF é "maior" alfabeticamente, vai para a subárvore direita
-            status_insercao = cadastrar_assinante(&((*raiz)->dir), cpf, nome, endereco, data_nasc);
-        } else {
-            // comparacao == 0 significa que o CPF já existe na árvore
-            // Não permite cadastro repetido, logo, o status se mantém 0 (falha)
-            status_insercao = 0; 
-        }
+    if(*raiz == NULL)
+        *raiz = novo;
+    else if(strcmp(novo->cpf, (*raiz)->cpf) == 0){
+        // A função strcmp compara os dois CPFs. Retorna < 0 se a primeira for menor, > 0 se for maior, e 0 se forem iguais.
+        // comparacao == 0 significa que o CPF já existe na árvore
+        // Não permite cadastro repetido, logo, o inseriu se mantém 0 (falha)
+        limpar_dados(novo);
+        free(novo);
+        novo = NULL;
+        inseriu = 0;
+    } else if(strcmp(novo->cpf, (*raiz)->cpf) < 0){
+        // Se a árvore não está vazia e o CPF é "menor", vai para a subárvore esquerda.
+        inseriu = inserir_assinante(&(*raiz)->esq, novo);
+    } else if (strcmp(novo->cpf, (*raiz)->cpf) > 0){
+        // Se o CPF é "maior", vai para a subárvore direita
+        inseriu = inserir_assinante(&(*raiz)->dir, novo);
     }
-
-    return status_insercao; 
+    return inseriu; 
 }
 
 

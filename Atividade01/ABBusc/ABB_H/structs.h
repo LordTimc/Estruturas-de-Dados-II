@@ -30,8 +30,8 @@ typedef struct usuario {
 // LISTA DINÂMICA DE FORMAS DE ASSINATURA
 typedef struct forma_ass {
     int codigo;
-    int livros_mensais;
-    int generos_mensais;
+    int qtd_livros_mensais;
+    int qtd_generos_mensais;
     int *generos_escolhidos; //Ponteiro para armazenar o vetor com os códigos dos gêneros
     char tipo_encadern[50];
     float valor_mensal;

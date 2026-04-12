@@ -36,9 +36,46 @@ Parâmetros:
  * - int edicao, anoPublica: Dados numéricos do livro passados por valor.
  */
 
-int cadastrar_livro(Livro **raiz, char *isbn, char *titulo, char *autor, char *editora, int edicao, int ano_publica) {
-    int status_insercao = 0;
+Livro *cadastrar_livro(Livro *livro){
+    char isbn[3];
+    char *titulo = NULL;
+    char *autor = NULL;
+    char *editora = NULL;
+    int edicao;
+    int ano_publica;
 
+    int cadastrou = 0;
+
+    printf("==== Informacoes do livro ====");
+
+    if(pega_isbn(isbn)){
+
+        printf("\nDigite o titulo: ");
+        titulo = leitura_de_string();
+        
+        if(titulo != NULL){
+            autor = pega_autor(); //endreco
+            editora = pega_editora(); // endereco
+            edicao = pega_edicao(); // isdigit
+            ano_publica = pega_ano_publica(); // digitar_ano
+            if(autor != NULL && editora != NULL){
+                livro = aloca_livro(isbn, titulo, autor, editora, edicao, ano_publica);
+                cadastrou = 1;
+
+                free(titulo);
+                free(autor);
+                free(editora);
+            }
+        }
+    }
+
+    if(!cadastrou){
+        if(titulo) free(titulo);
+        if(autor) free(autor);
+        if(editora) free(editora);
+    }
+    return livro;
+}
     // Se o ponteiro atual for NULL, encontramos a posição correta para inserir
     if (*raiz == NULL) {
         // Aloca memória para o novo livro

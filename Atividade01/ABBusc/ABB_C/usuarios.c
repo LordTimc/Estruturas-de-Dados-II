@@ -33,7 +33,7 @@ Usuario *cadastrar_assinante(Usuario *usuario) {
     // Variável única de retorno para saber se deu certo cadastrar.
     int cadastrou = 0; 
 
-    printf("==== Informacoes do assinante====");
+    printf("==== Informacoes do assinante ====");
 
     if(pega_cpf(cpf)){
 

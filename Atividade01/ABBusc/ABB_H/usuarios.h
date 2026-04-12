@@ -16,3 +16,9 @@ int no_sem_filho(Usuario *raiz);
 
 // Função verifica se é só um filho
 Usuario *so_um_filho(Usuario *r);
+
+// Funçãao verifica se tem dois filhos
+int dois_filhos(Usuario *r);
+
+// Função remove assinante
+int remove_assinant(Usuario **r, char *cpf);

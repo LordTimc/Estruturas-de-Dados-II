@@ -138,3 +138,34 @@ Usuario *so_um_filho(Usuario *r){
     }
     return(no);
 }
+
+int dois_filhos(Usuario *r){
+    return (r->esq != NULL && r->dir != NULL);
+}
+
+int remove_assinant(Usuario **r, char *cpf){
+    int removeu = 1;
+
+    if(*r != NULL){
+        if(strcasecpm((*r)->cpf, cpf) == 0){
+            Usuario *aux, *filho;
+            aux = *r;
+
+            if (no_sem_filho(*r)){
+                *r = NULL;
+                free(aux);
+            }
+            else if ((filho = so_um_filho(*r)) != NULL){
+                *r = filho;
+                free(aux);
+            }
+        } else if (strcasecmp(cpf, (*r)->cpf) < 0)
+            removeu = remove_assinant(&(*r)->esq, cpf);
+        else
+            removeu = remove_assinant(&(*r)->dir, cpf);
+        
+    } else {
+        removeu = 0;
+    }
+    return removeu;
+}

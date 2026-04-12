@@ -8,8 +8,10 @@
 Assinatura* alocar_assinatura();
 
 // Função para cadastrar uma assinatura na árvore binária
-int cadastrar_assinatura(Assinatura **raiz, Usuario *raiz_usuarios, forma_ass *lista_formas, char *cpf, int codigo_forma, char *data_assinatura, char *data_vencimento, float valor);
+Assinatura* cadastrar_assinatura(Assinatura *r);
 
+// Função para inserir assinatura
+int *inserir_assintura(Assinatura **raiz, Assinatura *novo);
 
 // Função para mostrar todas as assinaturas cadastradas na árvore (Em Ordem)
 void mostrarAssinaturas(Assinatura *raiz);

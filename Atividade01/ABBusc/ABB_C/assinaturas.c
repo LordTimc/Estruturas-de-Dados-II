@@ -49,95 +49,77 @@ Assinatura* alocar_assinatura(){
  * - int codigoForma, float valor: Dados numéricos (passagem por valor).
 */
 
-int cadastrar_assinatura(Assinatura **raiz, Usuario *raiz_usuarios, forma_ass *lista_formas, char *cpf, int codigo_forma, char *data_assinatura, char *data_vencimento, float valor) {
+Assinatura* cadastrar_assinatura(Assinatura *r){
+    char cpf_aux[12];
+    int cadastrou = 0;
+    Assinatura *novo_no = NULL;
 
-    int status_insercao = 0;
-    
-    int assinante_existe = 0;
-    int forma_existe = 0;
+    printf("--- Nova Assinatura ---\n");
 
-    // --- VALIDAÇÃO 1: O assinante existe? ---
-    // Busca na árvore binária de usuários de forma iterativa
-    if (raiz_usuarios != NULL) {
-        if (strcmp(cpf, raiz_usuarios->cpf) == 0) {
-            assinante_existe = 1; // Encontrou o CPF
-        } else if (strcmp(cpf, raiz_usuarios->cpf) < 0) {
-            raiz_usuarios = raiz_usuarios->esq;
-        } else {
-            raiz_usuarios = raiz_usuarios->dir;
-        }
-    }
-
-     // --- VALIDAÇÃO 2: A forma de assinatura existe? ---
-    // Percorre a lista dinâmica iterativamente
-    forma_da_ass *temp_f = lista_formas;
-    while (temp_f != NULL) {
-        if (temp_f->codigo == codigo_forma) {
-            forma_existe = 1;
-            break;
-        }
-        temp_f = temp_f->prox;
-    }
-
-    // Só prossegue se as duas validações forem verdadeiras
-    if (assinante_existe == 1 && forma_existe == 1) {
+    // Primeiro: Valida os dados
+    if (pega_cpf(cpf_aux)) {
         
-        Assinatura *atual = *raiz;
-        Assinatura *pai = NULL;
-        int cpf_repetido = 0;
+        // Segundo: Aloca o espaço
+        novo_no = alocar_assinatura();
 
-        // --- VALIDAÇÃO 3: O CPF já tem assinatura nesta árvore? ---
-        // Desce na árvore de assinaturas procurando pelo CPF para achar a folha correta
-        while (atual != NULL) {
-            pai = atual; // Salva o nó atual como "pai" antes de descer
-            int comp = strcmp(cpf, atual->cpf_usuario);
+        if (novo_no != NULL) {
+            // Terceiro: Transfere os dados validados para a struct
+            strcpy(novo_no->cpf_usuario, cpf_aux);
             
-            if (comp == 0) {
-                // CPF já tem uma assinatura cadastrada
-                cpf_repetido = 1;
-                break;
-            } else if (comp < 0) {
-                atual = atual->esq;
-            } else {
-                atual = atual->dir;
-            }
-        }
+            // Aqui você pediria o código da forma, as datas, etc.
+            printf("Digite o codigo da forma de assinatura: ");
+            novo_no->codigo_forma = num_inteiro();
 
-        // Se o CPF não for repetido, aloca e insere o nó
-        if (cpf_repetido == 0) {
-            Assinatura *nova_assinatura = (Assinatura *)malloc(sizeof(Assinatura));
-            
-            if (nova_assinatura != NULL) {
-               
-                strcpy(nova_assinatura->cpf_usuario, cpf);
-                nova_assinatura->codigo_forma = codigo_forma;
-                strcpy(nova_assinatura->data_assinatura, data_assinatura);
-                strcpy(nova_assinatura->data_vencimento, data_vencimento);
-                nova_assinatura->valor = valor;
-                
-                // Filhos nulos pois é um novo nó folha
-                nova_assinatura->esq = NULL;
-                nova_assinatura->dir = NULL;
+            printf("Data de Inicio da assinatura:\n");
+            if (pega_data(&novo_no->data_assinatura)){
 
-                // Conecta o novo nó à árvore
-                if (pai == NULL) {
-                    // Se pai é NULL, a árvore estava vazia
-                    *raiz = nova_assinatura;
-                } else {
-                    // Verifica se insere na esquerda ou direita do pai encontrado
-                    if (strcmp(cpf, pai->cpf_usuario) < 0) {
-                        pai->esq = nova_assinatura;
-                    } else {
-                        pai->dir = nova_assinatura;
-                    }
+                printf("Data de Vencimento da assinatura:\n");
+                if (pega_data(&novo_no->data_vencimento)){
+                    
+                    printf("Valor da Assinatura: ");
+                    novo_no->valor = num_decimal();
                 }
-                
-                status_insercao = 1;
             }
+            cadastrou = 1;
         }
     }
 
-    return status_insercao;
+    if (cadastrou) {
+        // Quarto: Insere na Árvore de Busca (ABB)
+        r = inserir_na_arvore(r, novo_no); 
+        printf("Assinatura realizada com sucesso!\n");
+    } else {
+        if (novo_no) free(novo_no); // Limpa se algo deu errado no meio
+    }
+
+    return r;
+}
+
+
+int *inserir_assintura(Assinatura **raiz, Assinatura *novo){
+    int inseriu = 1;
+    // Caso base: se chegamos em uma folha (ou árvore vazia),
+    // o ponteiro 'raiz' recebe o 'novo' nó.
+    if (*raiz == NULL) {
+        *raiz = novo;
+    }else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) == 0){
+        // Comparamos os CPFs para decidir o lado.
+        // strcmp retorna < 0 se o primeiro for menor, e > 0 se for maior.
+        // Caso o CPF seja igual, você decide o que fazer.
+            // Geralmente, em sistemas de cadastro, não permitimos duplicatas.
+        printf("Aviso: Assinatura ja existente para o CPF %s.\n", novo->cpf_usuario);
+        free(novo);
+        novo = NULL;
+        inseriu = 0;
+    }else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) < 0){
+            // Se o novo CPF for "menor", vai para a esquerda
+            inseriu = inserir_assinatura(&(*raiz)->esq, novo);
+     
+    }else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) > 0){
+            // Se o novo CPF for "maior", vai para a direita
+            inseriu = inserir_na_arvore(&(*raiz)->dir, novo);
+    }
+    return inseriu; 
 }
 
 /*

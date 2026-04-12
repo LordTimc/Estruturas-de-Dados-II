@@ -124,7 +124,7 @@ int validar_data_com_mensagem(Data *data){
     int deu_certo = 1;
     if(!verificar_data(data)){
         limpa_dados_buffer();
-        printf("Erro! Data de Nascimento invalida.\n");
+        printf("Erro! Data invalida.\n");
         deu_certo = 0;
     }
     return deu_certo;
@@ -154,6 +154,32 @@ int pega_data_nasci(Data *data_usuario){
         }
     } while(!nasci_valido); // enquanto o nasci_valido for igual a zero
     return nasci_valido;
+}
+
+// Função para pegar as datas de assinatura
+// e as datas de de Vencimento de assinatura
+int pega_data(Data *data_usuario){
+    char dados[12];
+    int valido = 0;
+
+    do {
+        printf("Entre com os dados da data nesse formato (dd/mm/aaaa): ");
+        int leu = ler_string_info(dados, sizeof(dados));
+
+        if(leu){
+            
+            int convertido = converte_data(dados, data_usuario);
+
+            if(convertido){
+                valido = validar_data_com_mensagem(data_usuario);
+            }else {
+                printf("Erro nos dados! Formato inadequado.\n");
+            }
+        } else{
+            printf("Erro na leitura da data assinatura!\n");
+        }
+    } while(!valido); // enquanto o nasci_valido for igual a zero
+    return valido;
 }
 
 // ------ cpf ----------

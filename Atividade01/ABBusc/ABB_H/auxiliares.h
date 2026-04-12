@@ -19,4 +19,7 @@ int pega_cpf(char *cpf);
 int endereco_eh_valido(const char *endereco);
 char *pega_endereco();
 
+int isbn_eh_valido(const char *codigo);
+int pega_isbn(char *codigo);
+
 #endif

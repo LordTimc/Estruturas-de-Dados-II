@@ -228,3 +228,46 @@ char *pega_endereco() {
 
     } while (1);
 }
+
+// ------ ISBN --------
+
+int isbn_eh_valido(const char *codigo){
+    int valido = 0;
+
+    // se o isbn nao for nulo e tiver menos de 3 caracteres
+    if (codigo && strlen(codigo) == 2){
+        // assume que tudo é valido
+        valido = 1; 
+
+        for (int i = 0; i < strlen(codigo) && valido; i++){
+            if (!isdigit(codigo[i])){
+                // se algum caractere não for dígito, então deixa de ser valido
+                valido = 0;
+            }
+        }
+    }  
+    return valido;
+}
+
+int pega_isbn(char *codigo){
+    
+    char dados_isbn[3];
+    int isbn_valido = 0;
+
+    do {
+        printf("Entre com o codigo do isbn nesse formato (xx): ");
+        int leu = ler_string_info(dados_isbn, sizeof(dados_isbn));
+
+        if(leu){
+            if(isbn_eh_valido(dados_isbn)){
+                strcpy(codigo, dados_isbn);
+                isbn_valido = 1;
+            }else {
+                printf("Erro no codigo do ISBN! O codigo tem que possuir 2 digitos numericos.\n");
+            }
+        } else{
+            printf("Erro na leitura do codigo do isbn!\n");
+        }
+    } while(!isbn_valido); // enquanto o cpf_valido for igual a zero
+    return isbn_valido;
+}

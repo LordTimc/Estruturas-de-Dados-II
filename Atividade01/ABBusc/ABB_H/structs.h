@@ -74,7 +74,7 @@ typedef struct livro {
 typedef struct genero {
     int codigo;
     char nome[50];
-    Livro *arvore_livros;   // ponteiro para árvore de livros daquele gênero
+    Livro *colecao_livros;   // ponteiro para árvore de livros daquele gênero
 } Genero;
 
 Genero lista_generos[MAX_GENEROS];

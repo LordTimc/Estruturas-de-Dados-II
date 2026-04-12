@@ -143,32 +143,38 @@ int mostrar_livros_da_arvore(Livro *r){
   - int codigoGenero: O código do gênero que o usuário deseja buscar (passagem por valor).
  
  */
+/*
+ * Função Principal: mostrar_livros_por_genero
+ * Versão sem comandos de salto (break/continue).
+ */
 void mostrar_livros_por_genero(Genero lista[], int qtd, int codigo_genero) {
     int encontrou_genero = 0;
+    int i = 0;
 
-    // Percorre o vetor de gêneros
-    for (int i = 0; i < qtd; i++) {
-        // Verifica se é o gênero que estamos procurando
+    // O laço continua enquanto não percorrer todo o vetor E não encontrar o gênero
+    while (i < qtd && !encontrou_genero) {
+        
+        // Verifica se o código atual corresponde ao buscado
         if (lista[i].codigo == codigo_genero) {
-            encontrou_genero = 1;
+            encontrou_genero = 1; // Altera a flag para 1, o que fará o laço parar na próxima verificação
             
             printf("\n--- Livros do Genero: %s ---\n", lista[i].nome);
             
-            // Verifica se a árvore de livros deste gênero está vazia
-            if (lista[i].arvore_livros == NULL) {
-                printf("Nenhum livro cadastrado nesta arvore.\n");
-            } else {
-                // Chama a função auxiliar para imprimir os livros
-                mostrar_livros_da_arvore(lista[i].arvore_livros);
-            }
+            /* * Chamamos a função auxiliar e verificamos o retorno.
+             * Se a árvore estiver vazia, ela retorna 0.
+             */
+            int imprimiu = mostrar_livros_da_arvore(lista[i].colecao_livros);
             
-            // Como já encontrou o gênero, podemos parar a busca no vetor
-            break; 
+            if (imprimiu == 0) {
+                printf("Nenhum livro cadastrado neste genero.\n");
+            }
         }
+        
+        i++; // Incremento manual do índice
     }
 
-    // Se o laço terminar e a flag continuar 0, o gênero não existe
-    if (encontrou_genero == 0) {
+    // Validação final caso o gênero não exista no cadastro
+    if (!encontrou_genero) {
         printf("Erro: Genero com o codigo %d nao foi encontrado.\n", codigo_genero);
     }
 }

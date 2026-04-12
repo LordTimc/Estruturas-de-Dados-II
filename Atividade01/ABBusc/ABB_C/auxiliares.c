@@ -150,7 +150,7 @@ int pega_data_nasci(data_nasci *data_usuario){
                 printf("Erro nos dados! Formato inadequado.\n");
             }
         } else{
-            printf("Erro na leitura!\n");
+            printf("Erro na leitura da data de nascimento!\n");
         }
     } while(!nasci_valido); // enquanto o nasci_valido for igual a zero
     return nasci_valido;
@@ -195,7 +195,7 @@ int pega_cpf(char *cpf){
                 printf("Erro no CPF! O CPF tem que possuir 11 digitos e que sejam numeros.\n");
             }
         } else{
-            printf("Erro na leitura!\n");
+            printf("Erro na leitura o cpf!\n");
         }
     } while(!cpf_valido); // enquanto o cpf_valido for igual a zero
     return cpf_valido;
@@ -205,4 +205,28 @@ int pega_cpf(char *cpf){
 
 int endereco_eh_valido(const char *endereco){
     return (endereco && strlen(endereco) > 0);
+}
+
+// essa função pega o endereço do usuário
+int pega_endereco(char *endereco){
+    char dados_ender[100];
+    int valido = 0;
+
+    do {
+        printf("Entre com o endereco: ");
+        int leu = ler_string_info(dados_ender, sizeof(dados_ender));
+
+        if(leu) {
+            if (endereco_eh_valido(dados_ender)){
+                strcpy(endereco, dados_ender);
+                valido = 1;
+            }else {
+                printf("Erro! O endereco nao pode ser vazio.\n");
+            }
+        }else {
+            printf("Erro na leitura do endereco");
+        }
+    } while (!valido);
+
+    return valido;
 }

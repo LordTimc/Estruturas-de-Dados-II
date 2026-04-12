@@ -24,4 +24,7 @@ int pega_isbn(char *codigo);
 
 int pega_edicao(char *codigo);
 
+int num_inteiro();
+float num_decimal();
+
 #endif

@@ -295,3 +295,33 @@ int pega_edicao(char *codigo){
     } while(!valido); // enquanto o cpf_valido for igual a zero
     return valido;
 }
+
+// ------- inteiros e decimais -----
+
+// Função valida e limpa os dados do buffer
+int num_inteiro(){
+    int inteiro = 0;
+
+    while (scanf("%d", &inteiro) != 1 || inteiro < 0)
+    {
+        printf("Numero invalido ");
+        printf("Digite novamente: ");
+        limpar_dados_buffer();
+    }
+    limpar_dados_buffer();
+
+    return inteiro;
+}
+
+float num_decimal(){
+    float decimal = 0;
+
+    while (scanf("%f", &decimal) != 1 || decimal < 0)
+    {
+        printf("Numero invalido ");
+        printf("Digite novamente: ");
+        limpar_dados_buffer();
+    }
+    limpar_dados_buffer();
+    return decimal;
+}

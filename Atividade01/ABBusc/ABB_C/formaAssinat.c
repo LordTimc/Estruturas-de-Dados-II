@@ -24,6 +24,93 @@ forma_ass *aloca_forma_assinatura(){
     }
     return novo;           
 }
+
+// Função para criar o vetor de códigos dentro da struct
+int *alocar_vetor_generos(int qtd){
+    int *aux = NULL;
+    if (qtd > 0){
+        aux = (int*) malloc(qtd * sizeof(int));
+        if(aux == NULL)
+            printf("Erro! Falha ao alocar memoria para o vetor de generos.\n");
+    };
+    return aux;
+}
+
+// Função para inserir um nó já pronto na lista
+forma_ass* inserir_na_lista(forma_ass* lista, forma_ass* novo){
+    forma_ass* retorno = lista;
+    if (novo != NULL) {
+        novo->prox = lista;
+        retorno = novo;
+    }
+    return retorno;
+}
+
+forma_ass* cad_forma_assinatura(forma_ass *lista, int qtd_generos_sistema){
+    forma_ass *retorno = lista; 
+    forma_ass *novo = NULL;
+    char *texto_limpo = NULL;
+    int cadastrou = 0;
+
+    if (qtd_generos_sistema > 0) {
+        novo = alocar_forma_assinatura();
+        
+        if (novo != NULL) {
+            // --- Leitura de Dados Básicos ---
+            printf("Codigo: "); 
+            novo->codigo = num_inteiro();
+            printf("Qtd Livros: ");
+            novo->qtd_livros_mensais = num_inteiro();
+            printf("Qtd Generos: "); 
+            novo->qtd_generos_mensais = num_inteiro();
+
+            // Alocação do vetor interno
+            novo->generos_escolhidos = alocar_vetor_generos(novo->qtd_generos_mensais);
+            
+            // Verificamos se o vetor de gêneros foi alocado com sucesso
+            if (novo->generos_escolhidos != NULL) {
+                for (int i = 0; i < novo->qtd_generos_mensais; i++) {
+                    printf("Codigo do %do genero: ", i + 1);
+                    novo->generos_escolhidos[i] = num_inteiro();
+                }
+
+                printf("Encadernacao: ");
+                texto_limpo = leitura_de_string(); 
+
+                if (texto_limpo != NULL) {
+                    strncpy(novo->tipo_encadern, texto_limpo, 49);
+                    novo->tipo_encadern[49] = '\0';
+                    
+                    printf("Valor Mensal: "); 
+                    novo->valor_mensal = num_decimal();
+                    novo->valor_anual = novo->valor_mensal * 12;
+
+                    // Se chegou aqui, tudo deu certo!
+                    cadastrou = 1; 
+                }
+            }
+        }
+    } else {
+        printf("Erro: Nenhum genero cadastrado no sistema.\n");
+    }
+
+    // --- Lógica Pós-Processamento ---
+    if (cadastrou) {
+        retorno = inserir_na_lista(lista, novo);
+        printf("Assinatura cadastrada com sucesso!\n");
+    } else {
+        // Se algo falhou, precisamos limpar o que foi alocado
+        if (novo != NULL) {
+            if (novo->generos_escolhidos != NULL) free(novo->generos_escolhidos);
+            free(novo);
+        }
+    }
+
+    // Limpeza obrigatória de variáveis auxiliares de leitura
+    if (texto_limpo != NULL) free(texto_limpo);
+
+    return retorno; 
+}
 /* Insere uma nova forma de assinatura no final da lista dinâmica, Valida se existe pelo menos um gênero cadastrado e impede códigos de forma repetidos.
  
  Parâmetros:
@@ -35,44 +122,6 @@ forma_ass *aloca_forma_assinatura(){
   - float valorMensal, valorAnual
  
  */
-
-forma_ass* cad_forma_assinatura(forma_ass *lista, int qtd_generos_existentes) {
-    // Validação: precisa ter pelo menos um gênero no sistema
-    if (qtd_generos_existentes){
-        forma_ass *novo = alocar_forma_assinatura();
-        if (novo == NULL) return lista;
-
-        printf("Codigo da Assinatura: ");
-        scanf("%d", &novo->codigo);
-        
-        printf("Qtd. Livros Mensais: ");
-        scanf("%d", &novo->qtd_livros_mensais);
-        
-        printf("Qtd. Generos Mensais: ");
-        scanf("%d", &novo->qtd_generos_mensais);
-
-        // Alocação do vetor dinâmico de códigos de gêneros dentro da assinatura
-        novo->generos_escolhidos = (int*) malloc(novo->qtd_generos_mensais * sizeof(int));
-        
-        for (int i = 0; i < novo->qtd_generos_mensais; i++) {
-            printf("Digite o codigo do %do genero: ", i + 1);
-            scanf("%d", &novo->generos_escolhidos[i]);
-        }
-
-        printf("Tipo de encadernacao: ");
-        scanf(" %[^\n]", novo->tipo_encadern); // Lê string com espaços
-        
-        printf("Valor Mensal: ");
-        scanf("%f", &novo->valor_mensal);
-        novo->valor_anual = novo->valor_mensal * 12; // Cálculo automático
-
-        // Inserção no início da lista (mais simples em lista encadeada)
-        novo->prox = lista;
-        return novo;
-    }
-       
-}
-
 
 
 /*

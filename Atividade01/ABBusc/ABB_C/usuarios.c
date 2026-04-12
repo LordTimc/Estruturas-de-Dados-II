@@ -22,9 +22,8 @@ Usuario *aloca_usuario (char *cpf, char *nome, char *endereco, data_nasci data){
     return (novo_usuario);
 }
 
-/* **raiz: Ponteiro duplo para a raiz da árvore. Escolhido (passagem por referência) 
-  porque precisamos modificar o ponteiro real da árvore no `main` quando alocamos um novo nó.
- * - char *cpf, *nome, *endereco, *dataNasc: Dados do usuário a serem inseridos (passagem por valor/ponteiro de array).*/
+
+/* - char *cpf, *nome, *endereco, *dataNasc: Dados do usuário a serem inseridos (passagem por valor/ponteiro de array).*/
 Usuario *cadastrar_assinante(Usuario *usuario) {
 
     char cpf[12];
@@ -35,23 +34,33 @@ Usuario *cadastrar_assinante(Usuario *usuario) {
     int cadastrou = 0; 
 
     printf("==== Informacoes do assinante====");
-    printf("\nDigite o nome: ");
-    nome = leitura_de_string();
 
-    if(nome != NULL){
-        cadastrou = pega_cpf(cpf);
-        if(cadastrou){
-            cadastrou = pega_data_nasci(&data);
-            usuario = aloca_usuario(cpf, nome, endereco, data);
+    if(pega_cpf(cpf)){
+
+        printf("\nDigite o nome: ");
+        nome = leitura_de_string();
+        
+        if(nome != NULL){
+            endereco = pega_endereco();    
+            if(endereco != NULL && pega_data_nasci(&data)){
+                usuario = aloca_usuario(cpf, nome, endereco, data);
+                cadastrou = 1;
+
+                free(nome);
+                free(endereco);
+            }
         }
     }
 
-    if(!cadastrou && nome != NULL){
-        free(nome);
+    if(!cadastrou){
+        if(nome) free(nome);
+        if(endereco) free(endereco);
     }
     return usuario;
 }
-
+/* **raiz: Ponteiro duplo para a raiz da árvore. Escolhido (passagem por referência) 
+  porque precisamos modificar o ponteiro real da árvore no `main` quando alocamos um novo nó.*/
+  
     // Verifica se chegamos em um nó folha/vazio
     if (raiz == NULL) {
         // Define o status como sucesso

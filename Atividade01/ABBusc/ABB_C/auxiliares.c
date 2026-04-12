@@ -203,30 +203,28 @@ int pega_cpf(char *cpf){
 
 // ------- endereço-----------
 
-int endereco_eh_valido(const char *endereco){
-    return (endereco && strlen(endereco) > 0);
+int endereco_eh_valido(const char *ender){
+    return (ender && strlen(ender) > 0);
 }
 
 // essa função pega o endereço do usuário
-int pega_endereco(char *endereco){
-    char dados_ender[100];
-    int valido = 0;
+char *pega_endereco() {
+    char *ender = NULL;
 
     do {
         printf("Entre com o endereco: ");
-        int leu = ler_string_info(dados_ender, sizeof(dados_ender));
+        ender = leitura_de_string();
 
-        if(leu) {
-            if (endereco_eh_valido(dados_ender)){
-                strcpy(endereco, dados_ender);
-                valido = 1;
-            }else {
+        if (ender != NULL) {
+            if (endereco_eh_valido(ender)) {
+                return ender; // já retorna pronto
+            } else {
                 printf("Erro! O endereco nao pode ser vazio.\n");
+                free(ender); // evita vazamento
             }
-        }else {
-            printf("Erro na leitura do endereco");
+        } else {
+            printf("Erro na leitura do endereco\n");
         }
-    } while (!valido);
 
-    return valido;
+    } while (1);
 }

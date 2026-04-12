@@ -17,6 +17,6 @@ int cpf_eh_valido(const char *cpf);
 int pega_cpf(char *cpf);
 
 int endereco_eh_valido(const char *endereco);
-int pega_endereco(char *endereco);
+char *pega_endereco();
 
 #endif

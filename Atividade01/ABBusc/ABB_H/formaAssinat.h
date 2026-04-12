@@ -16,4 +16,4 @@ forma_ass* cad_forma_assinatura(forma_ass *lista, int qtd_generos_sistema);
 void mostrar_assinaturas_por_forma(Assinatura *raiz, int codigo_forma);
 
 // Função para mostrar todas as formas de assinatura cadastradas
-void mostrar_formas_assinatura(forma_ass *inicio);
+void mostrar_formas_assinatura(forma_ass *lista);

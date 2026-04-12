@@ -167,21 +167,34 @@ void mostrar_assinaturas_por_forma(Assinatura *raiz, int codigo_forma) {
  * Usar uma cópia do ponteiro nos permite percorrer a lista sem perder a referência original no 'main'.
  
  */
-void mostrar_formas_assinatura(forma_ass *inicio) {
-    // Verifica se a lista está vazia antes de tentar imprimir
-    if (inicio == NULL) {
-        printf("Nenhuma forma de assinatura cadastrada no momento.\n");
-    } else {
-        // Cria um ponteiro auxiliar para percorrer a lista
-        forma_ass *atual = inicio;
+void mostrar_formas_assinatura(forma_ass *lista){
+    forma_ass *aux = lista;
+    printf("\n========= FORMAS DE ASSINATURA CADASTRADAS =========\n");
 
-        while (atual != NULL) {
-            printf("--------------------------------------------------\n");
-            printf("Codigo da Forma: %d\n", atual->codigo);
-            printf("Valor Mensal: R$ %.2f\n", atual->valor_mensal);
-            printf("Valor Anual: R$ %.2f\n", atual->valor_anual);
+    if (aux == NULL){
+        printf("Nenhuma assinatura cadastrada no sistema.\n");
+    }else{
+        while (aux != NULL) {
+            printf("Codigo: %d\n", aux->codigo);
+            printf("Tpo de Encadernacao: %s\n", aux->tipo_encadern);
+            printf("Quantidade de Livros Mensais: %d\n", aux->qtd_livros_mensais);
             
-            atual = atual->prox;
+            // Exibindo os gêneros escolhidos (vetor dinâmico interno)
+            printf("Generos (%d): ", aux->qtd_generos_mensais);
+            if (aux->generos_escolhidos != NULL){
+                for (int i = 0; i < aux->qtd_generos_mensais; i++){
+                    printf("[%d] ", aux->generos_escolhidos[i]);
+                }
+            }
+            printf("\n");
+
+            // Exibindo os valores financeiros
+            printf("Valor Mensal: R$ %.2f\n", aux->valor_mensal);
+            printf("Valor Anual:  R$ %.2f\n", aux->valor_anual);
+            
+            printf("--------------------------------------------------\n");
+            aux = aux->prox; // Avança para o próximo nó da lista
         }
     }
+    printf("====================================================\n");
 }

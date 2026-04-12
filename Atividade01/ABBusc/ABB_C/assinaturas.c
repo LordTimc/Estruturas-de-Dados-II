@@ -7,6 +7,36 @@
 #include "../ABB_H/assinaturas.h"
 #include "../ABB_H/auxiliares.h"
 
+
+Assinatura* alocar_assinatura(){
+    // Inicializa o ponteiro como NULL 
+    Assinatura *novo = (Assinatura*) malloc(sizeof(Assinatura));
+
+    if (novo != NULL) {
+        // Inicialização de strings para evitar lixo de memória
+        strcpy(novo->cpf_usuario, "");
+        
+        // Inicialização de valores numéricos
+        novo->codigo_forma = 0;
+        novo->valor = 0.0;
+
+        // Inicialização de structs internas
+        novo->data_assinatura.dia = 0;
+        novo->data_assinatura.mes = 0;
+        novo->data_assinatura.ano = 0;
+
+        novo->data_vencimento.dia = 0;
+        novo->data_vencimento.mes = 0;
+        novo->data_vencimento.ano = 0;
+
+        novo->esq = NULL;
+        novo->dir = NULL;
+    } else {
+        printf("Erro! Falha na alocacao de memoria para Assinatura.\n");
+    }
+    return novo; 
+}
+
 /*
  Insere uma nova assinatura na árvore binária, organizada pelo CPF do assinante.
  * Impede cadastros de CPFs repetidos.

@@ -1,0 +1,14 @@
+#ifndef MAIN_H
+#define MAIN_H
+#include "assinaturas.h"
+#include "auxiliares.h"
+#include "formaAssinat.h"
+#include "generos.h"
+#include "livros.h"
+#include "structs.h"
+#include "usuarios.h"
+
+void menu_das_opcoes();
+void menu();
+
+#endif

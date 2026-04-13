@@ -10,7 +10,7 @@
 #include "../ABB_H/structs.h"
 #include "../ABB_H/auxiliares.h"
 
-void menu(){
+void menu_das_opcoes(){
     printf("\n 1 - Cadastrar Assinantes\n");
     printf("\n 2 - Cadastrar Forma de Assinaturas\n");
     printf("\n 3 - Cadastrar Assinaturas\n");
@@ -27,4 +27,8 @@ void menu(){
     printf("\n 14 - Remover uma assinatura dado o CPF do assinante\n");
     printf("\n 15 - Remover um assinante pelo CPF do assinante\n");
     printf("\n 0 - Finalizar tudo\n");
+}
+
+void menu(){
+    
 }

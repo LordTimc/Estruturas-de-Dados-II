@@ -21,13 +21,7 @@ Assinatura* alocar_assinatura(){
         novo->valor = 0.0;
 
         // Inicialização de structs internas
-        novo->data_assinatura.dia = 0;
-        novo->data_assinatura.mes = 0;
-        novo->data_assinatura.ano = 0;
-
-        novo->data_vencimento.dia = 0;
-        novo->data_vencimento.mes = 0;
-        novo->data_vencimento.ano = 0;
+        
 
         novo->esq = NULL;
         novo->dir = NULL;
@@ -49,54 +43,64 @@ Assinatura* alocar_assinatura(){
  * - int codigoForma, float valor: Dados numéricos (passagem por valor).
 */
 
-Assinatura* cadastrar_assinatura(Assinatura *r){
+void cadastrar_assinatura(Assinatura **r){
     char cpf_aux[12];
     int cadastrou = 0;
     Assinatura *novo_no = NULL;
 
-    printf("--- Nova Assinatura ---\n");
+    printf("\n--- Nova Assinatura ---\n");
 
-    // Primeiro: Valida os dados
+    // 1. Valida o CPF antes de qualquer alocação
     if (pega_cpf(cpf_aux)) {
         
-        // Segundo: Aloca o espaço
+        // 2. Aloca e inicializa o nó (Responsabilidade Única)
         novo_no = alocar_assinatura();
 
         if (novo_no != NULL) {
-            // Terceiro: Transfere os dados validados para a struct
+            // 3. Preenchimento dos dados com verificações em cascata
             strcpy(novo_no->cpf_usuario, cpf_aux);
             
-            // Aqui você pediria o código da forma, as datas, etc.
             printf("Digite o codigo da forma de assinatura: ");
             novo_no->codigo_forma = num_inteiro();
 
             printf("Data de Inicio da assinatura:\n");
-            if (pega_data(&novo_no->data_assinatura)){
+            if (pega_data(&novo_no->data_assinatura)) {
 
                 printf("Data de Vencimento da assinatura:\n");
-                if (pega_data(&novo_no->data_vencimento)){
+                if (pega_data(&novo_no->data_vencimento)) {
                     
                     printf("Valor da Assinatura: ");
                     novo_no->valor = num_decimal();
+                    
+                    // Se o fluxo chegou aqui, todos os dados são válidos
+                    cadastrou = 1;
                 }
             }
-            cadastrou = 1;
         }
     }
 
+    // 4. Finalização
     if (cadastrou) {
-        // Quarto: Insere na Árvore de Busca (ABB)
-        r = inserir_na_arvore(r, novo_no); 
-        printf("Assinatura realizada com sucesso!\n");
+        // Chamada compatível com a sua função de ponteiro duplo
+        // Note que passamos 'r' diretamente, pois 'r' já é Assinatura**
+        if (inserir_assinatura(r, novo_no)) {
+            printf("Assinatura realizada com sucesso!\n");
+        } else {
+            // Caso a função de inserção retorne 0 (ex: CPF duplicado)
+            // A própria função 'inserir_assinatura' já deu free(novo_no) conforme seu código
+            printf("Erro: Nao foi possivel inserir na arvore.\n");
+        }
     } else {
-        if (novo_no) free(novo_no); // Limpa se algo deu errado no meio
+        // Se o erro foi na leitura dos dados (antes da inserção), limpamos aqui
+        if (novo_no != NULL) {
+            free(novo_no);
+        }
+        printf("Cadastro cancelado ou dados invalidos.\n");
     }
-
-    return r;
 }
 
 
-int *inserir_assintura(Assinatura **raiz, Assinatura *novo){
+int *inserir_assinatura(Assinatura **raiz, Assinatura *novo){
     int inseriu = 1;
     // Caso base: se chegamos em uma folha (ou árvore vazia),
     // o ponteiro 'raiz' recebe o 'novo' nó.
@@ -133,22 +137,31 @@ int *inserir_assintura(Assinatura **raiz, Assinatura *novo){
  sem alterar a estrutura ou os nós da árvore original.
  
  */
-void mostrar_assinaturas(Assinatura *raiz) {
-    
+void mostrar_assinaturas(Assinatura *raiz){
     if (raiz != NULL) {
-        
-        // 1º Passo: Visita a subárvore esquerda (CPFs menores)
+        // 1. Visita a subárvore da esquerda (Recursão)
         mostrar_assinaturas(raiz->esq);
+
+        // 2. Exibe os dados do nó atual
+        printf("\n-------------------------------------------");
+        printf("\nCPF do Assinante: %s", raiz->cpf_usuario);
+        printf("\nCodigo da Forma:  %d", raiz->codigo_forma);
         
-        // 2º Passo: Imprime os dados do nó atual (a raiz deste momento)
-        printf("--------------------------------------------------\n");
-        printf("cpf do assinante: %s\n", raiz->cpf_usuario);
-        printf("codigo da forma: %d\n", raiz->codigo_forma);
-        printf("data da assinatura: %s\n", raiz->data_assinatura);
-        printf("data de vencimento: %s\n", raiz->data_vencimento);
-        printf("valor: r$ %.2f\n", raiz->valor);
+        // Exibição das Datas (formatadas com %02d para garantir 2 dígitos)
+        printf("\nData Assinatura:  %02d/%02d/%04d", 
+                raiz->data_assinatura.dia, 
+                raiz->data_assinatura.mes, 
+                raiz->data_assinatura.ano);
         
-        // 3º Passo: Visita a subárvore direita (CPFs maiores)
+        printf("\nData Vencimento:  %02d/%02d/%04d\n", 
+                raiz->data_vencimento.dia, 
+                raiz->data_vencimento.mes, 
+                raiz->data_vencimento.ano);
+        
+        printf("\nValor:            R$ %.2f", raiz->valor);
+        printf("\n-------------------------------------------");
+
+        // 3. Visita a subárvore da direita (Recursão)
         mostrar_assinaturas(raiz->dir);
     }
 }
@@ -162,34 +175,33 @@ void mostrar_assinaturas(Assinatura *raiz) {
   - char *cpf: O CPF (string) informado pelo usuário para a busca.
  
  */
-void mostrar_vencimento_assinatura(Assinatura *raiz, char *cpf) {
-    Assinatura *atual = raiz;
-    int encontrou = 0; // Flag para saber se achou o assinante
+int mostrar_vencimento_assinatura_cpf(Assinatura *raiz, char *cpf){
+    int encontrou = 0;
 
-    while (atual != NULL) {
-        // Compara o CPF procurado com o CPF do nó atual
-        int comparacao = strcmp(cpf, atual->cpf_usuario);
-
-        if (comparacao == 0) {
-            // Encontrou a assinatura do usuário!
+    if (raiz != NULL) 
+    {
+        if (strcmp(cpf, raiz->cpf_usuario) == 0) 
+        {
+            //Exibe os dados se encontrar
             printf("--------------------------------------------------\n");
-            printf("assinante cpf: %s\n", atual->cpf_usuario);
-            printf("data de vencimento: %s\n", atual->data_vencimento);
-            
-            encontrou = 1;
-            break; // Pode parar o laço, pois já achamos o que queríamos e não há CPFs repetidos
-            
-        } else if (comparacao < 0) {
-            // Se o CPF buscado for "menor", vai para a esquerda
-            atual = atual->esq;
-        } else {
-            // Se o CPF buscado for "maior", vai para a direita
-            atual = atual->dir;
+            printf("Assinante CPF: %s\n", raiz->cpf_usuario);
+            printf("\nData Vencimento:  %02d/%02d/%04d\n", 
+                raiz->data_vencimento.dia, 
+                raiz->data_vencimento.mes, 
+                raiz->data_vencimento.ano);
+            printf("--------------------------------------------------\n");
+            encontrou = 1; 
+        } 
+        else if (strcmp(cpf, raiz->cpf_usuario) < 0) 
+        {
+            // Busca na subárvore esquerda
+            encontrou = mostrar_vencimento_assinatura_cpf(raiz->esq, cpf);
+        } 
+        else 
+        {
+            // Busca na subárvore direita
+            encontrou = mostrar_vencimento_assinatura_cpf(raiz->dir, cpf);
         }
     }
-
-    // Se o laço terminou e a flag continua 0, a assinatura não existe
-    if (encontrou == 0) {
-        printf("aviso: nenhuma assinatura encontrada para o cpf %s.\n", cpf);
-    }
+    return encontrou;
 }

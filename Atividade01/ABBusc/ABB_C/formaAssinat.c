@@ -37,7 +37,7 @@ int *alocar_vetor_generos(int qtd){
 }
 
 // Função para inserir um nó já pronto na lista
-forma_ass* inserir_na_lista(forma_ass* lista, forma_ass* novo){
+forma_ass *inserir_na_lista(forma_ass* lista, forma_ass* novo){
     forma_ass* retorno = lista;
     if (novo != NULL) {
         novo->prox = lista;
@@ -46,7 +46,7 @@ forma_ass* inserir_na_lista(forma_ass* lista, forma_ass* novo){
     return retorno;
 }
 
-forma_ass* cad_forma_assinatura(forma_ass *lista, int qtd_generos_sistema){
+forma_ass *cad_forma_assinatura(forma_ass *lista, int qtd_generos_sistema){
     forma_ass *retorno = lista; 
     forma_ass *novo = NULL;
     char *texto_limpo = NULL;
@@ -135,24 +135,31 @@ forma_ass* cad_forma_assinatura(forma_ass *lista, int qtd_generos_sistema){
   int codigo_forma: O código numérico da forma que queremos filtrar (passagem por valor).
 */
 
-void mostrar_assinaturas_por_forma(Assinatura *raiz, int codigo_forma) {
-    
+void mostrar_assinaturas_por_forma(Assinatura *raiz, int codigo_busca){
+    int encontrou = 0;
     if (raiz != NULL) {
-        
-        // 1º Passo: Visita toda a subárvore esquerda
-        mostrar_assinaturas_por_forma(raiz->esq, codigo_forma);
-        
-        // 2º Passo: Verifica se o nó atual (raiz deste momento) possui o código desejado
-        if (raiz->codigo_forma == codigo_forma) {
-            printf("--------------------------------------------------\n");
-            printf("CPF do Assinante: %s\n", raiz->cpf_usuario);
-            printf("Data da Assinatura: %s\n", raiz->data_assinatura);
-            printf("Data de Vencimento: %s\n", raiz->data_vencimento);
-            printf("Valor: R$ %.2f\n", raiz->valor);
+        // 1. Visita a subárvore da esquerda
+        mostrar_assinaturas_por_forma(raiz->esq, codigo_busca);
+
+        // 2. Verifica se o nó atual corresponde à busca
+        if (raiz->codigo_forma == codigo_busca){
+            encontrou = 1;
+            printf("\n-------------------------------------------");
+            printf("\nCPF do Assinante: %s", raiz->cpf_usuario);
+            printf("\nData Assinatura:  %02d/%02d/%04d", 
+                    raiz->data_assinatura.dia, 
+                    raiz->data_assinatura.mes, 
+                    raiz->data_assinatura.ano);
+            printf("\nData Vencimento:  %02d/%02d/%04d", 
+                    raiz->data_vencimento.dia, 
+                    raiz->data_vencimento.mes, 
+                    raiz->data_vencimento.ano);
+            printf("\nValor:            R$ %.2f", raiz->valor);
+            printf("\n-------------------------------------------");
         }
-        
-        // 3º Passo: Visita toda a subárvore direita
-        mostrar_assinaturas_por_forma(raiz->dir, codigo_forma);
+
+        // 3. Visita a subárvore da direita
+        mostrar_assinaturas_por_forma(raiz->dir, codigo_busca);
     }
 }
 

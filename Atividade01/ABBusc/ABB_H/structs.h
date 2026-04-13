@@ -3,7 +3,7 @@
 
 typedef struct data_nasci Data;
 typedef struct usuario Usuario;
-typedef struct forma_da_ass forma_da_ass;
+typedef struct forma_ass forma_ass;
 typedef struct assinatura Assinatura;
 typedef struct livro Livro;
 typedef struct genero Genero;
@@ -77,8 +77,4 @@ typedef struct assinatura {
     struct assinatura *esq, *dir;
 } Assinatura;
 
-
-
-
 #endif
-

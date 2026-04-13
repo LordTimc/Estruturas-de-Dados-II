@@ -14,3 +14,6 @@ int mostrar_livros_da_arvore(Livro *r);
 
 // Função principal para buscar um gênero e mostrar seus livros
 void mostrar_livros_por_genero(Genero lista[], int qtd, int codigo_genero);
+
+// Função para liberar os nó e depois a raiz.
+void liberar_arvore_usuario(Usuario *raiz);

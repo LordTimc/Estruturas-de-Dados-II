@@ -22,3 +22,6 @@ int dois_filhos(Usuario *r);
 
 // Função remove assinante
 int remove_assinant(Usuario **r, char *cpf);
+
+// Função para liberar os nó e depois a raiz.
+void liberar_arvore_usuario(Usuario *raiz);

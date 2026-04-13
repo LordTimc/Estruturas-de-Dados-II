@@ -169,3 +169,12 @@ int remove_assinant(Usuario **r, char *cpf){
     }
     return removeu;
 }
+
+// Função para liberar os nó e depois a raiz.
+void liberar_arvore_usuario(Usuario *raiz){
+    if (raiz != NULL) {
+        liberar_arvore_usuario(raiz->esq);
+        liberar_arvore_usuario(raiz->dir);
+        free(raiz);
+    }
+}

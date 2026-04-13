@@ -9,6 +9,7 @@
 #include "usuarios.h"
 
 void menu_das_opcoes();
+void menu_da_repeticao();
 void menu();
 
 #endif

@@ -177,3 +177,12 @@ void mostrar_livros_por_genero(Genero lista[], int qtd_genero, int codigo_genero
         printf("Erro: Genero com o codigo %d nao foi encontrado.\n", codigo_genero);
     }
 }
+
+// Função para liberar os nó e depois a raiz
+void liberar_arvore_livros(Livro *raiz){
+    if (raiz != NULL) {
+        liberar_arvore_livros(raiz->esq);
+        liberar_arvore_livros(raiz->dir);
+        free(raiz);
+    }
+}

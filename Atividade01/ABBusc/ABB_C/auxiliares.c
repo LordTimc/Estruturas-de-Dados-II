@@ -7,6 +7,8 @@
 #include "../ABB_H/structs.h"
 #include "../ABB_H/auxiliares.h"
 
+// ----- Leitura de string -----
+
 char *leitura_de_string(){
     char buffer[256], *string;
     string = NULL;

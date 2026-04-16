@@ -13,6 +13,9 @@ void cadastrar_assinatura(Assinatura **r);
 // Função para inserir assinatura
 int *inserir_assinatura(Assinatura **raiz, Assinatura *novo);
 
+//função que verifica se o usuario possui alguma assinatura
+int possui_assinatura_vencida(Assinatura *raiz, char *cpf);
+
 // Função para mostrar todas as assinaturas cadastradas na árvore (Em Ordem)
 void mostrar_assinaturas(Assinatura *raiz);
 

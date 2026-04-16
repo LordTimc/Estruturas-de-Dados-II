@@ -126,8 +126,35 @@ int *inserir_assinatura(Assinatura **raiz, Assinatura *novo){
     return inseriu; 
 }
 
-/*
+int possui_assinatura_vencida(Assinatura *raiz, char *cpf) {
+    int resultado = 0;
+    Data hoje;
 
+    pegar_data_de_hoje(&hoje);
+
+    if (raiz != NULL) {
+
+        if (strcmp(cpf, raiz->cpf_usuario) == 0) {
+            // Verifica se está vencida
+            if (
+                (raiz->data_vencimento.ano < hoje.ano) ||
+                (raiz->data_vencimento.ano == hoje.ano && raiz->data_vencimento.mes < hoje.mes) ||
+                (raiz->data_vencimento.ano == hoje.ano && raiz->data_vencimento.mes == hoje.mes && raiz->data_vencimento.dia < hoje.dia)
+            ) {
+                resultado = 1; // está vencida
+            } else {
+                resultado = 0; // não está vencida
+            }
+        } else if (strcmp(cpf, raiz->cpf_usuario)< 0) {
+            resultado = possui_assinatura_vencida(raiz->esq, cpf);
+        } else {
+            resultado = possui_assinatura_vencida(raiz->dir, cpf);
+        }
+    }
+    return resultado;
+}
+
+/*
  * Percorre a árvore binária de assinaturas utilizando o método "Em Ordem" (Esquerda -> Raiz -> Direita).
  ordenadas pelo CPF do assinante.
  *

@@ -62,20 +62,19 @@ void cadastrar_assinatura(Assinatura **r){
 }
 
 int inserir_assinatura(Assinatura **raiz, Assinatura *novo){
+    int inseriu = 1;
+
     if (*raiz == NULL) {
         *raiz = novo;
-        return 1;
-    }
-
-    int inseriu = 0;
-    if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) == 0){
-        printf("Aviso: Assinatura ja existente para o CPF %s.\n", novo->cpf_usuario);
-        free(novo);
-        return 0;
-    } else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) < 0){
-        inseriu = inserir_assinatura(&(*raiz)->esq, novo);
-    } else {
-        inseriu = inserir_assinatura(&(*raiz)->dir, novo);
+    }else{
+        if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) == 0){
+            printf("Aviso: Assinatura ja existente para o CPF %s.\n", novo->cpf_usuario);
+            free(novo);
+        } else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) < 0){
+            inseriu = inserir_assinatura(&(*raiz)->esq, novo);
+        } else {
+            inseriu = inserir_assinatura(&(*raiz)->dir, novo);
+        }
     }
 
     if (!inseriu) return 0;

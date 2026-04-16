@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "suporteAVL.h"
+#include "../AVL_H/suporteAVL.h"
 
 int maior(int a, int b) { return (a > b) ? a : b; }
 

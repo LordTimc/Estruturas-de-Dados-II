@@ -1,7 +1,7 @@
 #ifndef ASSINATURAS_H
 #define ASSINATURAS_H
 
-#include "structs.h"
+#include "../AVL_H/structs.h"
 
 Assinatura* alocar_assinatura();
 void cadastrar_assinatura(Assinatura **r);

@@ -1,7 +1,7 @@
 #ifndef USUARIOS_H
 #define USUARIOS_H
 
-#include "structs.h"
+#include "../AVL_H/structs.h"
 
 Usuario *aloca_assinante(char *cpf, char *nome, char *endereco, Data data_nascimento);
 Usuario *cadastrar_assinante(Usuario *raiz);

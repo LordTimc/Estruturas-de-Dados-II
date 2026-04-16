@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "structs.h"
-#include "usuarios.h"
-#include "auxiliares.h"
-#include "suporteAVL.h"
+#include "../AVL_H/structs.h"
+#include "../AVL_H/usuarios.h"
+#include "../AVL_H/auxiliares.h"
+#include "../AVL_H/suporteAVL.h"
 
 Usuario *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nascimento){ 
     Usuario *novo_usuario = (Usuario *)malloc(sizeof(Usuario));

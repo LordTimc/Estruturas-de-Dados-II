@@ -2,10 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "structs.h"
-#include "usuarios.h"
-#include "auxiliares.h"
-#include "formaAssinat.h"
+#include "../AVL_H/formaAssinat.h"
+
 
 forma_ass *alocar_forma_assinatura(){
     forma_ass *novo = (forma_ass *) malloc(sizeof(forma_ass));

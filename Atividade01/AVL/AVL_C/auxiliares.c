@@ -5,8 +5,8 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-#include "structs.h"
-#include "auxiliares.h"
+#include "../AVL_H/structs.h"
+#include "../AVL_H/auxiliares.h"
 
 char *leitura_de_string(){
     char buffer[256], *string;

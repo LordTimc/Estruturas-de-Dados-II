@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "structs.h"
-#include "livros.h"
-#include "auxiliares.h"
-#include "suporteAVL.h"
+#include "../AVL_H/structs.h"
+#include "../AVL_H/livros.h"
+#include "../AVL_H/auxiliares.h"
+#include "../AVL_H/suporteAVL.h"
 
 Livro *aloca_livro(char *isbn, char *titulo, char *autor, char *editora, int edicao, int ano_publica){
     Livro *novo_livro = (Livro *)malloc(sizeof(Livro));

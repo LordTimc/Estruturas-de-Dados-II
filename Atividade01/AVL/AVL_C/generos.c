@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "structs.h"
-#include "generos.h"
-#include "auxiliares.h"
+#include "../AVL_H/generos.h"
+#include "../AVL_H/structs.h"
+#include "../AVL_H/auxiliares.h"
+#include "../AVL_H/suporteAVL.h"
 
 Genero criar_genero(int codigo_livro, char *nome_genero){
     Genero novo;

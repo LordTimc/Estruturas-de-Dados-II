@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "structs.h"
-#include "usuarios.h"
-#include "assinaturas.h"
-#include "auxiliares.h"
-#include "suporteAVL.h"
+#include "../AVL_H/structs.h"
+#include "../AVL_H/usuarios.h"
+#include "../AVL_H/assinaturas.h"
+#include "../AVL_H/auxiliares.h"
+#include "../AVL_H/suporteAVL.h"
 
 Assinatura* alocar_assinatura(){
     Assinatura *novo = (Assinatura*) malloc(sizeof(Assinatura));

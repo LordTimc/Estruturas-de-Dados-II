@@ -1,7 +1,7 @@
 #ifndef SUPORTE_AVL_H
 #define SUPORTE_AVL_H
 
-#include "structs.h"
+#include "../AVL_H/structs.h"
 
 int maior(int a, int b);
 

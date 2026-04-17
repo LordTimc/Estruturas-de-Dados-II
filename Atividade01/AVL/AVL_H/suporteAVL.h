@@ -26,7 +26,7 @@ Livro* rot_esq_liv(Livro *x);
 
 //Funções balanceamento
 Assinatura* balancear_ass(Assinatura *no);
-Assinante* balancear_usu(Assinante *no);
+Assinante* balancear_assinante(Assinante *no);
 Livro* balancear_liv(Livro *no);
 
 #endif

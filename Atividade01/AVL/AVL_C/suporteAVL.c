@@ -29,12 +29,12 @@ Assinatura* rot_esq_ass(Assinatura *x) {
 }
 
 // ================= USUÁRIOS =================
-int altura_usu(Usuario *no) { return (no == NULL) ? 0 : no->altura; }
-int fb_usu(Usuario *no) { return (no == NULL) ? 0 : altura_usu(no->esq) - altura_usu(no->dir); }
+int altura_usu(Assinante *no) { return (no == NULL) ? 0 : no->altura; }
+int fb_usu(Assinante *no) { return (no == NULL) ? 0 : altura_usu(no->esq) - altura_usu(no->dir); }
 
-Usuario* rot_dir_usu(Usuario *y) {
-    Usuario *x = y->esq;
-    Usuario *T2 = x->dir;
+Assinante* rot_dir_usu(Assinante *y) {
+    Assinante *x = y->esq;
+    Assinante *T2 = x->dir;
     x->dir = y;
     y->esq = T2;
     y->altura = maior(altura_usu(y->esq), altura_usu(y->dir)) + 1;
@@ -42,9 +42,9 @@ Usuario* rot_dir_usu(Usuario *y) {
     return x;
 }
 
-Usuario* rot_esq_usu(Usuario *x) {
-    Usuario *y = x->dir;
-    Usuario *T2 = y->esq;
+Assinante* rot_esq_usu(Assinante *x) {
+    Assinante *y = x->dir;
+    Assinante *T2 = y->esq;
     y->esq = x;
     x->dir = T2;
     x->altura = maior(altura_usu(x->esq), altura_usu(x->dir)) + 1;
@@ -108,7 +108,7 @@ Assinatura* balancear_ass(Assinatura *no) {
 }
 
 // ================= BALANCEAMENTO USUÁRIOS =================
-Usuario* balancear_usu(Usuario *no) {
+Assinante* balancear_assinante(Assinante *no) {
     if (no == NULL) return NULL;
 
     no->altura = maior(altura_usu(no->esq), altura_usu(no->dir)) + 1;

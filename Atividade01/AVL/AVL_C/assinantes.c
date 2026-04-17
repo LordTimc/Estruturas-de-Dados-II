@@ -71,7 +71,7 @@ int inserir_assinante(Assinante **raiz, Assinante *novo){
     if (!inseriu) return 0;
 
     // BALANCEAMENTO AVL
-    *raiz = balancear_usu(*raiz);
+    *raiz = balancear_assinante(*raiz);
     return inseriu; 
 }
 

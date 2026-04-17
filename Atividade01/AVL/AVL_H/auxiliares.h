@@ -22,5 +22,6 @@ int pega_isbn(char *codigo);
 int pega_edicao(int edicao); // Retorna inteiro
 int num_inteiro();
 float num_decimal();
+int comparar_datas(Data d1, Data d2);
 
 #endif

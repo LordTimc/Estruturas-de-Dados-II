@@ -237,3 +237,18 @@ float num_decimal(){
     limpa_dados_buffer();
     return decimal;
 }
+
+// Retorna < 0 se d1 for mais antiga, 0 se iguais, > 0 se d1 for no futuro
+int comparar_datas(Data d1, Data d2) {
+    int resultado = 0;
+    
+    if (d1.ano != d2.ano) {
+        resultado = d1.ano - d2.ano;
+    } else if (d1.mes != d2.mes) {
+        resultado = d1.mes - d2.mes;
+    } else {
+        resultado = d1.dia - d2.dia;
+    }
+    
+    return resultado;
+}

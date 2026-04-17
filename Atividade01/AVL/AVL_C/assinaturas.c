@@ -116,3 +116,62 @@ int mostrar_vencimento_assinatura_cpf(Assinatura *raiz, char *cpf){
     }
     return encontrou;
 }
+
+
+Assinatura* buscar_assinatura(Assinatura *raiz, char *cpf) {
+    Assinatura *encontrado = NULL; 
+
+    if (raiz != NULL) {
+        if (strcmp(cpf, raiz->cpf_usuario) == 0) {
+            encontrado = raiz;
+        } else if (strcmp(cpf, raiz->cpf_usuario) < 0) {
+            encontrado = buscar_assinatura(raiz->esq, cpf);
+        } else {
+            encontrado = buscar_assinatura(raiz->dir, cpf);
+        }
+    }
+    
+    return encontrado;
+}
+
+
+int remover_no_assinatura(Assinatura **r, char *cpf) {
+    int removeu = 0;
+
+    if (*r != NULL) {
+        if (strcmp(cpf, (*r)->cpf_usuario) < 0) {
+            removeu = remover_no_assinatura(&(*r)->esq, cpf);
+        } else if (strcmp(cpf, (*r)->cpf_usuario) > 0) {
+            removeu = remover_no_assinatura(&(*r)->dir, cpf);
+        } else {
+            if ((*r)->esq == NULL || (*r)->dir == NULL) {
+                Assinatura *temp = (*r)->esq ? (*r)->esq : (*r)->dir;
+                if (temp == NULL) {
+                    temp = *r;
+                    *r = NULL;
+                } else {
+                    **r = *temp; 
+                }
+                free(temp);
+            } else {
+                Assinatura *temp = (*r)->esq;
+                while (temp->dir != NULL) temp = temp->dir;
+                
+                strcpy((*r)->cpf_usuario, temp->cpf_usuario);
+                (*r)->codigo_forma = temp->codigo_forma;
+                (*r)->data_assinatura = temp->data_assinatura;
+                (*r)->data_vencimento = temp->data_vencimento;
+                (*r)->valor = temp->valor;
+                
+                removeu = remover_no_assinatura(&(*r)->esq, temp->cpf_usuario); 
+            }
+            removeu = 1; 
+        }
+
+        if (*r != NULL && removeu) {
+            *r = balancear_ass(*r);
+        }
+    }
+    
+    return removeu;
+}

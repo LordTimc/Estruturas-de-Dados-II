@@ -113,39 +113,42 @@ int dois_filhos(Usuario *r){
 }
 
 int remove_assinant(Usuario **r, char *cpf) {
-    int removeu = 1;
-    if (*r == NULL) return 0;
+    int removeu = 0;
 
-    if (strcmp(cpf, (*r)->cpf) < 0) {
-        removeu = remove_assinant(&(*r)->esq, cpf);
-    } else if (strcmp(cpf, (*r)->cpf) > 0) {
-        removeu = remove_assinant(&(*r)->dir, cpf);
-    } else {
-        if ((*r)->esq == NULL || (*r)->dir == NULL) {
-            Usuario *temp = (*r)->esq ? (*r)->esq : (*r)->dir;
-            if (temp == NULL) {
-                temp = *r;
-                *r = NULL;
-            } else {
-                **r = *temp; 
-            }
-            free(temp);
+    if (*r != NULL) {
+        if (strcmp(cpf, (*r)->cpf) < 0) {
+            removeu = remove_assinant(&(*r)->esq, cpf);
+        } else if (strcmp(cpf, (*r)->cpf) > 0) {
+            removeu = remove_assinant(&(*r)->dir, cpf);
         } else {
-            Usuario *temp = (*r)->esq;
-            while (temp->dir != NULL) temp = temp->dir;
-            strcpy((*r)->cpf, temp->cpf);
-            strcpy((*r)->nome, temp->nome);
-            strcpy((*r)->endereco, temp->endereco);
-            (*r)->nascimento = temp->nascimento;
-            removeu = remove_assinant(&(*r)->esq, temp->cpf);
+            if ((*r)->esq == NULL || (*r)->dir == NULL) {
+                Usuario *temp = (*r)->esq ? (*r)->esq : (*r)->dir;
+                if (temp == NULL) {
+                    temp = *r;
+                    *r = NULL;
+                } else {
+                    **r = *temp; 
+                }
+                free(temp);
+            } else {
+                Usuario *temp = (*r)->esq;
+                while (temp->dir != NULL) temp = temp->dir;
+                
+                strcpy((*r)->cpf, temp->cpf);
+                strcpy((*r)->nome, temp->nome);
+                strcpy((*r)->endereco, temp->endereco);
+                (*r)->nascimento = temp->nascimento;
+                
+                removeu = remove_assinant(&(*r)->esq, temp->cpf);
+            }
+            removeu = 1;
+        }
+
+        if (*r != NULL && removeu) {
+            *r = balancear_usu(*r);
         }
     }
-
-    if (*r == NULL) return removeu;
-
-    // BALANCEAMENTO PÓS-REMOÇÃO AVL
-    *r = balancear_usu(*r);
-
+    
     return removeu;
 }
 

@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../AVL_H/formaAssinat.h"
+#include "../AVL_H/auxiliares.h"
 
 
 forma_ass *alocar_forma_assinatura(){

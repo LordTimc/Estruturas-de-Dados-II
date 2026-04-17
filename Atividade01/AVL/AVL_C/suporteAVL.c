@@ -80,77 +80,81 @@ Livro* rot_esq_liv(Livro *x) {
 
 // ================= BALANCEAMENTO ASSINATURAS =================
 Assinatura* balancear_ass(Assinatura *no) {
-    if (no == NULL) return NULL;
+    Assinatura *retorno = no;
 
-    no->altura = maior(altura_ass(no->esq), altura_ass(no->dir)) + 1;
-    int fb = fb_ass(no);
+    if (no != NULL) {
+        no->altura = maior(altura_ass(no->esq), altura_ass(no->dir)) + 1;
+        int fb = fb_ass(no);
 
-    // Rotação à Direita (Casos: Esquerda-Esquerda ou Esquerda-Direita)
-    if (fb > 1) {
-        if (fb_ass(no->esq) >= 0) {
-            return rot_dir_ass(no); // EE
-        } else {
-            no->esq = rot_esq_ass(no->esq); // ED
-            return rot_dir_ass(no);
+        if (fb > 1) {
+            if (fb_ass(no->esq) >= 0) {
+                retorno = rot_dir_ass(no); 
+            } else {
+                no->esq = rot_esq_ass(no->esq); 
+                retorno = rot_dir_ass(no);
+            }
+        } else if (fb < -1) {
+            if (fb_ass(no->dir) <= 0) {
+                retorno = rot_esq_ass(no); 
+            } else {
+                no->dir = rot_dir_ass(no->dir); 
+                retorno = rot_esq_ass(no);
+            }
         }
     }
-    // Rotação à Esquerda (Casos: Direita-Direita ou Direita-Esquerda)
-    if (fb < -1) {
-        if (fb_ass(no->dir) <= 0) {
-            return rot_esq_ass(no); // DD
-        } else {
-            no->dir = rot_dir_ass(no->dir); // DE
-            return rot_esq_ass(no);
-        }
-    }
-
-    return no; // Retorna o nó inalterado se já estiver balanceado
+    return retorno; 
 }
 
 // ================= BALANCEAMENTO USUÁRIOS =================
 Assinante* balancear_assinante(Assinante *no) {
-    if (no == NULL) return NULL;
+    Assinante *retorno = no;
 
-    no->altura = maior(altura_usu(no->esq), altura_usu(no->dir)) + 1;
-    int fb = fb_usu(no);
+    if (no != NULL) {
+        no->altura = maior(altura_usu(no->esq), altura_usu(no->dir)) + 1;
+        int fb = fb_usu(no);
 
-    if (fb > 1) {
-        if (fb_usu(no->esq) >= 0) return rot_dir_usu(no);
-        else {
-            no->esq = rot_esq_usu(no->esq);
-            return rot_dir_usu(no);
+        if (fb > 1) {
+            if (fb_usu(no->esq) >= 0) {
+                retorno = rot_dir_usu(no);
+            } else {
+                no->esq = rot_esq_usu(no->esq);
+                retorno = rot_dir_usu(no);
+            }
+        } else if (fb < -1) {
+            if (fb_usu(no->dir) <= 0) {
+                retorno = rot_esq_usu(no);
+            } else {
+                no->dir = rot_dir_usu(no->dir);
+                retorno = rot_esq_usu(no);
+            }
         }
     }
-    if (fb < -1) {
-        if (fb_usu(no->dir) <= 0) return rot_esq_usu(no);
-        else {
-            no->dir = rot_dir_usu(no->dir);
-            return rot_esq_usu(no);
-        }
-    }
-    return no;
+    return retorno;
 }
 
 // ================= BALANCEAMENTO LIVROS =================
 Livro* balancear_liv(Livro *no) {
-    if (no == NULL) return NULL;
+    Livro *retorno = no;
 
-    no->altura = maior(altura_liv(no->esq), altura_liv(no->dir)) + 1;
-    int fb = fb_liv(no);
+    if (no != NULL) {
+        no->altura = maior(altura_liv(no->esq), altura_liv(no->dir)) + 1;
+        int fb = fb_liv(no);
 
-    if (fb > 1) {
-        if (fb_liv(no->esq) >= 0) return rot_dir_liv(no);
-        else {
-            no->esq = rot_esq_liv(no->esq);
-            return rot_dir_liv(no);
+        if (fb > 1) {
+            if (fb_liv(no->esq) >= 0) {
+                retorno = rot_dir_liv(no);
+            } else {
+                no->esq = rot_esq_liv(no->esq);
+                retorno = rot_dir_liv(no);
+            }
+        } else if (fb < -1) {
+            if (fb_liv(no->dir) <= 0) {
+                retorno = rot_esq_liv(no);
+            } else {
+                no->dir = rot_dir_liv(no->dir);
+                retorno = rot_esq_liv(no);
+            }
         }
     }
-    if (fb < -1) {
-        if (fb_liv(no->dir) <= 0) return rot_esq_liv(no);
-        else {
-            no->dir = rot_dir_liv(no->dir);
-            return rot_esq_liv(no);
-        }
-    }
-    return no;
+    return retorno;
 }

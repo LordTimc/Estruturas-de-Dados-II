@@ -52,26 +52,29 @@ Assinante *cadastrar_assinante(Assinante *usuario) {
     return usuario;
 }
 
+
 int inserir_assinante(Assinante **raiz, Assinante *novo){
+    int inseriu = 0;
+
     if(*raiz == NULL) {
         *raiz = novo;
-        return 1;
-    }
-    
-    int inseriu = 0;
-    if(strcmp(novo->cpf, (*raiz)->cpf) == 0){
-        free(novo);
-        return 0; 
-    } else if(strcmp(novo->cpf, (*raiz)->cpf) < 0){
-        inseriu = inserir_assinante(&(*raiz)->esq, novo);
+        inseriu = 1;
     } else {
-        inseriu = inserir_assinante(&(*raiz)->dir, novo);
+        if(strcmp(novo->cpf, (*raiz)->cpf) == 0){
+            free(novo);
+            inseriu = 0; 
+        } else if(strcmp(novo->cpf, (*raiz)->cpf) < 0){
+            inseriu = inserir_assinante(&(*raiz)->esq, novo);
+        } else {
+            inseriu = inserir_assinante(&(*raiz)->dir, novo);
+        }
+
+        // Se inseriu com sucesso, faz o balanceamento
+        if (inseriu) {
+            *raiz = balancear_assinante(*raiz);
+        }
     }
     
-    if (!inseriu) return 0;
-
-    // BALANCEAMENTO AVL
-    *raiz = balancear_assinante(*raiz);
     return inseriu; 
 }
 

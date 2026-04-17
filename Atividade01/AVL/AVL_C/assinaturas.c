@@ -70,6 +70,7 @@ int inserir_assinatura(Assinatura **raiz, Assinatura *novo){
         if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) == 0){
             printf("Aviso: Assinatura ja existente para o CPF %s.\n", novo->cpf_usuario);
             free(novo);
+            inseriu = 0;
         } else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) < 0){
             inseriu = inserir_assinatura(&(*raiz)->esq, novo);
         } else {
@@ -77,10 +78,10 @@ int inserir_assinatura(Assinatura **raiz, Assinatura *novo){
         }
     }
 
-    if (!inseriu) return 0;
-
-    // BALANCEAMENTO AVL
-    *raiz = balancear_ass(*raiz);
+    // Apenas balanceia se uma nova inserção realmente ocorreu
+    if (inseriu) {
+        *raiz = balancear_ass(*raiz);
+    }
 
     return inseriu; 
 }

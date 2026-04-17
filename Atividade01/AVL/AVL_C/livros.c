@@ -67,25 +67,26 @@ Livro *cadastrar_livro(Livro *livro){
 }
 
 int inserir_livro(Livro **r, Livro *novo){
+    int inseriu = 0;
+
     if (*r == NULL) {
         *r = novo;
-        return 1;
-    }
-    
-    int inseriu = 0;
-    if(strcmp(novo->isbn, (*r)->isbn) == 0){
-        free(novo);
-        return 0;
-    } else if(strcmp(novo->isbn, (*r)->isbn) < 0){
-        inseriu = inserir_livro(&(*r)->esq, novo);
+        inseriu = 1;
     } else {
-        inseriu = inserir_livro(&(*r)->dir, novo);
+        if(strcmp(novo->isbn, (*r)->isbn) == 0){
+            free(novo);
+            inseriu = 0;
+        } else if(strcmp(novo->isbn, (*r)->isbn) < 0){
+            inseriu = inserir_livro(&(*r)->esq, novo);
+        } else {
+            inseriu = inserir_livro(&(*r)->dir, novo);
+        }
+        
+        if (inseriu) {
+            *r = balancear_liv(*r);
+        }
     }
     
-    if (!inseriu) return 0;
-
-    // BALANCEAMENTO AVL
-    *r = balancear_liv(*r);
     return inseriu;
 }
 

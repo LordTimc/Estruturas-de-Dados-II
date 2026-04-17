@@ -25,33 +25,29 @@ Assinante *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nas
 
 /* - char *cpf, *nome, *endereco, *dataNasc: Dados do usuário a serem inseridos (passagem por valor/ponteiro de array).*/
 Assinante *cadastrar_assinante(Assinante *usuario) {
-
     char cpf[12];
     char *nome = NULL;
     char *endereco = NULL; 
     Data nascimento;
-    // Variável única de retorno para saber se deu certo cadastrar.
     int cadastrou = 0; 
 
     printf("==== Informacoes do assinante ====");
 
     if(pega_cpf(cpf)){
-
         printf("\nDigite o nome: ");
         nome = leitura_de_string();
         
         if(nome != NULL){
             endereco = pega_endereco();    
             if(endereco != NULL && pega_data_nasci(&nascimento)){
-                usuario = aloca_usuario(cpf, nome, endereco, nascimento);
+                // CORREÇÃO: Estava aloca_usuario
+                usuario = aloca_assinante(cpf, nome, endereco, nascimento);
                 cadastrou = 1;
-
                 free(nome);
                 free(endereco);
             }
         }
     }
-
     if(!cadastrou){
         if(nome) free(nome);
         if(endereco) free(endereco);
@@ -143,29 +139,40 @@ int dois_filhos(Assinante *r){
     return (r->esq != NULL && r->dir != NULL);
 }
 
-int remove_assinant(Assinante **r, char *cpf){
-    int removeu = 1;
+int remove_assinant(Assinante **r, char *cpf) {
+    int removeu = 0;
 
-    if(*r != NULL){
-        if(strcasecpm((*r)->cpf, cpf) == 0){
-            Assinante *aux, *filho;
-            aux = *r;
-
-            if (no_sem_filho(*r)){
-                *r = NULL;
-                free(aux);
-            }
-            else if ((filho = so_um_filho(*r)) != NULL){
-                *r = filho;
-                free(aux);
-            }
-        } else if (strcasecmp(cpf, (*r)->cpf) < 0)
+    if (*r != NULL) {
+        if (strcmp(cpf, (*r)->cpf) < 0) {
             removeu = remove_assinant(&(*r)->esq, cpf);
-        else
+        } else if (strcmp(cpf, (*r)->cpf) > 0) {
             removeu = remove_assinant(&(*r)->dir, cpf);
-        
-    } else {
-        removeu = 0;
+        } else {
+            // Encontrou o nó a ser removido
+            if ((*r)->esq == NULL || (*r)->dir == NULL) {
+                // Caso 1 e 2: Zero ou 1 filho
+                Assinante *temp = (*r)->esq ? (*r)->esq : (*r)->dir;
+                if (temp == NULL) {
+                    temp = *r;
+                    *r = NULL;
+                } else {
+                    **r = *temp; 
+                }
+                free(temp);
+            } else {
+                // Caso 3: Dois filhos (Busca o maior da subárvore esquerda)
+                Assinante *temp = (*r)->esq;
+                while (temp->dir != NULL) temp = temp->dir;
+                
+                strcpy((*r)->cpf, temp->cpf);
+                strcpy((*r)->nome, temp->nome);
+                strcpy((*r)->endereco, temp->endereco);
+                (*r)->nascimento = temp->nascimento;
+                
+                removeu = remove_assinant(&(*r)->esq, temp->cpf);
+            }
+            removeu = 1;
+        }
     }
     return removeu;
 }
@@ -178,3 +185,11 @@ void liberar_arvore_usuario(Assinante *raiz){
         free(raiz);
     }
 }
+
+Assinante* buscar_assinante(Assinante *raiz, char *cpf) {
+    if (raiz == NULL) return NULL;
+    if (strcmp(cpf, raiz->cpf) == 0) return raiz;
+    if (strcmp(cpf, raiz->cpf) < 0) return buscar_assinante(raiz->esq, cpf);
+    return buscar_assinante(raiz->dir, cpf);
+}
+

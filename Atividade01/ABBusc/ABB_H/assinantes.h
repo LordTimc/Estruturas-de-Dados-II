@@ -25,3 +25,5 @@ int remove_assinant(Assinante **r, char *cpf);
 
 // Função para liberar os nó e depois a raiz.
 void liberar_arvore_usuario(Assinante *raiz);
+
+Assinante* buscar_assinante(Assinante *raiz, char *cpf);

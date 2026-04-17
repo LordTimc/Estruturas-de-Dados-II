@@ -8,10 +8,10 @@
 Assinatura* alocar_assinatura();
 
 // Função para cadastrar uma assinatura na árvore binária
-void cadastrar_assinatura(Assinatura **r);
+void cadastrar_assinatura(Assinatura **r, Assinante *raiz_usu, forma_ass *lista_formas);
 
 // Função para inserir assinatura
-int *inserir_assinatura(Assinatura **raiz, Assinatura *novo);
+int inserir_assinatura(Assinatura **raiz, Assinatura *novo);
 
 //função que verifica se o usuario possui alguma assinatura
 int possui_assinatura_vencida(Assinatura *raiz, char *cpf);
@@ -21,6 +21,11 @@ void mostrar_assinaturas(Assinatura *raiz);
 
 // Função para buscar e mostrar a data de vencimento de uma assinatura específica
 int mostrar_vencimento_assinatura_cpf(Assinatura *raiz, char *cpf);
+
+Assinatura* buscar_assinatura(Assinatura *raiz, char *cpf);
+int remover_no_assinatura(Assinatura **r, char *cpf);
+
+void liberar_arvore_assinaturas(Assinatura *raiz);
 #endif
 
 

@@ -7,7 +7,7 @@
 #include "../ABB_H/auxiliares.h"
 #include "../ABB_H/formaAssinat.h"
 
-forma_ass *aloca_forma_assinatura(){
+forma_ass *alocar_forma_assinatura(){
     forma_ass *novo = (forma_ass *) malloc(sizeof(forma_ass));
             
     if (novo == NULL){ 
@@ -204,4 +204,27 @@ void mostrar_formas_assinatura(forma_ass *lista){
         }
     }
     printf("====================================================\n");
+}
+
+// Adicione no final do ABB_C/formaAssinat.c
+void liberar_lista_formas(forma_ass *lista){
+    forma_ass *temp;
+    while (lista != NULL) {
+        temp = lista;
+        lista = lista->prox;
+        if(temp->generos_escolhidos != NULL) {
+            free(temp->generos_escolhidos);
+        }
+        free(temp);
+    }
+}
+
+
+forma_ass* buscar_forma(forma_ass *lista, int codigo) {
+    forma_ass *aux = lista;
+    while (aux != NULL) {
+        if (aux->codigo == codigo) return aux;
+        aux = aux->prox;
+    }
+    return NULL;
 }

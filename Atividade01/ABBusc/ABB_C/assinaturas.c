@@ -6,6 +6,7 @@
 #include "../ABB_H/assinantes.h"
 #include "../ABB_H/assinaturas.h"
 #include "../ABB_H/auxiliares.h"
+#include "../ABB_H/formaAssinat.h"
 
 
 Assinatura* alocar_assinatura(){
@@ -43,85 +44,76 @@ Assinatura* alocar_assinatura(){
  * - int codigoForma, float valor: Dados numéricos (passagem por valor).
 */
 
-void cadastrar_assinatura(Assinatura **r){
+void cadastrar_assinatura(Assinatura **r, Assinante *raiz_usu, forma_ass *lista_formas){
     char cpf_aux[12];
     int cadastrou = 0;
     Assinatura *novo_no = NULL;
 
     printf("\n--- Nova Assinatura ---\n");
 
-    // 1. Valida o CPF antes de qualquer alocação
     if (pega_cpf(cpf_aux)) {
-        
-        // 2. Aloca e inicializa o nó (Responsabilidade Única)
-        novo_no = alocar_assinatura();
+        // REGRA DE NEGÓCIO III: O assinante TEM que existir
+        if (buscar_assinante(raiz_usu, cpf_aux) == NULL) {
+            printf("Erro: Assinante com CPF %s nao encontrado no sistema.\n", cpf_aux);
+            return;
+        }
 
+        novo_no = alocar_assinatura();
         if (novo_no != NULL) {
-            // 3. Preenchimento dos dados com verificações em cascata
             strcpy(novo_no->cpf_usuario, cpf_aux);
             
             printf("Digite o codigo da forma de assinatura: ");
             novo_no->codigo_forma = num_inteiro();
 
+            // REGRA DE NEGÓCIO III: A forma de assinatura TEM que existir
+            if (buscar_forma(lista_formas, novo_no->codigo_forma) == NULL) {
+                printf("Erro: Forma de assinatura %d nao existe.\n", novo_no->codigo_forma);
+                free(novo_no);
+                return;
+            }
+
             printf("Data de Inicio da assinatura:\n");
             if (pega_data(&novo_no->data_assinatura)) {
-
                 printf("Data de Vencimento da assinatura:\n");
                 if (pega_data(&novo_no->data_vencimento)) {
-                    
                     printf("Valor da Assinatura: ");
                     novo_no->valor = num_decimal();
-                    
-                    // Se o fluxo chegou aqui, todos os dados são válidos
                     cadastrou = 1;
                 }
             }
         }
     }
 
-    // 4. Finalização
     if (cadastrou) {
-        // Chamada compatível com a sua função de ponteiro duplo
-        // Note que passamos 'r' diretamente, pois 'r' já é Assinatura**
         if (inserir_assinatura(r, novo_no)) {
             printf("Assinatura realizada com sucesso!\n");
         } else {
-            // Caso a função de inserção retorne 0 (ex: CPF duplicado)
-            // A própria função 'inserir_assinatura' já deu free(novo_no) conforme seu código
             printf("Erro: Nao foi possivel inserir na arvore.\n");
         }
     } else {
-        // Se o erro foi na leitura dos dados (antes da inserção), limpamos aqui
-        if (novo_no != NULL) {
-            free(novo_no);
-        }
+        if (novo_no != NULL) free(novo_no);
         printf("Cadastro cancelado ou dados invalidos.\n");
     }
 }
 
 
-int *inserir_assinatura(Assinatura **raiz, Assinatura *novo){
-    int inseriu = 1;
-    // Caso base: se chegamos em uma folha (ou árvore vazia),
-    // o ponteiro 'raiz' recebe o 'novo' nó.
+int inserir_assinatura(Assinatura **raiz, Assinatura *novo){
+    int inseriu = 0;
     if (*raiz == NULL) {
         *raiz = novo;
-    }else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) == 0){
-        // Comparamos os CPFs para decidir o lado.
-        // strcmp retorna < 0 se o primeiro for menor, e > 0 se for maior.
-        // Caso o CPF seja igual, você decide o que fazer.
-            // Geralmente, em sistemas de cadastro, não permitimos duplicatas.
-        printf("Aviso: Assinatura ja existente para o CPF %s.\n", novo->cpf_usuario);
-        free(novo);
-        novo = NULL;
-        inseriu = 0;
-    }else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) < 0){
-            // Se o novo CPF for "menor", vai para a esquerda
+        inseriu = 1;
+    } else {
+        if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) == 0){
+            printf("Aviso: Assinatura ja existente para o CPF %s.\n", novo->cpf_usuario);
+            free(novo);
+            inseriu = 0;
+        } else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) < 0){
+            // CORREÇÃO: Estava chamando si mesmo errado
             inseriu = inserir_assinatura(&(*raiz)->esq, novo);
-     
-    }else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) > 0){
-            // Se o novo CPF for "maior", vai para a direita
-            inseriu = inserir_na_arvore(&(*raiz)->dir, novo);
+        } else {
+            // CORREÇÃO: Estava chamando 'inserir_na_arvore'
+            inseriu = inserir_assinatura(&(*raiz)->dir, novo);
+        }
     }
     return inseriu; 
 }
@@ -230,4 +222,62 @@ int mostrar_vencimento_assinatura_cpf(Assinatura *raiz, char *cpf){
         }
     }
     return encontrou;
+}
+
+
+Assinatura* buscar_assinatura(Assinatura *raiz, char *cpf) {
+    Assinatura *encontrado = NULL; 
+    if (raiz != NULL) {
+        if (strcmp(cpf, raiz->cpf_usuario) == 0) {
+            encontrado = raiz;
+        } else if (strcmp(cpf, raiz->cpf_usuario) < 0) {
+            encontrado = buscar_assinatura(raiz->esq, cpf);
+        } else {
+            encontrado = buscar_assinatura(raiz->dir, cpf);
+        }
+    }
+    return encontrado;
+}
+
+int remover_no_assinatura(Assinatura **r, char *cpf) {
+    int removeu = 0;
+    if (*r != NULL) {
+        if (strcmp(cpf, (*r)->cpf_usuario) < 0) {
+            removeu = remover_no_assinatura(&(*r)->esq, cpf);
+        } else if (strcmp(cpf, (*r)->cpf_usuario) > 0) {
+            removeu = remover_no_assinatura(&(*r)->dir, cpf);
+        } else {
+            if ((*r)->esq == NULL || (*r)->dir == NULL) {
+                Assinatura *temp = (*r)->esq ? (*r)->esq : (*r)->dir;
+                if (temp == NULL) {
+                    temp = *r;
+                    *r = NULL;
+                } else {
+                    **r = *temp; 
+                }
+                free(temp);
+            } else {
+                Assinatura *temp = (*r)->esq;
+                while (temp->dir != NULL) temp = temp->dir;
+                
+                strcpy((*r)->cpf_usuario, temp->cpf_usuario);
+                (*r)->codigo_forma = temp->codigo_forma;
+                (*r)->data_assinatura = temp->data_assinatura;
+                (*r)->data_vencimento = temp->data_vencimento;
+                (*r)->valor = temp->valor;
+                
+                removeu = remover_no_assinatura(&(*r)->esq, temp->cpf_usuario); 
+            }
+            removeu = 1; 
+        }
+    }
+    return removeu;
+}
+
+void liberar_arvore_assinaturas(Assinatura *raiz){
+    if (raiz != NULL) {
+        liberar_arvore_assinaturas(raiz->esq);
+        liberar_arvore_assinaturas(raiz->dir);
+        free(raiz);
+    }
 }

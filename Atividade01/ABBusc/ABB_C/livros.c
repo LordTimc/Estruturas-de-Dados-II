@@ -35,25 +35,27 @@ Livro *cadastrar_livro(Livro *livro){
     char *editora = NULL;
     int edicao;
     int ano_publica;
-
     int cadastrou = 0;
 
     printf("==== Informacoes do livro ====");
 
     if(pega_isbn(isbn)){
-
         printf("\nDigite o titulo: ");
         titulo = leitura_de_string();
         
         if(titulo != NULL){
-            autor = leitura_de_string(); //endreco
-            editora = leitura_de_string(); // endereco
-            edicao = pega_edicao(edicao); // isdigit
-            ano_publica = pega_ano_publica(); // digitar_ano
+            printf("Autor: ");
+            autor = leitura_de_string(); 
+            printf("Editora: ");
+            editora = leitura_de_string(); 
+            printf("Edicao: ");
+            edicao = num_inteiro(); // CORREÇÃO: Retornado ao modelo AVL que funciona
+            printf("Ano de publicacao: ");
+            ano_publica = num_inteiro(); // CORREÇÃO: Idem.
+
             if(autor != NULL && editora != NULL){
                 livro = aloca_livro(isbn, titulo, autor, editora, edicao, ano_publica);
                 cadastrou = 1;
-
                 free(titulo);
                 free(autor);
                 free(editora);
@@ -78,24 +80,23 @@ Parâmetros:
  * - int edicao, anoPublica: Dados numéricos do livro passados por valor.
  */
 int inserir_livro(Livro **r, Livro *novo){
-    int inseriu = 1;
-    // Se o ponteiro atual for NULL, encontramos a posição correta para inserir
-    if (*r == NULL) 
+    int inseriu = 0;
+    
+    if (*r == NULL) {
         *r = novo;
-    else if(strcmp(novo->isbn, (*r)->isbn) == 0){
-        // A função strcmp compara os dois ISBN. Retorna < 0 se a primeira for menor, > 0 se for maior, e 0 se forem iguais.
-        // comparacao == 0 significa que o ISBN já existe na árvore
-        // Não permite cadastro repetido, logo, o inseriu se mantém 0 (falha)
-        free(novo);
-        novo = NULL;
-        inseriu = 0;
-    } else if(strcmp(novo->isbn, (*r)->isbn) < 0){
-        // Se a árvore não está vazia e o ISBN é "menor", vai para a subárvore esquerda.
-        inseriu = inserir_assinante(&(*r)->esq, novo);
-    } else if (strcmp(novo->isbn, (*r)->isbn) > 0){
-        // Se o ISBN é "maior", vai para a subárvore direita
-        inseriu = inserir_assinante(&(*r)->dir, novo);
+        inseriu = 1;
+    } else {
+        if(strcmp(novo->isbn, (*r)->isbn) == 0){
+            free(novo);
+            inseriu = 0;
+        } else if(strcmp(novo->isbn, (*r)->isbn) < 0){
+            // CORREÇÃO: Estava chamando inserir_assinante!
+            inseriu = inserir_livro(&(*r)->esq, novo);
+        } else {
+            inseriu = inserir_livro(&(*r)->dir, novo);
+        }
     }
+    
     return inseriu;
 }
 

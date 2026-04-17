@@ -12,6 +12,7 @@ int ler_string_info(char *buffer, int tam);
 int converte_data(const char *entrada, Data *data);
 int validar_data_com_mensagem(Data *data);
 int pega_data_nasci(Data *data_usuario);
+int pega_data(Data *data_usuario);
 
 int cpf_eh_valido(const char *cpf);
 int pega_cpf(char *cpf);

@@ -135,7 +135,7 @@ int validar_data_com_mensagem(Data *data){
 // Essa função pega a data de nascimento do usuário (assinante)
 int pega_data_nasci(Data *data_usuario){
     
-    char dados_nasci[12];
+    char dados_nasci[15];
     int nasci_valido = 0;
 
     do {
@@ -161,7 +161,7 @@ int pega_data_nasci(Data *data_usuario){
 // Função para pegar as datas de assinatura
 // e as datas de de Vencimento de assinatura
 int pega_data(Data *data_usuario){
-    char dados[12];
+    char dados[15];
     int valido = 0;
 
     do {
@@ -208,7 +208,7 @@ int cpf_eh_valido(const char *cpf){
 
 int pega_cpf(char *cpf){
     
-    char dados_cpf[12];
+    char dados_cpf[15];
     int cpf_valido = 0;
 
     do {
@@ -279,7 +279,7 @@ int num_eh_valido(const char *num){
 
 int pega_isbn(char *codigo){
     
-    char dados_isbn[3];
+    char dados_isbn[5];
     int isbn_valido = 0;
 
     do {
@@ -303,7 +303,7 @@ int pega_isbn(char *codigo){
 
 int pega_edicao(char *codigo){
     
-    char dados_edicao[3];
+    char dados_edicao[5];
     int valido = 0;
 
     do {
@@ -334,9 +334,9 @@ int num_inteiro(){
     {
         printf("Numero invalido ");
         printf("Digite novamente: ");
-        limpar_dados_buffer();
+        limpa_dados_buffer();
     }
-    limpar_dados_buffer();
+    limpa_dados_buffer();
 
     return inteiro;
 }
@@ -348,8 +348,8 @@ float num_decimal(){
     {
         printf("Numero invalido ");
         printf("Digite novamente: ");
-        limpar_dados_buffer();
+        limpa_dados_buffer();
     }
-    limpar_dados_buffer();
+    limpa_dados_buffer();
     return decimal;
 }

@@ -2,7 +2,7 @@
 #define STRUCTS_H
 
 typedef struct data_nasci Data;
-typedef struct usuario Usuario;
+typedef struct assinante Assinante;
 typedef struct forma_ass forma_ass;
 typedef struct assinatura Assinatura;
 typedef struct livro Livro;
@@ -16,15 +16,15 @@ typedef struct data_nasci {
 } Data;
 
 // ÁRVORE DE USUÁRIOS (ASSINANTES) - [AVL]
-typedef struct usuario {
+typedef struct assinante {
     char cpf[12];
     char nome[100];
     char endereco[100];
     Data nascimento;
     int altura; // Necessário para AVL
 
-    struct usuario *esq, *dir;
-} Usuario;
+    struct assinante *esq, *dir;
+} Assinante;
 
 // ÁRVORE DE LIVROS - [AVL]
 typedef struct livro {

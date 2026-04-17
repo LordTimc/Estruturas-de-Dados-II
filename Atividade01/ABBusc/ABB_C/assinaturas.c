@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "../ABB_H/structs.h"
-#include "../ABB_H/usuarios.h"
+#include "../ABB_H/assinantes.h"
 #include "../ABB_H/assinaturas.h"
 #include "../ABB_H/auxiliares.h"
 
@@ -133,7 +133,6 @@ int possui_assinatura_vencida(Assinatura *raiz, char *cpf) {
     pegar_data_de_hoje(&hoje);
 
     if (raiz != NULL) {
-
         if (strcmp(cpf, raiz->cpf_usuario) == 0) {
             // Verifica se está vencida
             if (

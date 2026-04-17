@@ -3,12 +3,12 @@
 #include <string.h>
 
 #include "../ABB_H/structs.h"
-#include "../ABB_H/usuarios.h"
+#include "../ABB_H/assinantes.h"
 #include "../ABB_H/auxiliares.h"
 
-Usuario *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nascimento){ 
+Assinante *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nascimento){ 
     // Aloca espaço na memória para o novo usuário
-    Usuario *novo_usuario = (Usuario *)malloc(sizeof(Usuario));
+    Assinante *novo_usuario = (Assinante *)malloc(sizeof(Assinante));
         
     if (novo_usuario != NULL) {
         strcpy(novo_usuario->cpf, cpf);
@@ -24,7 +24,7 @@ Usuario *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nasci
 
 
 /* - char *cpf, *nome, *endereco, *dataNasc: Dados do usuário a serem inseridos (passagem por valor/ponteiro de array).*/
-Usuario *cadastrar_assinante(Usuario *usuario) {
+Assinante *cadastrar_assinante(Assinante *usuario) {
 
     char cpf[12];
     char *nome = NULL;
@@ -59,7 +59,7 @@ Usuario *cadastrar_assinante(Usuario *usuario) {
     return usuario;
 }
 /* **raiz: Ponteiro duplo para a raiz da árvore. Escolhido (passagem por referência), pois precisamos modificar o ponteiro real da árvore no `main` quando alocamos um novo nó.*/
-int inserir_assinante(Usuario **raiz, Usuario *novo){
+int inserir_assinante(Assinante **raiz, Assinante *novo){
     int inseriu = 1;
 
     // Verifica se chegamos em um nó folha/vazio
@@ -91,7 +91,7 @@ int inserir_assinante(Usuario **raiz, Usuario *novo){
  * por valor (cópia do ponteiro) porque esta função serve apenas para LEITURA. 
  * Não vamos inserir ou remover nós, logo, não precisamos modificar a árvore original.
 */
-int mostrar_assinantes(Usuario *raiz) {
+int mostrar_assinantes(Assinante *raiz) {
     int mostrou = 0;
 
     // Verifica se o nó atual não é nulo
@@ -116,7 +116,7 @@ int mostrar_assinantes(Usuario *raiz) {
 
 // ------ Remoção ----------
 
-int no_sem_filho(Usuario *raiz){
+int no_sem_filho(Assinante *raiz){
     int eh_folha = 0;
 
     if(raiz != NULL){
@@ -126,8 +126,8 @@ int no_sem_filho(Usuario *raiz){
     return eh_folha;
 }
 
-Usuario *so_um_filho(Usuario *r){
-    Usuario *no;
+Assinante *so_um_filho(Assinante *r){
+    Assinante *no;
     no = NULL;
 
     if(r != NULL){
@@ -139,16 +139,16 @@ Usuario *so_um_filho(Usuario *r){
     return(no);
 }
 
-int dois_filhos(Usuario *r){
+int dois_filhos(Assinante *r){
     return (r->esq != NULL && r->dir != NULL);
 }
 
-int remove_assinant(Usuario **r, char *cpf){
+int remove_assinant(Assinante **r, char *cpf){
     int removeu = 1;
 
     if(*r != NULL){
         if(strcasecpm((*r)->cpf, cpf) == 0){
-            Usuario *aux, *filho;
+            Assinante *aux, *filho;
             aux = *r;
 
             if (no_sem_filho(*r)){
@@ -171,7 +171,7 @@ int remove_assinant(Usuario **r, char *cpf){
 }
 
 // Função para liberar os nó e depois a raiz.
-void liberar_arvore_usuario(Usuario *raiz){
+void liberar_arvore_usuario(Assinante *raiz){
     if (raiz != NULL) {
         liberar_arvore_usuario(raiz->esq);
         liberar_arvore_usuario(raiz->dir);

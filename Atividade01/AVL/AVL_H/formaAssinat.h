@@ -1,7 +1,7 @@
 #ifndef FORMA_ASSINATURA_H
 #define FORMA_ASSINATURA_H
 
-#include "../AVL_H/structs.h"
+#include "structs.h"
 
 forma_ass *aloca_forma_assinatura();
 int *alocar_vetor_generos(int qtd);

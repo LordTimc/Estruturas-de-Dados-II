@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "../AVL_H/structs.h"
-#include "../AVL_H/usuarios.h"
+#include "../AVL_H/assinantes.h"
 #include "../AVL_H/assinaturas.h"
 #include "../AVL_H/auxiliares.h"
 #include "../AVL_H/suporteAVL.h"

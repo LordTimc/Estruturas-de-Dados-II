@@ -5,7 +5,7 @@
 // Ajuste os caminhos conforme a sua estrutura de diretórios
 #include "../AVL_H/structs.h"
 #include "../AVL_H/auxiliares.h"
-#include "../AVL_H/usuarios.h"
+#include "../AVL_H/assinantes.h"
 #include "../AVL_H/assinaturas.h"
 #include "../AVL_H/formaAssinat.h"
 #include "../AVL_H/generos.h"
@@ -38,7 +38,7 @@ void exibir_menu() {
 
 int main() {
     // Inicialização das estruturas do sistema
-    Usuario *raiz_usuarios = NULL;
+    Assinante *raiz_usuarios = NULL;
     forma_ass *lista_formas = NULL;
     Assinatura *raiz_assinaturas = NULL;
     Livro *raiz_livros_global = NULL; // Árvore AVL geral para organizar todos os livros por ISBN
@@ -54,7 +54,7 @@ int main() {
 
         switch (opcao) {
             case 1: { // Cadastrar Assinantes
-                Usuario *novo_usuario = cadastrar_assinante(NULL);
+                Assinante *novo_usuario = cadastrar_assinante(NULL);
                 if (novo_usuario != NULL) {
                     if (inserir_assinante(&raiz_usuarios, novo_usuario)) {
                         printf("\n>>> Assinante cadastrado com sucesso!\n");

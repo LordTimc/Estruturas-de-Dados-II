@@ -1,7 +1,7 @@
 #ifndef GENEROS_H
 #define GENEROS_H
 
-#include "../AVL_H/structs.h"
+#include "structs.h"
 
 Genero criar_genero(int codigo_livro, char *nome_genero);
 int inserir_genero(Genero lista[], int *qtd_gen, Genero novo_genero);

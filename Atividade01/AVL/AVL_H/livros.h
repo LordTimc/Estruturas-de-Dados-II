@@ -1,7 +1,7 @@
 #ifndef LIVROS_H
 #define LIVROS_H
 
-#include "../AVL_H/structs.h"
+#include "structs.h"
 
 Livro *aloca_livro(char *isbn, char *titulo, char *autor, char *editora, int edicao, int ano_publica);
 Livro *cadastrar_livro(Livro *livro);

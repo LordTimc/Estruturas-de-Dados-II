@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "../ABB_H/structs.h"
-#include "../ABB_H/usuarios.h"
+#include "../ABB_H/assinantes.h"
 #include "../ABB_H/auxiliares.h"
 #include "../ABB_H/formaAssinat.h"
 

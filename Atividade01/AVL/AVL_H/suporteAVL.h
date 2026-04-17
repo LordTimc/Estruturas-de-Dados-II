@@ -1,7 +1,7 @@
 #ifndef SUPORTE_AVL_H
 #define SUPORTE_AVL_H
 
-#include "../AVL_H/structs.h"
+#include "structs.h"
 
 
 int maior(int a, int b);
@@ -13,10 +13,10 @@ Assinatura* rot_dir_ass(Assinatura *y);
 Assinatura* rot_esq_ass(Assinatura *x);
 
 // Suporte para Usuários
-int altura_usu(Usuario *no);
-int fb_usu(Usuario *no);
-Usuario* rot_dir_usu(Usuario *y);
-Usuario* rot_esq_usu(Usuario *x);
+int altura_usu(Assinante *no);
+int fb_usu(Assinante *no);
+Assinante* rot_dir_usu(Assinante *y);
+Assinante* rot_esq_usu(Assinante *x);
 
 // Suporte para Livros
 int altura_liv(Livro *no);
@@ -26,7 +26,7 @@ Livro* rot_esq_liv(Livro *x);
 
 //Funções balanceamento
 Assinatura* balancear_ass(Assinatura *no);
-Usuario* balancear_usu(Usuario *no);
+Assinante* balancear_usu(Assinante *no);
 Livro* balancear_liv(Livro *no);
 
 #endif

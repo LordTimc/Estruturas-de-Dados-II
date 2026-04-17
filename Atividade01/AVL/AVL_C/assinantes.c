@@ -3,12 +3,12 @@
 #include <string.h>
 
 #include "../AVL_H/structs.h"
-#include "../AVL_H/usuarios.h"
+#include "../AVL_H/assinantes.h"
 #include "../AVL_H/auxiliares.h"
 #include "../AVL_H/suporteAVL.h"
 
-Usuario *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nascimento){ 
-    Usuario *novo_usuario = (Usuario *)malloc(sizeof(Usuario));
+Assinante *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nascimento){ 
+    Assinante *novo_usuario = (Assinante *)malloc(sizeof(Assinante));
     if (novo_usuario != NULL) {
         strcpy(novo_usuario->cpf, cpf);
         strcpy(novo_usuario->nome, nome);
@@ -22,7 +22,7 @@ Usuario *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nasci
     return (novo_usuario);
 }
 
-Usuario *cadastrar_assinante(Usuario *usuario) {
+Assinante *cadastrar_assinante(Assinante *usuario) {
     char cpf[12];
     char *nome = NULL;
     char *endereco = NULL; 
@@ -52,7 +52,7 @@ Usuario *cadastrar_assinante(Usuario *usuario) {
     return usuario;
 }
 
-int inserir_assinante(Usuario **raiz, Usuario *novo){
+int inserir_assinante(Assinante **raiz, Assinante *novo){
     if(*raiz == NULL) {
         *raiz = novo;
         return 1;
@@ -75,7 +75,7 @@ int inserir_assinante(Usuario **raiz, Usuario *novo){
     return inseriu; 
 }
 
-int mostrar_assinantes(Usuario *raiz) {
+int mostrar_assinantes(Assinante *raiz) {
     int mostrou = 0;
     if (raiz != NULL) {
         mostrou = mostrar_assinantes(raiz->esq);
@@ -90,7 +90,7 @@ int mostrar_assinantes(Usuario *raiz) {
     return mostrou;
 }
 
-int no_sem_filho(Usuario *raiz){
+int no_sem_filho(Assinante *raiz){
     int eh_folha = 0;
     if(raiz != NULL){
         if(raiz->esq == NULL && raiz->dir == NULL)
@@ -99,8 +99,8 @@ int no_sem_filho(Usuario *raiz){
     return eh_folha;
 }
 
-Usuario *so_um_filho(Usuario *r){
-    Usuario *no = NULL;
+Assinante *so_um_filho(Assinante *r){
+    Assinante *no = NULL;
     if(r != NULL){
         if(r->esq == NULL && r->dir != NULL) no = r->dir;
         else if(r->esq != NULL && r->dir == NULL) no = r->esq;
@@ -108,11 +108,11 @@ Usuario *so_um_filho(Usuario *r){
     return(no);
 }
 
-int dois_filhos(Usuario *r){
+int dois_filhos(Assinante *r){
     return (r->esq != NULL && r->dir != NULL);
 }
 
-int remove_assinant(Usuario **r, char *cpf) {
+int remove_assinant(Assinante **r, char *cpf) {
     int removeu = 0;
 
     if (*r != NULL) {
@@ -122,7 +122,7 @@ int remove_assinant(Usuario **r, char *cpf) {
             removeu = remove_assinant(&(*r)->dir, cpf);
         } else {
             if ((*r)->esq == NULL || (*r)->dir == NULL) {
-                Usuario *temp = (*r)->esq ? (*r)->esq : (*r)->dir;
+                Assinante *temp = (*r)->esq ? (*r)->esq : (*r)->dir;
                 if (temp == NULL) {
                     temp = *r;
                     *r = NULL;
@@ -131,7 +131,7 @@ int remove_assinant(Usuario **r, char *cpf) {
                 }
                 free(temp);
             } else {
-                Usuario *temp = (*r)->esq;
+                Assinante *temp = (*r)->esq;
                 while (temp->dir != NULL) temp = temp->dir;
                 
                 strcpy((*r)->cpf, temp->cpf);
@@ -152,7 +152,7 @@ int remove_assinant(Usuario **r, char *cpf) {
     return removeu;
 }
 
-void liberar_arvore_usuario(Usuario *raiz){
+void liberar_arvore_usuario(Assinante *raiz){
     if (raiz != NULL) {
         liberar_arvore_usuario(raiz->esq);
         liberar_arvore_usuario(raiz->dir);

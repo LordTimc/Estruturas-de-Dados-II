@@ -1,7 +1,7 @@
 #ifndef AUXILIARES_H
 #define AUXILIARES_H
 
-#include "../AVL_H/structs.h"
+#include "structs.h"
 
 char *leitura_de_string();
 void limpa_dados_buffer();

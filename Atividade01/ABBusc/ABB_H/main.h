@@ -6,7 +6,7 @@
 #include "generos.h"
 #include "livros.h"
 #include "structs.h"
-#include "usuarios.h"
+#include "assinantes.h"
 
 void menu_das_opcoes();
 void menu_da_repeticao();

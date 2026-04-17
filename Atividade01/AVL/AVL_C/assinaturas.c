@@ -80,20 +80,7 @@ int inserir_assinatura(Assinatura **raiz, Assinatura *novo){
     if (!inseriu) return 0;
 
     // BALANCEAMENTO AVL
-    (*raiz)->altura = 1 + maior(altura_ass((*raiz)->esq), altura_ass((*raiz)->dir));
-    int fb = fb_ass(*raiz);
-
-    if (fb > 1 && strcmp(novo->cpf_usuario, (*raiz)->esq->cpf_usuario) < 0)
-        *raiz = rot_dir_ass(*raiz);
-    else if (fb < -1 && strcmp(novo->cpf_usuario, (*raiz)->dir->cpf_usuario) > 0)
-        *raiz = rot_esq_ass(*raiz);
-    else if (fb > 1 && strcmp(novo->cpf_usuario, (*raiz)->esq->cpf_usuario) > 0) {
-        (*raiz)->esq = rot_esq_ass((*raiz)->esq);
-        *raiz = rot_dir_ass(*raiz);
-    } else if (fb < -1 && strcmp(novo->cpf_usuario, (*raiz)->dir->cpf_usuario) < 0) {
-        (*raiz)->dir = rot_dir_ass((*raiz)->dir);
-        *raiz = rot_esq_ass(*raiz);
-    }
+    *raiz = balancear_ass(*raiz);
 
     return inseriu; 
 }

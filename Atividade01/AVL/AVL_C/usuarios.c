@@ -71,20 +71,7 @@ int inserir_assinante(Usuario **raiz, Usuario *novo){
     if (!inseriu) return 0;
 
     // BALANCEAMENTO AVL
-    (*raiz)->altura = 1 + maior(altura_usu((*raiz)->esq), altura_usu((*raiz)->dir));
-    int fb = fb_usu(*raiz);
-
-    if (fb > 1 && strcmp(novo->cpf, (*raiz)->esq->cpf) < 0)
-        *raiz = rot_dir_usu(*raiz);
-    else if (fb < -1 && strcmp(novo->cpf, (*raiz)->dir->cpf) > 0)
-        *raiz = rot_esq_usu(*raiz);
-    else if (fb > 1 && strcmp(novo->cpf, (*raiz)->esq->cpf) > 0) {
-        (*raiz)->esq = rot_esq_usu((*raiz)->esq);
-        *raiz = rot_dir_usu(*raiz);
-    } else if (fb < -1 && strcmp(novo->cpf, (*raiz)->dir->cpf) < 0) {
-        (*raiz)->dir = rot_dir_usu((*raiz)->dir);
-        *raiz = rot_esq_usu(*raiz);
-    }
+    *raiz = balancear_usu(*raiz);
     return inseriu; 
 }
 
@@ -157,20 +144,7 @@ int remove_assinant(Usuario **r, char *cpf) {
     if (*r == NULL) return removeu;
 
     // BALANCEAMENTO PÓS-REMOÇÃO AVL
-    (*r)->altura = 1 + maior(altura_usu((*r)->esq), altura_usu((*r)->dir));
-    int fb = fb_usu(*r);
-
-    if (fb > 1 && fb_usu((*r)->esq) >= 0)
-        *r = rot_dir_usu(*r);
-    else if (fb > 1 && fb_usu((*r)->esq) < 0) {
-        (*r)->esq = rot_esq_usu((*r)->esq);
-        *r = rot_dir_usu(*r);
-    } else if (fb < -1 && fb_usu((*r)->dir) <= 0)
-        *r = rot_esq_usu(*r);
-    else if (fb < -1 && fb_usu((*r)->dir) > 0) {
-        (*r)->dir = rot_dir_usu((*r)->dir);
-        *r = rot_esq_usu(*r);
-    }
+    *r = balancear_usu(*r);
 
     return removeu;
 }

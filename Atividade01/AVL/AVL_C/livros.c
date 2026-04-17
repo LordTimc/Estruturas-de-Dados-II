@@ -85,20 +85,7 @@ int inserir_livro(Livro **r, Livro *novo){
     if (!inseriu) return 0;
 
     // BALANCEAMENTO AVL
-    (*r)->altura = 1 + maior(altura_liv((*r)->esq), altura_liv((*r)->dir));
-    int fb = fb_liv(*r);
-
-    if (fb > 1 && strcmp(novo->isbn, (*r)->esq->isbn) < 0)
-        *r = rot_dir_liv(*r);
-    else if (fb < -1 && strcmp(novo->isbn, (*r)->dir->isbn) > 0)
-        *r = rot_esq_liv(*r);
-    else if (fb > 1 && strcmp(novo->isbn, (*r)->esq->isbn) > 0) {
-        (*r)->esq = rot_esq_liv((*r)->esq);
-        *r = rot_dir_liv(*r);
-    } else if (fb < -1 && strcmp(novo->isbn, (*r)->dir->isbn) < 0) {
-        (*r)->dir = rot_dir_liv((*r)->dir);
-        *r = rot_esq_liv(*r);
-    }
+    *r = balancear_liv(*r);
     return inseriu;
 }
 

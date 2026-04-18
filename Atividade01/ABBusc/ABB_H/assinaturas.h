@@ -25,6 +25,12 @@ int mostrar_vencimento_assinatura_cpf(Assinatura *raiz, char *cpf);
 Assinatura* buscar_assinatura(Assinatura *raiz, char *cpf);
 int remover_no_assinatura(Assinatura **r, char *cpf);
 
+// Funções auxiliares para remoção de Assinaturas
+int no_sem_filho_assinatura(Assinatura *raiz);
+Assinatura *so_um_filho_assinatura(Assinatura *r);
+int dois_filhos_assinatura(Assinatura *r);
+
+
 void liberar_arvore_assinaturas(Assinatura *raiz);
 #endif
 

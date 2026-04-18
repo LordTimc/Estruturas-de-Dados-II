@@ -140,6 +140,7 @@ int dois_filhos(Assinante *r){
 }
 
 int remove_assinant(Assinante **r, char *cpf) {
+    // Inicializa a variável de controle (único ponto de saída)
     int removeu = 0;
 
     if (*r != NULL) {
@@ -148,32 +149,45 @@ int remove_assinant(Assinante **r, char *cpf) {
         } else if (strcmp(cpf, (*r)->cpf) > 0) {
             removeu = remove_assinant(&(*r)->dir, cpf);
         } else {
-            // Encontrou o nó a ser removido
-            if ((*r)->esq == NULL || (*r)->dir == NULL) {
-                // Caso 1 e 2: Zero ou 1 filho
-                Assinante *temp = (*r)->esq ? (*r)->esq : (*r)->dir;
-                if (temp == NULL) {
-                    temp = *r;
-                    *r = NULL;
-                } else {
-                    **r = *temp; 
-                }
+            // Encontrou o nó a ser removido!
+            Assinante *temp = *r;
+
+            // CASO 1: Nó Folha (Zero filhos)
+            if (no_sem_filho(*r)) {
+                *r = NULL;
                 free(temp);
-            } else {
-                // Caso 3: Dois filhos (Busca o maior da subárvore esquerda)
-                Assinante *temp = (*r)->esq;
-                while (temp->dir != NULL) temp = temp->dir;
+                removeu = 1; // Define sucesso
+            } 
+            // CASO 2: Apenas UM filho
+            // Como so_um_filho retorna NULL se não houver exatamente 1 filho, 
+            // podemos testar se o retorno é diferente de NULL.
+            else if (so_um_filho(*r) != NULL) { 
+                *r = so_um_filho(*r); 
+                free(temp);
+                removeu = 1; // Define sucesso
+            } 
+            // CASO 3: Dois filhos
+            else if (dois_filhos(*r)) { 
+                // Busca o maior elemento da subárvore esquerda
+                temp = (*r)->esq;
+                while (temp->dir != NULL) {
+                    temp = temp->dir;
+                }
                 
+                // Copia os dados do nó substituto para o nó atual
                 strcpy((*r)->cpf, temp->cpf);
                 strcpy((*r)->nome, temp->nome);
                 strcpy((*r)->endereco, temp->endereco);
                 (*r)->nascimento = temp->nascimento;
                 
+                // A recursão cuidará de deletar o nó duplicado.
+                // O retorno dessa recursão (1) é passado para a nossa variável.
                 removeu = remove_assinant(&(*r)->esq, temp->cpf);
             }
-            removeu = 1;
         }
     }
+    
+    // Único return de toda a função!
     return removeu;
 }
 

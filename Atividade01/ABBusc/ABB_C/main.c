@@ -10,6 +10,7 @@
 #include "../ABB_H/generos.h"
 #include "../ABB_H/livros.h"
 #include "../ABB_H/auxiliares.h"
+#include "../ABB_H/testes_tempo.h"
 
 // Protótipos das funções de interface
 void menu_das_opcoes();
@@ -229,6 +230,20 @@ int main() {
                     }
                     break;
                 }
+                // Dentro do main.c (exemplo de uso)
+
+                case 99: {
+                    printf("\n--- BATERIA DE TESTES: LETRA A ---\n");
+                    executar_teste_letra_A(1000000); // 1 Milhão
+                    executar_teste_letra_A(2000000); // 2 Milhões
+                    executar_teste_letra_A(3000000); // 3 Milhões
+                    executar_teste_letra_A(4000000); // 4 Milhões
+
+
+                    printf("\n--- BATERIA DE TESTES: LETRA B ---\n");
+                    executar_teste_letra_B(); // <-- ADICIONE AQUI
+                    break;
+            }
                 
                 case 0:
                     printf("\nLiberando memoria e finalizando...\n");

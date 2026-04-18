@@ -28,7 +28,7 @@ typedef struct assinante {
 
 // ÁRVORE DE LIVROS - [AVL]
 typedef struct livro {
-    char isbn[3]; // Ajustado para 3 para caber o '\0'
+    char isbn[15]; // Ajustado para 3 para caber o '\0'
     char titulo[100];
     char autor[100];
     char editora[100];

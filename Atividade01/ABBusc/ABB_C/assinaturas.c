@@ -239,38 +239,79 @@ Assinatura* buscar_assinatura(Assinatura *raiz, char *cpf) {
     return encontrado;
 }
 
+
+int no_sem_filho_assinatura(Assinatura *raiz) {
+    int eh_folha = 0;
+    if (raiz != NULL) {
+        if (raiz->esq == NULL && raiz->dir == NULL)
+            eh_folha = 1;
+    }
+    return eh_folha;
+}
+
+Assinatura *so_um_filho_assinatura(Assinatura *r) {
+    Assinatura *no = NULL;
+    if (r != NULL) {
+        if (r->esq == NULL && r->dir != NULL)
+            no = r->dir;
+        else if (r->esq != NULL && r->dir == NULL)
+            no = r->esq;
+    }
+    return no;
+}
+
+int dois_filhos_assinatura(Assinatura *r) {
+    return (r != NULL && r->esq != NULL && r->dir != NULL);
+}
+
+
 int remover_no_assinatura(Assinatura **r, char *cpf) {
+    // Única variável de controle do fluxo
     int removeu = 0;
+
     if (*r != NULL) {
         if (strcmp(cpf, (*r)->cpf_usuario) < 0) {
             removeu = remover_no_assinatura(&(*r)->esq, cpf);
         } else if (strcmp(cpf, (*r)->cpf_usuario) > 0) {
             removeu = remover_no_assinatura(&(*r)->dir, cpf);
         } else {
-            if ((*r)->esq == NULL || (*r)->dir == NULL) {
-                Assinatura *temp = (*r)->esq ? (*r)->esq : (*r)->dir;
-                if (temp == NULL) {
-                    temp = *r;
-                    *r = NULL;
-                } else {
-                    **r = *temp; 
-                }
+            // Encontrou o nó a ser removido!
+            Assinatura *temp = *r;
+
+            // CASO 1: Nó Folha (Zero filhos)
+            if (no_sem_filho_assinatura(*r)) {
+                *r = NULL;
                 free(temp);
-            } else {
-                Assinatura *temp = (*r)->esq;
-                while (temp->dir != NULL) temp = temp->dir;
+                removeu = 1; 
+            } 
+            // CASO 2: Apenas UM filho
+            else if (so_um_filho_assinatura(*r) != NULL) {
+                *r = so_um_filho_assinatura(*r);
+                free(temp);
+                removeu = 1; 
+            } 
+            // CASO 3: Dois filhos
+            else if (dois_filhos_assinatura(*r)) {
+                // Busca o maior elemento da subárvore esquerda
+                temp = (*r)->esq;
+                while (temp->dir != NULL) {
+                    temp = temp->dir;
+                }
                 
+                // Copia todos os dados do nó substituto para o nó atual
                 strcpy((*r)->cpf_usuario, temp->cpf_usuario);
                 (*r)->codigo_forma = temp->codigo_forma;
                 (*r)->data_assinatura = temp->data_assinatura;
                 (*r)->data_vencimento = temp->data_vencimento;
                 (*r)->valor = temp->valor;
                 
+                // Dispara a recursão para deletar o nó duplicado
+                // Captura o sucesso da recursão na nossa variável de controle
                 removeu = remover_no_assinatura(&(*r)->esq, temp->cpf_usuario); 
             }
-            removeu = 1; 
         }
     }
+    
     return removeu;
 }
 

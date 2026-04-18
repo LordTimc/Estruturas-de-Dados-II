@@ -29,7 +29,7 @@ typedef struct assinante {
 // ÁRVORE DE LIVROS
 typedef struct livro {
 
-    char isbn[2];
+    char isbn[20];
     char titulo[100];
     char autor[100];
     char editora[100];

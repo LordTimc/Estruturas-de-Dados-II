@@ -124,17 +124,24 @@ int remove_assinant(Assinante **r, char *cpf) {
         } else if (strcmp(cpf, (*r)->cpf) > 0) {
             removeu = remove_assinant(&(*r)->dir, cpf);
         } else {
-            if ((*r)->esq == NULL || (*r)->dir == NULL) {
-                Assinante *temp = (*r)->esq ? (*r)->esq : (*r)->dir;
-                if (temp == NULL) {
-                    temp = *r;
-                    *r = NULL;
-                } else {
-                    **r = *temp; 
-                }
+            // Encontrou o nó a ser removido!
+            Assinante *temp = *r;
+
+            // CASO 1: Nó Folha
+            if (no_sem_filho(*r)) {
+                *r = NULL;
                 free(temp);
-            } else {
-                Assinante *temp = (*r)->esq;
+                removeu = 1;
+            } 
+            // CASO 2: Apenas UM filho
+            else if (so_um_filho(*r) != NULL) { 
+                *r = so_um_filho(*r); 
+                free(temp);
+                removeu = 1;
+            } 
+            // CASO 3: Dois filhos
+            else if (dois_filhos(*r)) { 
+                temp = (*r)->esq;
                 while (temp->dir != NULL) temp = temp->dir;
                 
                 strcpy((*r)->cpf, temp->cpf);
@@ -144,11 +151,12 @@ int remove_assinant(Assinante **r, char *cpf) {
                 
                 removeu = remove_assinant(&(*r)->esq, temp->cpf);
             }
-            removeu = 1;
         }
 
+        
+        // Se a remoção aconteceu (removeu == 1) e o nó atual não ficou nulo, recalcula o balanceamento
         if (*r != NULL && removeu) {
-            *r = balancear_usu(*r);
+            *r = balancear_assinante(*r);
         }
     }
     

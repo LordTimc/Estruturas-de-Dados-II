@@ -11,6 +11,7 @@
 #include "../AVL_H/generos.h"
 #include "../AVL_H/livros.h"
 #include "../AVL_H/suporteAVL.h"
+#include "../AVL_H/testes_tempo.h"
 
 void exibir_menu() {
     printf("\n======================================================\n");
@@ -230,6 +231,17 @@ int main() {
                         }
                     }
                 }
+                break;
+            }
+            case 99: {
+                printf("\n--- BATERIA DE TESTES AVL: LETRA A ---\n");
+                executar_teste_letra_A(1000000);
+                executar_teste_letra_A(2000000);
+                executar_teste_letra_A(3000000);
+                executar_teste_letra_A(4000000);
+
+                printf("\n--- BATERIA DE TESTES AVL: LETRA B ---\n");
+                executar_teste_letra_B();
                 break;
             }
             case 0:

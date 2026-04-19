@@ -12,7 +12,7 @@ int inserir_assinante(Assinante **raiz, Assinante *novo);
 int mostrar_assinantes(Assinante *raiz);
 
 // Função verifica se o nó é folha
-int no_sem_filho(Assinante *raiz);
+int eh_folha(Assinante *raiz);
 
 // Função verifica se é só um filho
 Assinante *so_um_filho(Assinante *r);

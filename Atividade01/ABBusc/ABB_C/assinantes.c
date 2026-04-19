@@ -112,7 +112,7 @@ int mostrar_assinantes(Assinante *raiz) {
 
 // ------ Remoção ----------
 
-int no_sem_filho(Assinante *raiz){
+int eh_folha(Assinante *raiz){
     int eh_folha = 0;
 
     if(raiz != NULL){

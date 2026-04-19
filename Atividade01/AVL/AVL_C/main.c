@@ -11,7 +11,7 @@
 #include "../AVL_H/generos.h"
 #include "../AVL_H/livros.h"
 #include "../AVL_H/suporteAVL.h"
-#include "../AVL_H/testes_tempo.h"
+
 
 void exibir_menu() {
     printf("\n======================================================\n");

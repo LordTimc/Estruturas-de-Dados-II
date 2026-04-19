@@ -145,7 +145,7 @@ void mostrar_assinaturas_por_forma(Assinatura *raiz, int codigo_busca){
         if (raiz->codigo_forma == codigo_busca){
             encontrou = 1;
             printf("\n-------------------------------------------");
-            printf("\nCPF do Assinante: %s", raiz->cpf_usuario);
+            printf("\nCPF do Assinante: %s", raiz->cpf_assinante);
             printf("\nData Assinatura:  %02d/%02d/%04d", 
                     raiz->data_assinatura.dia, 
                     raiz->data_assinatura.mes, 

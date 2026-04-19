@@ -10,7 +10,7 @@
 #include "../ABB_H/generos.h"
 #include "../ABB_H/livros.h"
 #include "../ABB_H/auxiliares.h"
-#include "../ABB_H/testes_tempo.h"
+
 
 // Protótipos das funções de interface
 void menu_das_opcoes();
@@ -29,6 +29,7 @@ int main() {
     int opc = -1;
     int repetir = 1;
     int resposta = 0;
+    char cpf_busca[15];
 
     printf("====================================================\n");
     printf("        BEM-VINDO AO SISTEMA DE GESTAO DE LIVROS    \n");
@@ -184,7 +185,6 @@ int main() {
                     
                 case 13: {
                     printf("\n--- VENCIMENTO DE ASSINATURA ---\n");
-                    char cpf_busca[12];
                     if (pega_cpf(cpf_busca)) {
                         if (mostrar_vencimento_assinatura_cpf(raiz_assinatura, cpf_busca) == 0)
                             printf("Nenhuma assinatura encontrada para o CPF.\n");
@@ -195,14 +195,13 @@ int main() {
                 case 14: {
                     // TRAVA FASE 6: Exclui apenas se vencida
                     printf("\n--- REMOVER ASSINATURA ---\n");
-                    char cpf_rem[12];
-                    if (pega_cpf(cpf_rem)) {
-                        Assinatura *ass = buscar_assinatura(raiz_assinatura, cpf_rem);
+                    if (pega_cpf(cpf_busca)) {
+                        Assinatura *ass = buscar_assinatura(raiz_assinatura, cpf_busca);
                         if (ass == NULL) {
                             printf("Erro: Nenhuma assinatura encontrada.\n");
                         } else {
-                            if (possui_assinatura_vencida(raiz_assinatura, cpf_rem)) {
-                                remover_no_assinatura(&raiz_assinatura, cpf_rem);
+                            if (possui_assinatura_vencida(raiz_assinatura, cpf_busca)) {
+                                remover_no_assinatura(&raiz_assinatura, cpf_busca);
                                 printf("Operacao de Sucesso: Assinatura removida!\n");
                             } else {
                                 printf("Operacao negada! A assinatura esta ATIVA e nao pode ser removida.\n");
@@ -215,13 +214,13 @@ int main() {
                 case 15: {
                     // TRAVA FASE 6: Exclui apenas sem assinaturas ativas
                     printf("\n--- REMOVER ASSINANTE ---\n");
-                    char cpf_usu[12];
-                    if (pega_cpf(cpf_usu)) {
-                        Assinatura *ass = buscar_assinatura(raiz_assinatura, cpf_usu);
-                        if (ass != NULL && !possui_assinatura_vencida(raiz_assinatura, cpf_usu)) {
+                    char cpf_assinante[12];
+                    if (pega_cpf(cpf_assinante)) {
+                        Assinatura *ass = buscar_assinatura(raiz_assinatura, cpf_assinante);
+                        if (ass != NULL && !possui_assinatura_vencida(raiz_assinatura, cpf_assinante)) {
                             printf("Operacao negada! O assinante possui assinatura ATIVA.\n");
                         } else {
-                            if (remove_assinant(&raiz_assinante, cpf_usu)) {
+                            if (remove_assinant(&raiz_assinante, cpf_assinante)) {
                                 printf("Removido com sucesso! O usuario agora esta livre de pendencias.\n");
                             } else {
                                 printf("Assinante nao encontrado.\n");

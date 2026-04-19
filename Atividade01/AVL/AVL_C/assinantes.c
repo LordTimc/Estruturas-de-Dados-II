@@ -8,18 +8,18 @@
 #include "../AVL_H/suporteAVL.h"
 
 Assinante *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nascimento){ 
-    Assinante *novo_usuario = (Assinante *)malloc(sizeof(Assinante));
-    if (novo_usuario != NULL) {
-        strcpy(novo_usuario->cpf, cpf);
-        strcpy(novo_usuario->nome, nome);
-        strcpy(novo_usuario->endereco, endereco);
-        novo_usuario->nascimento = data_nascimento;
+    Assinante *novo_assinante = (Assinante *)malloc(sizeof(Assinante));
+    if (novo_assinante != NULL) {
+        strcpy(novo_assinante->cpf, cpf);
+        strcpy(novo_assinante->nome, nome);
+        strcpy(novo_assinante->endereco, endereco);
+        novo_assinante->nascimento = data_nascimento;
         
-        novo_usuario->altura = 1;
-        novo_usuario->esq = NULL;
-        novo_usuario->dir = NULL;
+        novo_assinante->altura = 1;
+        novo_assinante->esq = NULL;
+        novo_assinante->dir = NULL;
     }
-    return (novo_usuario);
+    return (novo_assinante);
 }
 
 Assinante *cadastrar_assinante(Assinante *usuario) {
@@ -93,7 +93,7 @@ int mostrar_assinantes(Assinante *raiz) {
     return mostrou;
 }
 
-int no_sem_filho(Assinante *raiz){
+int eh_folha(Assinante *raiz){
     int eh_folha = 0;
     if(raiz != NULL){
         if(raiz->esq == NULL && raiz->dir == NULL)
@@ -128,7 +128,7 @@ int remove_assinant(Assinante **r, char *cpf) {
             Assinante *temp = *r;
 
             // CASO 1: Nó Folha
-            if (no_sem_filho(*r)) {
+            if (eh_folha(*r)) {
                 *r = NULL;
                 free(temp);
                 removeu = 1;

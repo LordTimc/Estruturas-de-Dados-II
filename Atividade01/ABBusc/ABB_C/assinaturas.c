@@ -15,7 +15,7 @@ Assinatura* alocar_assinatura(){
 
     if (novo != NULL) {
         // Inicialização de strings para evitar lixo de memória
-        strcpy(novo->cpf_usuario, "");
+        strcpy(novo->cpf_assinante, "");
         
         // Inicialização de valores numéricos
         novo->codigo_forma = 0;
@@ -60,7 +60,7 @@ void cadastrar_assinatura(Assinatura **r, Assinante *raiz_usu, forma_ass *lista_
 
         novo_no = alocar_assinatura();
         if (novo_no != NULL) {
-            strcpy(novo_no->cpf_usuario, cpf_aux);
+            strcpy(novo_no->cpf_assinante, cpf_aux);
             
             printf("Digite o codigo da forma de assinatura: ");
             novo_no->codigo_forma = num_inteiro();
@@ -103,11 +103,11 @@ int inserir_assinatura(Assinatura **raiz, Assinatura *novo){
         *raiz = novo;
         inseriu = 1;
     } else {
-        if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) == 0){
-            printf("Aviso: Assinatura ja existente para o CPF %s.\n", novo->cpf_usuario);
+        if(strcmp(novo->cpf_assinante, (*raiz)->cpf_assinante) == 0){
+            printf("Aviso: Assinatura ja existente para o CPF %s.\n", novo->cpf_assinante);
             free(novo);
             inseriu = 0;
-        } else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) < 0){
+        } else if(strcmp(novo->cpf_assinante, (*raiz)->cpf_assinante) < 0){
             // CORREÇÃO: Estava chamando si mesmo errado
             inseriu = inserir_assinatura(&(*raiz)->esq, novo);
         } else {
@@ -125,7 +125,7 @@ int possui_assinatura_vencida(Assinatura *raiz, char *cpf) {
     pegar_data_de_hoje(&hoje);
 
     if (raiz != NULL) {
-        if (strcmp(cpf, raiz->cpf_usuario) == 0) {
+        if (strcmp(cpf, raiz->cpf_assinante) == 0) {
             // Verifica se está vencida
             if (
                 (raiz->data_vencimento.ano < hoje.ano) ||
@@ -136,7 +136,7 @@ int possui_assinatura_vencida(Assinatura *raiz, char *cpf) {
             } else {
                 resultado = 0; // não está vencida
             }
-        } else if (strcmp(cpf, raiz->cpf_usuario)< 0) {
+        } else if (strcmp(cpf, raiz->cpf_assinante)< 0) {
             resultado = possui_assinatura_vencida(raiz->esq, cpf);
         } else {
             resultado = possui_assinatura_vencida(raiz->dir, cpf);
@@ -162,7 +162,7 @@ void mostrar_assinaturas(Assinatura *raiz){
 
         // 2. Exibe os dados do nó atual
         printf("\n-------------------------------------------");
-        printf("\nCPF do Assinante: %s", raiz->cpf_usuario);
+        printf("\nCPF do Assinante: %s", raiz->cpf_assinante);
         printf("\nCodigo da Forma:  %d", raiz->codigo_forma);
         
         // Exibição das Datas (formatadas com %02d para garantir 2 dígitos)
@@ -198,11 +198,11 @@ int mostrar_vencimento_assinatura_cpf(Assinatura *raiz, char *cpf){
 
     if (raiz != NULL) 
     {
-        if (strcmp(cpf, raiz->cpf_usuario) == 0) 
+        if (strcmp(cpf, raiz->cpf_assinante) == 0) 
         {
             //Exibe os dados se encontrar
             printf("--------------------------------------------------\n");
-            printf("Assinante CPF: %s\n", raiz->cpf_usuario);
+            printf("Assinante CPF: %s\n", raiz->cpf_assinante);
             printf("\nData Vencimento:  %02d/%02d/%04d\n", 
                 raiz->data_vencimento.dia, 
                 raiz->data_vencimento.mes, 
@@ -210,7 +210,7 @@ int mostrar_vencimento_assinatura_cpf(Assinatura *raiz, char *cpf){
             printf("--------------------------------------------------\n");
             encontrou = 1; 
         } 
-        else if (strcmp(cpf, raiz->cpf_usuario) < 0) 
+        else if (strcmp(cpf, raiz->cpf_assinante) < 0) 
         {
             // Busca na subárvore esquerda
             encontrou = mostrar_vencimento_assinatura_cpf(raiz->esq, cpf);
@@ -228,9 +228,9 @@ int mostrar_vencimento_assinatura_cpf(Assinatura *raiz, char *cpf){
 Assinatura* buscar_assinatura(Assinatura *raiz, char *cpf) {
     Assinatura *encontrado = NULL; 
     if (raiz != NULL) {
-        if (strcmp(cpf, raiz->cpf_usuario) == 0) {
+        if (strcmp(cpf, raiz->cpf_assinante) == 0) {
             encontrado = raiz;
-        } else if (strcmp(cpf, raiz->cpf_usuario) < 0) {
+        } else if (strcmp(cpf, raiz->cpf_assinante) < 0) {
             encontrado = buscar_assinatura(raiz->esq, cpf);
         } else {
             encontrado = buscar_assinatura(raiz->dir, cpf);
@@ -270,9 +270,9 @@ int remover_no_assinatura(Assinatura **r, char *cpf) {
     int removeu = 0;
 
     if (*r != NULL) {
-        if (strcmp(cpf, (*r)->cpf_usuario) < 0) {
+        if (strcmp(cpf, (*r)->cpf_assinante) < 0) {
             removeu = remover_no_assinatura(&(*r)->esq, cpf);
-        } else if (strcmp(cpf, (*r)->cpf_usuario) > 0) {
+        } else if (strcmp(cpf, (*r)->cpf_assinante) > 0) {
             removeu = remover_no_assinatura(&(*r)->dir, cpf);
         } else {
             // Encontrou o nó a ser removido!
@@ -299,7 +299,7 @@ int remover_no_assinatura(Assinatura **r, char *cpf) {
                 }
                 
                 // Copia todos os dados do nó substituto para o nó atual
-                strcpy((*r)->cpf_usuario, temp->cpf_usuario);
+                strcpy((*r)->cpf_assinante, temp->cpf_assinante);
                 (*r)->codigo_forma = temp->codigo_forma;
                 (*r)->data_assinatura = temp->data_assinatura;
                 (*r)->data_vencimento = temp->data_vencimento;
@@ -307,7 +307,7 @@ int remover_no_assinatura(Assinatura **r, char *cpf) {
                 
                 // Dispara a recursão para deletar o nó duplicado
                 // Captura o sucesso da recursão na nossa variável de controle
-                removeu = remover_no_assinatura(&(*r)->esq, temp->cpf_usuario); 
+                removeu = remover_no_assinatura(&(*r)->esq, temp->cpf_assinante); 
             }
         }
     }

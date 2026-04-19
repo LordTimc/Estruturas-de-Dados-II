@@ -300,30 +300,6 @@ int pega_isbn(char *codigo){
     return isbn_valido;
 }
 
-
-int pega_edicao(char *codigo){
-    
-    char dados_edicao[5];
-    int valido = 0;
-
-    do {
-        printf("Entre com o num da edicao nesse formato (xx): ");
-        int leu = ler_string_info(dados_edicao, sizeof(dados_edicao));
-
-        if(leu){
-            if(num_eh_valido(dados_edicao)){
-                strcpy(codigo, dados_edicao);
-                valido = 1;
-            }else {
-                printf("Erro no num da edicao! O num tem que possuir 2 digitos numericos.\n");
-            }
-        } else{
-            printf("Erro na leitura do num da edicao!\n");
-        }
-    } while(!valido); // enquanto o cpf_valido for igual a zero
-    return valido;
-}
-
 // ------- inteiros e decimais -----
 
 // Função valida e limpa os dados do buffer

@@ -64,7 +64,7 @@ typedef struct forma_ass {
 
 // ÁRVORE DE ASSINATURAS - [AVL]
 typedef struct assinatura {
-    char cpf_usuario[12];              
+    char cpf_assinante[12];              
     int codigo_forma;                 
     Data data_assinatura;
     Data data_vencimento;

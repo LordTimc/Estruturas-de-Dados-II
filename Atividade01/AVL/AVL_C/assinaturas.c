@@ -11,7 +11,7 @@
 Assinatura* alocar_assinatura(){
     Assinatura *novo = (Assinatura*) malloc(sizeof(Assinatura));
     if (novo != NULL) {
-        strcpy(novo->cpf_usuario, "");
+        strcpy(novo->cpf_assinante, "");
         novo->codigo_forma = 0;
         novo->valor = 0.0;
         novo->altura = 1; 
@@ -33,7 +33,7 @@ void cadastrar_assinatura(Assinatura **r){
     if (pega_cpf(cpf_aux)) {
         novo_no = alocar_assinatura();
         if (novo_no != NULL) {
-            strcpy(novo_no->cpf_usuario, cpf_aux);
+            strcpy(novo_no->cpf_assinante, cpf_aux);
             printf("Digite o codigo da forma de assinatura: ");
             novo_no->codigo_forma = num_inteiro();
 
@@ -67,11 +67,11 @@ int inserir_assinatura(Assinatura **raiz, Assinatura *novo){
     if (*raiz == NULL) {
         *raiz = novo;
     }else{
-        if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) == 0){
-            printf("Aviso: Assinatura ja existente para o CPF %s.\n", novo->cpf_usuario);
+        if(strcmp(novo->cpf_assinante, (*raiz)->cpf_assinante) == 0){
+            printf("Aviso: Assinatura ja existente para o CPF %s.\n", novo->cpf_assinante);
             free(novo);
             inseriu = 0;
-        } else if(strcmp(novo->cpf_usuario, (*raiz)->cpf_usuario) < 0){
+        } else if(strcmp(novo->cpf_assinante, (*raiz)->cpf_assinante) < 0){
             inseriu = inserir_assinatura(&(*raiz)->esq, novo);
         } else {
             inseriu = inserir_assinatura(&(*raiz)->dir, novo);
@@ -90,7 +90,7 @@ void mostrar_assinaturas(Assinatura *raiz){
     if (raiz != NULL) {
         mostrar_assinaturas(raiz->esq);
         printf("\n-------------------------------------------");
-        printf("\nCPF do Assinante: %s", raiz->cpf_usuario);
+        printf("\nCPF do Assinante: %s", raiz->cpf_assinante);
         printf("\nCodigo da Forma:  %d", raiz->codigo_forma);
         printf("\nData Assinatura:  %02d/%02d/%04d", raiz->data_assinatura.dia, raiz->data_assinatura.mes, raiz->data_assinatura.ano);
         printf("\nData Vencimento:  %02d/%02d/%04d\n", raiz->data_vencimento.dia, raiz->data_vencimento.mes, raiz->data_vencimento.ano);
@@ -103,13 +103,13 @@ void mostrar_assinaturas(Assinatura *raiz){
 int mostrar_vencimento_assinatura_cpf(Assinatura *raiz, char *cpf){
     int encontrou = 0;
     if (raiz != NULL) {
-        if (strcmp(cpf, raiz->cpf_usuario) == 0) {
+        if (strcmp(cpf, raiz->cpf_assinante) == 0) {
             printf("--------------------------------------------------\n");
-            printf("Assinante CPF: %s\n", raiz->cpf_usuario);
+            printf("Assinante CPF: %s\n", raiz->cpf_assinante);
             printf("\nData Vencimento:  %02d/%02d/%04d\n", raiz->data_vencimento.dia, raiz->data_vencimento.mes, raiz->data_vencimento.ano);
             printf("--------------------------------------------------\n");
             encontrou = 1; 
-        } else if (strcmp(cpf, raiz->cpf_usuario) < 0) {
+        } else if (strcmp(cpf, raiz->cpf_assinante) < 0) {
             encontrou = mostrar_vencimento_assinatura_cpf(raiz->esq, cpf);
         } else {
             encontrou = mostrar_vencimento_assinatura_cpf(raiz->dir, cpf);
@@ -123,9 +123,9 @@ Assinatura* buscar_assinatura(Assinatura *raiz, char *cpf) {
     Assinatura *encontrado = NULL; 
 
     if (raiz != NULL) {
-        if (strcmp(cpf, raiz->cpf_usuario) == 0) {
+        if (strcmp(cpf, raiz->cpf_assinante) == 0) {
             encontrado = raiz;
-        } else if (strcmp(cpf, raiz->cpf_usuario) < 0) {
+        } else if (strcmp(cpf, raiz->cpf_assinante) < 0) {
             encontrado = buscar_assinatura(raiz->esq, cpf);
         } else {
             encontrado = buscar_assinatura(raiz->dir, cpf);
@@ -137,7 +137,7 @@ Assinatura* buscar_assinatura(Assinatura *raiz, char *cpf) {
 
 
 // --- Funções Auxiliares de Assinatura ---
-int no_sem_filho_assinatura(Assinatura *raiz) {
+int eh_folha_assinatura(Assinatura *raiz) {
     int eh_folha = 0;
     if (raiz != NULL) {
         if (raiz->esq == NULL && raiz->dir == NULL)
@@ -164,16 +164,16 @@ int remover_no_assinatura(Assinatura **r, char *cpf) {
     int removeu = 0;
 
     if (*r != NULL) {
-        if (strcmp(cpf, (*r)->cpf_usuario) < 0) {
+        if (strcmp(cpf, (*r)->cpf_assinante) < 0) {
             removeu = remover_no_assinatura(&(*r)->esq, cpf);
-        } else if (strcmp(cpf, (*r)->cpf_usuario) > 0) {
+        } else if (strcmp(cpf, (*r)->cpf_assinante) > 0) {
             removeu = remover_no_assinatura(&(*r)->dir, cpf);
         } else {
             // Encontrou o nó a ser removido!
             Assinatura *temp = *r;
 
             // CASO 1: Nó Folha
-            if (no_sem_filho_assinatura(*r)) {
+            if (eh_folha_assinatura(*r)) {
                 *r = NULL;
                 free(temp);
                 removeu = 1; 
@@ -189,13 +189,13 @@ int remover_no_assinatura(Assinatura **r, char *cpf) {
                 temp = (*r)->esq;
                 while (temp->dir != NULL) temp = temp->dir;
                 
-                strcpy((*r)->cpf_usuario, temp->cpf_usuario);
+                strcpy((*r)->cpf_assinante, temp->cpf_assinante);
                 (*r)->codigo_forma = temp->codigo_forma;
                 (*r)->data_assinatura = temp->data_assinatura;
                 (*r)->data_vencimento = temp->data_vencimento;
                 (*r)->valor = temp->valor;
                 
-                removeu = remover_no_assinatura(&(*r)->esq, temp->cpf_usuario); 
+                removeu = remover_no_assinatura(&(*r)->esq, temp->cpf_assinante); 
             }
         }
 

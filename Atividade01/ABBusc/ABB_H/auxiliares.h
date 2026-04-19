@@ -23,8 +23,6 @@ char *pega_endereco();
 int num_eh_valido(const char *num);
 int pega_isbn(char *codigo);
 
-int pega_edicao(char *codigo);
-
 int num_inteiro();
 float num_decimal();
 

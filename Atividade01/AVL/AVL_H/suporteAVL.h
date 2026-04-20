@@ -12,8 +12,8 @@ int fb_ass(Assinatura *no);
 Assinatura* rot_dir_ass(Assinatura *y);
 Assinatura* rot_esq_ass(Assinatura *x);
 
-// Suporte para Usuários
-int altura_usu(Assinante *no);
+// Suporte para Assinantes
+int altura_assinantes(Assinante *no);
 int fb_usu(Assinante *no);
 Assinante* rot_dir_usu(Assinante *y);
 Assinante* rot_esq_usu(Assinante *x);

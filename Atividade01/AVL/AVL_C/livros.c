@@ -7,24 +7,26 @@
 #include "../AVL_H/auxiliares.h"
 #include "../AVL_H/suporteAVL.h"
 
-Livro *aloca_livro(char *isbn, char *titulo, char *autor, char *editora, int edicao, int ano_publica){
+Livro *aloca_livro(){
     Livro *novo_livro = (Livro *)malloc(sizeof(Livro));
     if (novo_livro != NULL) {
-        strcpy(novo_livro->isbn, isbn);
-        strcpy(novo_livro->titulo, titulo);
-        strcpy(novo_livro->autor, autor);
-        strcpy(novo_livro->editora, editora);
-        novo_livro->edicao = edicao;
-        novo_livro->ano_publica = ano_publica;
+        strcpy(novo_livro->isbn, "");
+        strcpy(novo_livro->titulo, "");
+        strcpy(novo_livro->autor, "");
+        strcpy(novo_livro->editora, "");
+        novo_livro->edicao = 0;
+        novo_livro->ano_publica = 0;
         
         novo_livro->altura = 1;
         novo_livro->esq = NULL;
         novo_livro->dir = NULL;
+    }else {
+        printf("Erro! Falha na alocacao de memoria para Assinante.\n");
     }
     return(novo_livro);
 }
 
-Livro *cadastrar_livro(Livro *livro){
+void *cadastrar_livro(Livro **livro){
     char isbn[3];
     char *titulo = NULL;
     char *autor = NULL;
@@ -32,10 +34,13 @@ Livro *cadastrar_livro(Livro *livro){
     int edicao;
     int ano_publica;
     int cadastrou = 0;
+    Livro *novo_li = NULL;
 
     printf("==== Informacoes do livro ====");
 
     if(pega_isbn(isbn)){
+        novo_li = aloca_livro();
+
         printf("\nDigite o titulo: ");
         titulo = leitura_de_string();
         
@@ -50,20 +55,32 @@ Livro *cadastrar_livro(Livro *livro){
             ano_publica = num_inteiro(); 
 
             if(autor != NULL && editora != NULL){
-                livro = aloca_livro(isbn, titulo, autor, editora, edicao, ano_publica);
+                
+                strcpy(novo_li->isbn, isbn);
+                strcpy(novo_li->titulo, titulo);
+                strcpy(novo_li->autor, autor);
+                novo_li->edicao = edicao;
+                novo_li->ano_publica = ano_publica;
+
                 cadastrou = 1;
-                free(titulo);
-                free(autor);
-                free(editora);
             }
         }
     }
-    if(!cadastrou){
-        if(titulo) free(titulo);
-        if(autor) free(autor);
-        if(editora) free(editora);
+    if (cadastrou) {
+        if (inserir_livro(&(*livro), novo_li)) {
+            printf("Assinante cadastrado com sucesso!\n");
+        } else {
+            printf("Erro: Nao foi possivel inserir na arvore.\n");
+        }
+    } else {
+        if (novo_li != NULL) free(novo_li);
+        printf("Cadastro de assinante cancelado ou dados invalidos.\n");
     }
-    return livro;
+
+    // Liberação de memória auxiliar
+    if (titulo) free(titulo);
+    if (autor) free(autor);
+    if (editora) free(editora);
 }
 
 int inserir_livro(Livro **r, Livro *novo){

@@ -50,7 +50,7 @@ void cadastrar_assinatura(Assinatura **r){
     }
 
     if (cadastrou) {
-        if (inserir_assinatura(r, novo_no)) {
+        if (inserir_assinatura(&(*r), novo_no)) {
             printf("Assinatura realizada com sucesso!\n");
         } else {
             printf("Erro: Nao foi possivel inserir na arvore.\n");

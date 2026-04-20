@@ -44,7 +44,7 @@ Assinatura* alocar_assinatura(){
  * - int codigoForma, float valor: Dados numéricos (passagem por valor).
 */
 
-void cadastrar_assinatura(Assinatura **r, Assinante *raiz_usu, forma_ass *lista_formas){
+void cadastrar_assinatura(Assinatura **r, Assinante *raiz_assinante, forma_ass *lista_formas){
     char cpf_aux[12];
     int cadastrou = 0;
     Assinatura *novo_no = NULL;
@@ -53,39 +53,38 @@ void cadastrar_assinatura(Assinatura **r, Assinante *raiz_usu, forma_ass *lista_
 
     if (pega_cpf(cpf_aux)) {
         // REGRA DE NEGÓCIO III: O assinante TEM que existir
-        if (buscar_assinante(raiz_usu, cpf_aux) == NULL) {
+        if (buscar_assinante(raiz_assinante, cpf_aux) == NULL) {
             printf("Erro: Assinante com CPF %s nao encontrado no sistema.\n", cpf_aux);
-            return;
-        }
+        }else{
+            novo_no = alocar_assinatura();
+            if (novo_no != NULL) {
+                strcpy(novo_no->cpf_assinante, cpf_aux);
+                
+                printf("Digite o codigo da forma de assinatura: ");
+                novo_no->codigo_forma = num_inteiro();
 
-        novo_no = alocar_assinatura();
-        if (novo_no != NULL) {
-            strcpy(novo_no->cpf_assinante, cpf_aux);
-            
-            printf("Digite o codigo da forma de assinatura: ");
-            novo_no->codigo_forma = num_inteiro();
+                // REGRA DE NEGÓCIO III: A forma de assinatura TEM que existir
+                if (buscar_forma(lista_formas, novo_no->codigo_forma) == NULL) {
+                    printf("Erro: Forma de assinatura %d nao existe.\n", novo_no->codigo_forma);
+                    free(novo_no);
+                    return;
+                }
 
-            // REGRA DE NEGÓCIO III: A forma de assinatura TEM que existir
-            if (buscar_forma(lista_formas, novo_no->codigo_forma) == NULL) {
-                printf("Erro: Forma de assinatura %d nao existe.\n", novo_no->codigo_forma);
-                free(novo_no);
-                return;
-            }
-
-            printf("Data de Inicio da assinatura:\n");
-            if (pega_data(&novo_no->data_assinatura)) {
-                printf("Data de Vencimento da assinatura:\n");
-                if (pega_data(&novo_no->data_vencimento)) {
-                    printf("Valor da Assinatura: ");
-                    novo_no->valor = num_decimal();
-                    cadastrou = 1;
+                printf("Data de Inicio da assinatura:\n");
+                if (pega_data(&novo_no->data_assinatura)) {
+                    printf("Data de Vencimento da assinatura:\n");
+                    if (pega_data(&novo_no->data_vencimento)) {
+                        printf("Valor da Assinatura: ");
+                        novo_no->valor = num_decimal();
+                        cadastrou = 1;
+                    }
                 }
             }
         }
     }
 
     if (cadastrou) {
-        if (inserir_assinatura(r, novo_no)) {
+        if (inserir_assinatura(&(*r), novo_no)) {
             printf("Assinatura realizada com sucesso!\n");
         } else {
             printf("Erro: Nao foi possivel inserir na arvore.\n");
@@ -99,6 +98,8 @@ void cadastrar_assinatura(Assinatura **r, Assinante *raiz_usu, forma_ass *lista_
 
 int inserir_assinatura(Assinatura **raiz, Assinatura *novo){
     int inseriu = 0;
+
+    // Verifica se chegamos em um nó folha/vazio
     if (*raiz == NULL) {
         *raiz = novo;
         inseriu = 1;

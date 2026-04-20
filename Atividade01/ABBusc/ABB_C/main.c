@@ -30,6 +30,7 @@ int main() {
     int repetir = 1;
     int resposta = 0;
     char cpf_busca[15];
+    int codigo_busca;
 
     printf("====================================================\n");
     printf("        BEM-VINDO AO SISTEMA DE GESTAO DE LIVROS    \n");
@@ -44,12 +45,7 @@ int main() {
             switch (opc) {
                 case 1: {
                     printf("\n--- CADASTRAR ASSINANTE ---\n");
-                    Assinante *novo_assinante = cadastrar_assinante(NULL);
-                    if(novo_assinante != NULL) {
-                        resposta = inserir_assinante(&raiz_assinante, novo_assinante);
-                        if(resposta == 1) printf("\nAssinante cadastrado com sucesso!\n");
-                        else printf("\nErro: Assinante com este CPF ja existe no sistema.\n");
-                    }
+                    cadastrar_assinante(&raiz_assinante);
                     break;
                 }
                 
@@ -150,6 +146,7 @@ int main() {
                 case 6:
                     printf("\n--- LISTA DE ASSINANTES ---\n");
                     if (mostrar_assinantes(raiz_assinante) == 0) printf("Nenhum assinante cadastrado na arvore.\n");
+                    else mostrar_assinantes(raiz_assinante);
                     break;
                     
                 case 7:
@@ -161,7 +158,8 @@ int main() {
                 case 8:
                     printf("\n--- BUSCAR ASSINATURAS POR FORMA ---\n");
                     printf("Digite o codigo da forma de assinatura: ");
-                    mostrar_assinaturas_por_forma(raiz_assinatura, num_inteiro());
+                    codigo_busca = num_inteiro();
+                    mostrar_assinaturas_por_forma(raiz_assinatura, codigo_busca);
                     break;
                     
                 case 9:

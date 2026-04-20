@@ -220,11 +220,16 @@ void liberar_lista_formas(forma_ass *lista){
 }
 
 
-forma_ass* buscar_forma(forma_ass *lista, int codigo) {
+forma_ass* buscar_forma(forma_ass *lista, int codigo){
     forma_ass *aux = lista;
-    while (aux != NULL) {
-        if (aux->codigo == codigo) return aux;
-        aux = aux->prox;
+    forma_ass *resultado = NULL;
+
+    while (aux != NULL && resultado == NULL){
+        if(aux->codigo == codigo){
+            resultado = aux;
+        }else{
+            aux = aux->prox;
+        }
     }
-    return NULL;
+    return resultado;
 }

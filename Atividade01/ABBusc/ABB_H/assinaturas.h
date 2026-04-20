@@ -8,7 +8,7 @@
 Assinatura* alocar_assinatura();
 
 // Função para cadastrar uma assinatura na árvore binária
-void cadastrar_assinatura(Assinatura **r, Assinante *raiz_usu, forma_ass *lista_formas);
+void cadastrar_assinatura(Assinatura **r, Assinante *raiz_assinante, forma_ass *lista_formas);
 
 // Função para inserir assinatura
 int inserir_assinatura(Assinatura **raiz, Assinatura *novo);

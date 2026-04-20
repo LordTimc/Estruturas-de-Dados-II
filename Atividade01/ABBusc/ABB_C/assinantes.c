@@ -6,67 +6,95 @@
 #include "../ABB_H/assinantes.h"
 #include "../ABB_H/auxiliares.h"
 
-Assinante *aloca_assinante (char *cpf, char *nome, char *endereco, Data data_nascimento){ 
-    // Aloca espaço na memória para o novo usuário
-    Assinante *novo_usuario = (Assinante *)malloc(sizeof(Assinante));
-        
-    if (novo_usuario != NULL) {
-        strcpy(novo_usuario->cpf, cpf);
-        strcpy(novo_usuario->nome, nome);
-        strcpy(novo_usuario->endereco, endereco);
-        novo_usuario->nascimento = data_nascimento;
-        
-        novo_usuario->esq = NULL;
-        novo_usuario->dir = NULL;
+// Função para alocar um novo assinante
+Assinante *alocar_assinante(){
+    // Inicializa o ponteiro
+    Assinante *novo = (Assinante *) malloc(sizeof(Assinante));
+
+    if (novo != NULL) {
+        // Inicialização de strings
+        strcpy(novo->cpf, "");
+        strcpy(novo->nome, "");
+        strcpy(novo->endereco, "");
+
+        // Inicialização de struct interna
+        novo->nascimento.dia = 0;
+        novo->nascimento.mes = 0;
+        novo->nascimento.ano = 0;
+
+        // Inicialização da árvore
+        novo->esq = NULL;
+        novo->dir = NULL;
+    } else {
+        printf("Erro! Falha na alocacao de memoria para Assinante.\n");
     }
-    return (novo_usuario);
+    return novo;
 }
 
-
-/* - char *cpf, *nome, *endereco, *dataNasc: Dados do usuário a serem inseridos (passagem por valor/ponteiro de array).*/
-Assinante *cadastrar_assinante(Assinante *usuario) {
+// Função para cadastrar um novo assinante na árvore binária
+void cadastrar_assinante(Assinante **r){
     char cpf[12];
     char *nome = NULL;
     char *endereco = NULL; 
     Data nascimento;
-    int cadastrou = 0; 
+    int cadastrou = 0;
+    Assinante *novo_no = NULL;
 
-    printf("==== Informacoes do assinante ====");
+    printf("\n--- Novo Assinante ---\n");
 
-    if(pega_cpf(cpf)){
-        printf("\nDigite o nome: ");
-        nome = leitura_de_string();
-        
-        if(nome != NULL){
-            endereco = pega_endereco();    
-            if(endereco != NULL && pega_data_nasci(&nascimento)){
-                // CORREÇÃO: Estava aloca_usuario
-                usuario = aloca_assinante(cpf, nome, endereco, nascimento);
-                cadastrou = 1;
-                free(nome);
-                free(endereco);
+    if (pega_cpf(cpf)) {
+        novo_no = alocar_assinante();
+
+        if (novo_no != NULL) {
+            printf("\nDigite o nome: ");
+            nome = leitura_de_string();
+
+            if (nome != NULL) {
+                endereco = pega_endereco();
+
+                if (endereco != NULL && pega_data_nasci(&nascimento)) {
+                    
+                    // Preenchimento do nó
+                    strcpy(novo_no->cpf, cpf);
+                    strcpy(novo_no->nome, nome);
+                    strcpy(novo_no->endereco, endereco);
+                    novo_no->nascimento = nascimento;
+
+                    cadastrou = 1;
+                }
             }
         }
     }
-    if(!cadastrou){
-        if(nome) free(nome);
-        if(endereco) free(endereco);
+
+    if (cadastrou) {
+        if (inserir_assinante(&(*r), novo_no)) {
+            printf("Assinante cadastrado com sucesso!\n");
+        } else {
+            printf("Erro: Nao foi possivel inserir na arvore.\n");
+        }
+    } else {
+        if (novo_no != NULL) free(novo_no);
+        printf("Cadastro de assinante cancelado ou dados invalidos.\n");
     }
-    return usuario;
+
+    // Liberação de memória auxiliar
+    if (nome) free(nome);
+    if (endereco) free(endereco);
 }
+
 /* **raiz: Ponteiro duplo para a raiz da árvore. Escolhido (passagem por referência), pois precisamos modificar o ponteiro real da árvore no `main` quando alocamos um novo nó.*/
 int inserir_assinante(Assinante **raiz, Assinante *novo){
-    int inseriu = 1;
+    int inseriu = 0;
 
     // Verifica se chegamos em um nó folha/vazio
-    if(*raiz == NULL)
+    if(*raiz == NULL){
         *raiz = novo;
-    else if(strcmp(novo->cpf, (*raiz)->cpf) == 0){
+        inseriu = 1;
+    }else if(strcmp(novo->cpf, (*raiz)->cpf) == 0){
         // A função strcmp compara os dois CPFs. Retorna < 0 se a primeira for menor, > 0 se for maior, e 0 se forem iguais.
         // comparacao == 0 significa que o CPF já existe na árvore
         // Não permite cadastro repetido, logo, o inseriu se mantém 0 (falha)
         free(novo);
-        novo = NULL;
         inseriu = 0;
     } else if(strcmp(novo->cpf, (*raiz)->cpf) < 0){
         // Se a árvore não está vazia e o CPF é "menor", vai para a subárvore esquerda.
@@ -78,12 +106,11 @@ int inserir_assinante(Assinante **raiz, Assinante *novo){
     return inseriu; 
 }
 
-
 /* Percorre a árvore binária de assinantes utilizando o método "Em Ordem" (Esquerda -> Raiz -> Direita).
  ordenados pelo CPF.
  
  * Parâmetros:
- * - Usuario *raiz: Ponteiro simples para a raiz da árvore. Escolhemos a passagem 
+ * - Assinante *raiz: Ponteiro simples para a raiz da árvore. Escolhemos a passagem 
  * por valor (cópia do ponteiro) porque esta função serve apenas para LEITURA. 
  * Não vamos inserir ou remover nós, logo, não precisamos modificar a árvore original.
 */
@@ -191,19 +218,31 @@ int remove_assinant(Assinante **r, char *cpf) {
     return removeu;
 }
 
+// ------- Liberação ----------
+
 // Função para liberar os nó e depois a raiz.
-void liberar_arvore_usuario(Assinante *raiz){
+void liberar_arvore_assinante(Assinante *raiz){
     if (raiz != NULL) {
-        liberar_arvore_usuario(raiz->esq);
-        liberar_arvore_usuario(raiz->dir);
+        liberar_arvore_assinante(raiz->esq);
+        liberar_arvore_assinante(raiz->dir);
         free(raiz);
     }
 }
 
+// -------- Busca ----------
+
 Assinante* buscar_assinante(Assinante *raiz, char *cpf) {
-    if (raiz == NULL) return NULL;
-    if (strcmp(cpf, raiz->cpf) == 0) return raiz;
-    if (strcmp(cpf, raiz->cpf) < 0) return buscar_assinante(raiz->esq, cpf);
-    return buscar_assinante(raiz->dir, cpf);
+    Assinante *resultado = NULL;
+    if (raiz != NULL) {
+        if (strcmp(cpf, raiz->cpf) == 0) {
+            resultado = raiz;
+        } else if (strcmp(cpf, raiz->cpf) < 0) {
+            resultado = buscar_assinante(raiz->esq, cpf);
+        } else {
+            resultado = buscar_assinante(raiz->dir, cpf);
+        }
+    }
+
+    return resultado;
 }
 

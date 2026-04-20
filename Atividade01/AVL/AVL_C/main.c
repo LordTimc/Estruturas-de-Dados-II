@@ -39,9 +39,9 @@ void exibir_menu() {
 
 int main() {
     // Inicialização das estruturas do sistema
-    Assinante *raiz_usuarios = NULL;
-    forma_ass *lista_formas = NULL;
-    Assinatura *raiz_assinaturas = NULL;
+    Assinante *raiz_assinante = NULL;
+    forma_ass *lista_forma = NULL;
+    Assinatura *raiz_assinatura = NULL;
     Livro *raiz_livros_global = NULL; // Árvore AVL geral para organizar todos os livros por ISBN
     int qtd_generos = 0;
 
@@ -54,36 +54,30 @@ int main() {
         opcao = num_inteiro();
 
         switch (opcao) {
-            case 1: { // Cadastrar Assinantes
-                Assinante *novo_usuario = cadastrar_assinante(NULL);
-                if (novo_usuario != NULL) {
-                    if (inserir_assinante(&raiz_usuarios, novo_usuario)) {
-                        printf("\n>>> Assinante cadastrado com sucesso!\n");
-                    } else {
-                        printf("\n>>> Erro: Cadastro cancelado. Assinante com este CPF ja existe.\n");
-                    }
-                }
+            case 1: // Cadastrar Assinantes
+                printf("\n--- CADASTRAR ASSINANTE ---\n");
+                cadastrar_assinante(&raiz_assinante);
                 break;
-            }
-            case 2: { // Cadastrar Forma de Assinatura
+            
+            case 2: // Cadastrar Forma de Assinatura
                 if (qtd_generos == 0) {
                     printf("\n>>> Erro: E necessario cadastrar pelo menos um genero antes de criar uma forma de assinatura.\n");
                 } else {
-                    lista_formas = cad_forma_assinatura(lista_formas, qtd_generos);
+                    lista_forma = cad_forma_assinatura(lista_forma, qtd_generos);
                 }
                 break;
-            }
-            case 3: { // Cadastrar Assinaturas
-                if (raiz_usuarios == NULL) {
+
+            case 3: // Cadastrar Assinaturas
+                if (raiz_assinante == NULL) {
                     printf("\n>>> Erro: Nenhum assinante cadastrado no sistema.\n");
-                } else if (lista_formas == NULL) {
+                } else if (lista_forma == NULL) {
                     printf("\n>>> Erro: Nenhuma forma de assinatura cadastrada no sistema.\n");
                 } else {
-                    cadastrar_assinatura(&raiz_assinaturas);
+                    cadastrar_assinatura(&raiz_assinatura);
                 }
                 break;
-            }
-            case 4: { // Cadastrar Generos
+            
+            case 4: // Cadastrar Generos
                 if (raiz_livros_global == NULL) {
                     printf("\n>>> Erro: E necessario ter pelo menos um livro cadastrado no sistema antes de criar um genero.\n");
                 } else {
@@ -110,8 +104,8 @@ int main() {
                     }
                 }
                 break;
-            }
-            case 5: { // Cadastrar Livros
+        
+            case 5: // Cadastrar Livros
                 Livro *novo_livro = cadastrar_livro(NULL);
                 if (novo_livro != NULL) {
                     if (inserir_livro(&raiz_livros_global, novo_livro)) {
@@ -142,29 +136,36 @@ int main() {
                     }
                 }
                 break;
-            }
+
             case 6: // Mostrar todos assinantes
-                if (raiz_usuarios == NULL) printf("\n>>> Nenhum assinante cadastrado.\n");
-                else mostrar_assinantes(raiz_usuarios);
+                if (raiz_assinante == NULL) printf("\n>>> Nenhum assinante cadastrado.\n");
+                else mostrar_assinantes(raiz_assinante);
                 break;
+
             case 7: // Mostrar todas assinaturas
-                if (raiz_assinaturas == NULL) printf("\n>>> Nenhuma assinatura cadastrada.\n");
-                else mostrar_assinaturas(raiz_assinaturas);
+                if (raiz_assinatura == NULL) printf("\n>>> Nenhuma assinatura cadastrada.\n");
+                else mostrar_assinaturas(raiz_assinatura);
                 break;
+
             case 8: // Mostrar assinaturas de uma forma
                 printf("Digite o codigo da forma de assinatura: ");
                 codigo_busca = num_inteiro();
-                mostrar_assinaturas_por_forma(raiz_assinaturas, codigo_busca);
+                mostrar_assinaturas_por_forma(raiz_assinatura, codigo_busca);
                 break;
+
             case 9: // Mostrar formas cadastradas
-                mostrar_formas_assinatura(lista_formas);
+                mostrar_formas_assinatura(lista_forma);
                 break;
+
             case 10: // Mostrar todos os gêneros
                 mostrar_generos(lista_generos, qtd_generos);
                 break;
+
             case 11: // Mostrar gêneros assinados
-                mostrar_generos_assinados(raiz_assinaturas, lista_formas, lista_generos, qtd_generos);
+                if (raiz_assinatura == NULL || lista_forma == NULL) printf("\nNao ha assinaturas para verificar.\n");
+                else mostrar_generos_assinados(raiz_assinatura, lista_forma, lista_generos, qtd_generos);
                 break;
+
             case 12: // Mostrar livros de um gênero
                 if (qtd_generos == 0) {
                     printf("\n>>> Nenhum genero cadastrado.\n");
@@ -174,23 +175,25 @@ int main() {
                     mostrar_livros_por_genero(lista_generos, qtd_generos, codigo_busca);
                 }
                 break;
+                
             case 13: // Mostrar data de vencimento
                 if (pega_cpf(cpf_busca)) {
-                    if (!mostrar_vencimento_assinatura_cpf(raiz_assinaturas, cpf_busca)) {
+                    if (!mostrar_vencimento_assinatura_cpf(raiz_assinatura, cpf_busca)) {
                         printf("\n>>> Nenhuma assinatura encontrada para o CPF informado.\n");
                     }
                 }
                 break;
-            case 14: { // Remover assinatura (somente vencida)
+
+            case 14: // Remover assinatura (somente vencida)
                 if (pega_cpf(cpf_busca)) {
-                    Assinatura *ass = buscar_assinatura(raiz_assinaturas, cpf_busca);
+                    Assinatura *ass = buscar_assinatura(raiz_assinatura, cpf_busca);
                     if (ass != NULL) {
                         Data data_atual;
                         pegar_data_de_hoje(&data_atual);
                         
                         // compara_datas retorna < 0 se a primeira data for no passado
                         if (comparar_datas(ass->data_vencimento, data_atual) < 0) {
-                            if (remover_no_assinatura(&raiz_assinaturas, cpf_busca)) {
+                            if (remover_no_assinatura(&raiz_assinatura, cpf_busca)) {
                                 printf("\n>>> Assinatura vencida removida com sucesso!\n");
                             } else {
                                 printf("\n>>> Erro ao tentar remover a assinatura.\n");
@@ -203,10 +206,10 @@ int main() {
                     }
                 }
                 break;
-            }
-            case 15: { // Remover assinante (somente sem assinatura ativa)
+            
+            case 15: // Remover assinante (somente sem assinatura ativa)
                 if (pega_cpf(cpf_busca)) {
-                    Assinatura *ass = buscar_assinatura(raiz_assinaturas, cpf_busca);
+                    Assinatura *ass = buscar_assinatura(raiz_assinatura, cpf_busca);
                     if (ass != NULL) {
                         Data data_atual;
                         pegar_data_de_hoje(&data_atual);
@@ -216,7 +219,7 @@ int main() {
                             printf("\n>>> Operacao negada: O assinante possui uma assinatura ativa.\n");
                         } else {
                             // Tem assinatura, mas está vencida
-                            if (remove_assinant(&raiz_usuarios, cpf_busca)) {
+                            if (remove_assinant(&raiz_assinante, cpf_busca)) {
                                 printf("\n>>> Assinante removido com sucesso (assinaturas anteriores estavam vencidas)!\n");
                             } else {
                                 printf("\n>>> Erro ao remover assinante.\n");
@@ -224,7 +227,7 @@ int main() {
                         }
                     } else {
                         // Não tem nenhuma assinatura cadastrada
-                        if (remove_assinant(&raiz_usuarios, cpf_busca)) {
+                        if (remove_assinant(&raiz_assinante, cpf_busca)) {
                             printf("\n>>> Assinante removido com sucesso!\n");
                         } else {
                             printf("\n>>> Erro: Assinante nao encontrado.\n");
@@ -232,7 +235,7 @@ int main() {
                     }
                 }
                 break;
-            }
+            
             case 99: {
                 printf("\n--- BATERIA DE TESTES AVL: LETRA A ---\n");
                 executar_teste_letra_A(1000000);

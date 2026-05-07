@@ -8,24 +8,27 @@ int maior(int a, int b) { return (a > b) ? a : b; }
 int altura_ass(Assinatura *no) { return (no == NULL) ? 0 : no->altura; }
 int fb_ass(Assinatura *no) { return (no == NULL) ? 0 : altura_ass(no->esq) - altura_ass(no->dir); }
 
-Assinatura* rot_dir_ass(Assinatura *y) {
-    Assinatura *x = y->esq;
-    Assinatura *T2 = x->dir;
-    x->dir = y;
-    y->esq = T2;
-    y->altura = maior(altura_ass(y->esq), altura_ass(y->dir)) + 1;
-    x->altura = maior(altura_ass(x->esq), altura_ass(x->dir)) + 1;
-    return x;
+Assinatura* rot_dir_ass(Assinatura *Raiz) {
+    Assinatura *Aux = Raiz->esq;
+
+    Raiz->esq = Aux->dir;
+    Aux->dir = Raiz;
+
+    Raiz->altura = maior(altura_ass(Raiz->esq), altura_ass(Raiz->dir)) + 1;
+    Aux->altura = maior(altura_ass(Aux->esq), altura_ass(Aux->dir)) + 1;
+
+    return Aux;
 }
 
-Assinatura* rot_esq_ass(Assinatura *x) {
-    Assinatura *y = x->dir;
-    Assinatura *T2 = y->esq;
-    y->esq = x;
-    x->dir = T2;
-    x->altura = maior(altura_ass(x->esq), altura_ass(x->dir)) + 1;
-    y->altura = maior(altura_ass(y->esq), altura_ass(y->dir)) + 1;
-    return y;
+Assinatura* rot_esq_ass(Assinatura *Raiz) { // x é raiz || y é aux || T2 é direita de aux
+    Assinatura *aux = Raiz->dir;
+
+    aux->dir = aux->esq;
+    aux->esq = Raiz;
+    Raiz->dir = aux->dir;
+    Raiz->altura = maior(altura_ass(Raiz->esq), altura_ass(Raiz->dir)) + 1;
+    aux->altura = maior(altura_ass(aux->esq), altura_ass(aux->dir)) + 1;
+    return aux;
 }
 
 // ================= USUÁRIOS =================
@@ -42,7 +45,7 @@ Assinante* rot_dir_usu(Assinante *y) {
     return x;
 }
 
-Assinante* rot_esq_usu(Assinante *x) {
+Assinante* rot_esq_usu(Assinante *x) { 
     Assinante *y = x->dir;
     Assinante *T2 = y->esq;
     y->esq = x;

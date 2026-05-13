@@ -1,12 +1,13 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-#define VERMELHO 1
-#define PRETO 0
+#define RED 1
+#define BLACK 0
 
 typedef struct disciplina Disciplina;
 typedef struct curso Curso;
 typedef struct aluno ALuno;
+
 typedef struct Arvore_Alunos;
 typedef struct Arvore_Cursos;
 typedef struct Arvore_Disciplinas;
@@ -17,12 +18,6 @@ typedef struct disciplina {
     char nome[100];
     int bloco;
     int carga_horaria;
-
-    /* Ponteiros da árvore Rubro-Negra */
-    struct Disciplina *esq;
-    struct Disciplina *dir;
-    struct Disciplina *pai;
-
     int cor;
 
 } Disciplina;
@@ -68,20 +63,30 @@ typedef struct aluno {
 } Aluno;
 
 
-/* =========================================================
-   ÁRVORES
-========================================================= */
-
-typedef struct {
-    Aluno *raiz;
-} Arvore_Alunos;
-
-typedef struct {
-    Curso *raiz;
-} Arvore_Cursos;
+// Arvores
 
 typedef struct {
     Disciplina *raiz;
-} Arvore_Disciplinas;
+
+    struct Disciplina *esq;
+    struct Disciplina *dir;
+    struct Disciplina *pai;
+} Arv_Disciplinas;
+
+typedef struct {
+    Curso *raiz;
+
+    struct Curso *esq;
+    struct Curso *dir;
+    struct Curso *pai;
+} Arv_Cursos;
+
+typedef struct {
+    Aluno *raiz;
+
+    struct Aluno *esq;
+    struct Aluno *dir;
+    struct Aluno *pai;
+} Arv_Alunos;
 
 #endif

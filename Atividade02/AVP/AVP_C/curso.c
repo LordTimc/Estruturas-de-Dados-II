@@ -6,19 +6,25 @@
 #include "../AVP_H/cursos.h"
 #include "../AVP_H/auxiliares.h"
 
+// Função para alocar um novo curso
+Curso *alocou_curso(){
+
+    // Inicializa novo ponteiro
+    Curso *novo = (Curso*) malloc(sizeof(Curso));
+        if(novo == NULL){
+            free(novo);
+        }
+        // novo->cod_curso = valor;
+        novo->cor = RED;
+        novo->dir = NULL;
+        novo->esq = NULL;
+}
+
 Curso *inserir_curso(Curso *raiz, int valor){
     int inseriu = 0;
 
     if (raiz == NULL){
-        Curso *novo = (Curso*) malloc(sizeof(Curso));
-        if(novo == NULL){
-            free(novo);
-            inseriu = 0;
-        }
-        novo->cod_curso = valor;
-        novo->cor = RED;
-        novo->dir = NULL;
-        novo->esq = NULL;
+        
         
         inseriu = 1;
     }
@@ -33,7 +39,7 @@ Curso *inserir_curso(Curso *raiz, int valor){
     if(cor(raiz->dir) == RED && cor(raiz->esq) == BLACK)
         raiz = rota_esq(raiz);
 
-    if(cor(raiz->esq) == RED && cor(raiz->esq->esq) == RED)
+    // if(cor(raiz->esq) == RED && cor(raiz->esq->esq) == RED)
         raiz = rota_dir(raiz);
     
     if(cor(raiz->esq) == RED && cor(raiz->dir) == RED)
@@ -45,11 +51,11 @@ Curso *inserir_curso(Curso *raiz, int valor){
 int insere_ArvVP(Arv_Cursos *raiz, int valor){
     int sucesso = 0;
 
-    *raiz = inserir_curso (*raiz, valor);
-    if((*raiz) != NULL){
-        (*raiz).raiz->cor = BLACK;
-        sucesso = 1;
-    }
+    // *raiz = inserir_curso (*raiz, valor);
+    // if((*raiz) != NULL){
+    //     (*raiz).raiz->cor = BLACK;
+    //     sucesso = 1;
+    // }
 
     return sucesso; 
 }

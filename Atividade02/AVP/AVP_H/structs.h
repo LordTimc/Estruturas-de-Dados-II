@@ -13,25 +13,32 @@ typedef struct Arvore_Cursos;
 typedef struct Arvore_Disciplinas;
 
 // STRUCT DISCIPLINA
-typedef struct disciplina {
+// Ela vem primeiro porque não depende de nenhuma outra struct
+typedef struct Disciplina {
     int cod_disciplina;
     char nome[100];
     int bloco;
     int carga_horaria;
-    int cor;
 
+    /* Ponteiros da árvore Rubro-Negra */
+    struct Disciplina *esq;
+    struct Disciplina *dir;
+    struct Disciplina *pai;
+
+    int cor;
 } Disciplina;
 
 
 //STRUCT CURSO
-typedef struct curso {
+// a struct Curso vem em segundo porque depende da struct Disciplina
+typedef struct Curso {
     int cod_curso;
     char nome[100];
 
     int quantidade_blocos;
-    int semanas_por_disciplina;
+    int semanas_por_disciplina; // Na UFPI é 15
 
-    /* Raiz da árvore de disciplinas */
+    /* quando o compilador ler isso, ele já precisa conhecer o tipo Disciplina */
     Disciplina *raiz_disciplinas;
 
     /* Ponteiros da árvore Rubro-Negra */
@@ -40,11 +47,11 @@ typedef struct curso {
     struct Curso *pai;
 
     int cor;
-
 } Curso;
 
 
 //STRUCT ALUNO
+// não depende de nenhuma struct, pois não possui ponteiro para curso
 typedef struct aluno {
     int matricula;
     char nome[100];
@@ -59,34 +66,6 @@ typedef struct aluno {
     struct Aluno *pai;
 
     int cor;
-
 } Aluno;
-
-
-// Arvores
-
-typedef struct {
-    Disciplina *raiz;
-
-    struct Disciplina *esq;
-    struct Disciplina *dir;
-    struct Disciplina *pai;
-} Arv_Disciplinas;
-
-typedef struct {
-    Curso *raiz;
-
-    struct Curso *esq;
-    struct Curso *dir;
-    struct Curso *pai;
-} Arv_Cursos;
-
-typedef struct {
-    Aluno *raiz;
-
-    struct Aluno *esq;
-    struct Aluno *dir;
-    struct Aluno *pai;
-} Arv_Alunos;
 
 #endif

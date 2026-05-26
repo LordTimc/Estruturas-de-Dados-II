@@ -4,13 +4,10 @@
 #define RED 1
 #define BLACK 0
 
-typedef struct disciplina Disciplina;
-typedef struct curso Curso;
-typedef struct aluno ALuno;
+typedef struct Disciplina Disciplina;
+typedef struct Curso Curso;
+typedef struct Aluno Aluno;
 
-typedef struct Arvore_Alunos;
-typedef struct Arvore_Cursos;
-typedef struct Arvore_Disciplinas;
 
 // STRUCT DISCIPLINA
 // Ela vem primeiro porque não depende de nenhuma outra struct
@@ -52,7 +49,7 @@ typedef struct Curso {
 
 //STRUCT ALUNO
 // não depende de nenhuma struct, pois não possui ponteiro para curso
-typedef struct aluno {
+typedef struct Aluno {
     int matricula;
     char nome[100];
 

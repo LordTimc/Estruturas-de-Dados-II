@@ -1,15 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arv23_curso.h"
-
-static Arv23_Curso *cria_no_CURSO(CURSO info, Arv23_Curso *esq, Arv23_Curso *cen) {
+Arv23_Curso *cria_no_CURSO(CURSO info, Arv23_Curso *esq, Arv23_Curso *cen) {
     Arv23_Curso *no = (Arv23_Curso *)malloc(sizeof(Arv23_Curso));
     if (no != NULL) { no->info1 = info; no->nInfo = 1; no->esq = esq; no->cen = cen; no->dir = NULL; }
     return no;
 }
-
-static int eh_folha_CURSO(Arv23_Curso *no) { return (no != NULL && no->esq == NULL); }
-static Arv23_Curso *buscar_menor_CURSO(Arv23_Curso *no) {
+int eh_folha_CURSO(Arv23_Curso *no) { return (no != NULL && no->esq == NULL); }
+Arv23_Curso *buscar_menor_CURSO(Arv23_Curso *no) {
     Arv23_Curso *at = no; while (at && at->esq) at = at->esq; return at;
 }
 
@@ -24,23 +22,20 @@ CURSO *buscar_info_curso(Arv23_Curso *raiz, int codigo) {
     }
     return ret;
 }
-
-static void adiciona_CURSO(Arv23_Curso **no, CURSO info, Arv23_Curso *sub) {
+void adiciona_CURSO(Arv23_Curso **no, CURSO info, Arv23_Curso *sub) {
     Arv23_Curso *at = *no;
     if (info.codigo > at->info1.codigo) { at->info2 = info; at->dir = sub; }
     else { at->info2 = at->info1; at->info1 = info; at->dir = at->cen; at->cen = sub; }
     at->nInfo = 2;
 }
-
-static Arv23_Curso *quebra_CURSO(Arv23_Curso **no, CURSO info, CURSO *sobe, Arv23_Curso *dir) {
+Arv23_Curso *quebra_CURSO(Arv23_Curso **no, CURSO info, CURSO *sobe, Arv23_Curso *dir) {
     Arv23_Curso *at = *no; Arv23_Curso *maior = NULL;
     if (info.codigo > at->info2.codigo) { *sobe = at->info2; maior = cria_no_CURSO(info, at->dir, dir); at->nInfo=1; at->dir=NULL; }
     else if (info.codigo > at->info1.codigo) { *sobe = info; maior = cria_no_CURSO(at->info2, dir, at->dir); at->nInfo=1; at->dir=NULL; }
     else { *sobe = at->info1; maior = cria_no_CURSO(at->info2, at->cen, at->dir); at->info1 = info; at->cen = dir; at->nInfo=1; at->dir=NULL; }
     return maior;
 }
-
-static int insere_rec_CURSO(Arv23_Curso **raiz, CURSO valor, CURSO *sobe, Arv23_Curso **maior) {
+int insere_rec_CURSO(Arv23_Curso **raiz, CURSO valor, CURSO *sobe, Arv23_Curso **maior) {
     int sucesso = 0; Arv23_Curso *at = *raiz;
     if (at == NULL) { *raiz = cria_no_CURSO(valor, NULL, NULL); *maior = NULL; sucesso = (*raiz != NULL); }
     else if (valor.codigo == at->info1.codigo || (at->nInfo == 2 && valor.codigo == at->info2.codigo)) { *maior = NULL; sucesso = 0; }
@@ -77,19 +72,19 @@ int insere_23_CURSO(Arv23_Curso **raiz, CURSO valor) {
 }
 
 // ==== DELEÇÃO CURSO ====
-static StatusRemocao redist_esq(Arv23_Curso **ptr, Arv23_Curso *pai, Arv23_Curso *irm, int pos) {
+StatusRemocao redist_esq(Arv23_Curso **ptr, Arv23_Curso *pai, Arv23_Curso *irm, int pos) {
     Arv23_Curso *f = *ptr; CURSO desce;
     if(pos==1){ desce=pai->info1; pai->info1=irm->info2; }else{ desce=pai->info2; pai->info2=irm->info2; }
     f->info1 = desce; f->nInfo=1; f->esq=irm->dir; f->cen=(f->esq?f->esq:f->cen); f->dir=NULL;
     irm->nInfo=1; irm->dir=NULL; return OK;
 }
-static StatusRemocao redist_dir(Arv23_Curso **ptr, Arv23_Curso *pai, Arv23_Curso *irm, int pos) {
+StatusRemocao redist_dir(Arv23_Curso **ptr, Arv23_Curso *pai, Arv23_Curso *irm, int pos) {
     Arv23_Curso *f = *ptr; CURSO desce;
     if(pos==0){ desce=pai->info1; pai->info1=irm->info1; }else{ desce=pai->info2; pai->info2=irm->info1; }
     f->info1 = desce; f->nInfo=1; f->esq=(f->esq?f->esq:f->cen); f->cen=irm->esq; f->dir=NULL;
     irm->info1=irm->info2; irm->nInfo=1; irm->esq=irm->cen; irm->cen=irm->dir; irm->dir=NULL; return OK;
 }
-static StatusRemocao fundir_esq(Arv23_Curso **ptr, Arv23_Curso *pai, Arv23_Curso *irm, int pos) {
+StatusRemocao fundir_esq(Arv23_Curso **ptr, Arv23_Curso *pai, Arv23_Curso *irm, int pos) {
     Arv23_Curso *f = *ptr; CURSO desce; StatusRemocao st = OK;
     Arv23_Curso *rem = (f->esq?f->esq:f->cen);
     if(pai->nInfo==1){ desce=pai->info1; pai->nInfo=0; st=UNDERFLOW; }
@@ -99,7 +94,7 @@ static StatusRemocao fundir_esq(Arv23_Curso **ptr, Arv23_Curso *pai, Arv23_Curso
     if(st==UNDERFLOW){pai->cen=NULL; pai->dir=NULL;}
     free(f); return st;
 }
-static StatusRemocao fundir_dir(Arv23_Curso **ptr, Arv23_Curso *pai, Arv23_Curso *irm, int pos) {
+StatusRemocao fundir_dir(Arv23_Curso **ptr, Arv23_Curso *pai, Arv23_Curso *irm, int pos) {
     Arv23_Curso *f = *ptr; CURSO desce; StatusRemocao st = OK;
     Arv23_Curso *rem = (f->esq?f->esq:f->cen);
     if(pai->nInfo==1){ desce=pai->info1; pai->nInfo=0; st=UNDERFLOW; }
@@ -109,7 +104,7 @@ static StatusRemocao fundir_dir(Arv23_Curso **ptr, Arv23_Curso *pai, Arv23_Curso
     if(st==UNDERFLOW){pai->cen=NULL; pai->dir=NULL;}
     free(f); return st;
 }
-static StatusRemocao under_CURSO(Arv23_Curso **ptr, Arv23_Curso *pai) {
+StatusRemocao under_CURSO(Arv23_Curso **ptr, Arv23_Curso *pai) {
     StatusRemocao st = OK; Arv23_Curso *f = *ptr;
     if(f==NULL || f->nInfo>0) st = OK;
     else if(pai==NULL) st = UNDERFLOW;
@@ -125,8 +120,7 @@ static StatusRemocao under_CURSO(Arv23_Curso **ptr, Arv23_Curso *pai) {
         else st = NAO_FOI_POSSIVEL_T_UNDERFLOW;
     } return st;
 }
-
-static StatusRemocao rem_rec_CURSO(Arv23_Curso **ptr, int cod) {
+StatusRemocao rem_rec_CURSO(Arv23_Curso **ptr, int cod) {
     StatusRemocao st = OK; Arv23_Curso *at = *ptr;
     if(!at) st = INFO_NAO_ENCONTRADA;
     else {

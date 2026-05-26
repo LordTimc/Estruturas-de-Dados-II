@@ -74,8 +74,7 @@ Arv23_Disciplina *quebra_no_DISCIPLINA(Arv23_Disciplina **no, DISCIPLINA info, D
     }
     return maior;
 }
-
-static int insere_23_recursivo_DISCIPLINA(Arv23_Disciplina **raiz, DISCIPLINA valor, DISCIPLINA *sobe, Arv23_Disciplina **maiorNo) {
+int insere_23_recursivo_DISCIPLINA(Arv23_Disciplina **raiz, DISCIPLINA valor, DISCIPLINA *sobe, Arv23_Disciplina **maiorNo) {
     int sucesso = 0;
     Arv23_Disciplina *no_atual = *raiz;
     if (no_atual == NULL) {
@@ -137,7 +136,7 @@ int insere_23_DISCIPLINA(Arv23_Disciplina **raiz, DISCIPLINA valor) {
 }
 
 // ==== LÓGICA DE REMOÇÃO (SEGUINDO SEU MOLDE) ====
-static StatusRemocao redistribuir_com_irmao_esquerdo_DISCIPLINA(Arv23_Disciplina **ponteiro_filho, Arv23_Disciplina *pai, Arv23_Disciplina *irmao_esq, int pos_filho) {
+StatusRemocao redistribuir_com_irmao_esquerdo_DISCIPLINA(Arv23_Disciplina **ponteiro_filho, Arv23_Disciplina *pai, Arv23_Disciplina *irmao_esq, int pos_filho) {
     Arv23_Disciplina *filho = *ponteiro_filho;
     DISCIPLINA chave_pai_desce;
     Arv23_Disciplina *filho_transferido = irmao_esq->dir;
@@ -161,8 +160,7 @@ static StatusRemocao redistribuir_com_irmao_esquerdo_DISCIPLINA(Arv23_Disciplina
     irmao_esq->dir = NULL;
     return OK;
 }
-
-static StatusRemocao redistribuir_com_irmao_direito_DISCIPLINA(Arv23_Disciplina **ponteiro_filho, Arv23_Disciplina *pai, Arv23_Disciplina *irmao_dir, int pos_filho) {
+StatusRemocao redistribuir_com_irmao_direito_DISCIPLINA(Arv23_Disciplina **ponteiro_filho, Arv23_Disciplina *pai, Arv23_Disciplina *irmao_dir, int pos_filho) {
     Arv23_Disciplina *filho = *ponteiro_filho;
     DISCIPLINA chave_pai_desce;
     Arv23_Disciplina *filho_transferido = irmao_dir->esq;
@@ -189,8 +187,7 @@ static StatusRemocao redistribuir_com_irmao_direito_DISCIPLINA(Arv23_Disciplina 
     irmao_dir->dir = NULL;
     return OK;
 }
-
-static StatusRemocao fundir_com_irmao_esquerdo_DISCIPLINA(Arv23_Disciplina **ponteiro_filho, Arv23_Disciplina *pai, Arv23_Disciplina *irmao_esq, int pos_filho) {
+StatusRemocao fundir_com_irmao_esquerdo_DISCIPLINA(Arv23_Disciplina **ponteiro_filho, Arv23_Disciplina *pai, Arv23_Disciplina *irmao_esq, int pos_filho) {
     Arv23_Disciplina *filho_underflow = *ponteiro_filho;
     DISCIPLINA chave_pai_desce;
     StatusRemocao status_pai = OK;
@@ -219,8 +216,7 @@ static StatusRemocao fundir_com_irmao_esquerdo_DISCIPLINA(Arv23_Disciplina **pon
     free(filho_underflow);
     return status_pai;
 }
-
-static StatusRemocao fundir_com_irmao_direito_DISCIPLINA(Arv23_Disciplina **ponteiro_filho, Arv23_Disciplina *pai, Arv23_Disciplina *irmao_dir, int pos_filho) {
+StatusRemocao fundir_com_irmao_direito_DISCIPLINA(Arv23_Disciplina **ponteiro_filho, Arv23_Disciplina *pai, Arv23_Disciplina *irmao_dir, int pos_filho) {
     Arv23_Disciplina *filho_underflow = *ponteiro_filho;
     DISCIPLINA chave_pai_desce;
     StatusRemocao status_pai = OK;
@@ -252,8 +248,7 @@ static StatusRemocao fundir_com_irmao_direito_DISCIPLINA(Arv23_Disciplina **pont
     free(filho_underflow);
     return status_pai;
 }
-
-static StatusRemocao tratar_underflow_DISCIPLINA(Arv23_Disciplina **ponteiro_filho, Arv23_Disciplina *pai) {
+StatusRemocao tratar_underflow_DISCIPLINA(Arv23_Disciplina **ponteiro_filho, Arv23_Disciplina *pai) {
     StatusRemocao status_final = OK;
     Arv23_Disciplina *filho = *ponteiro_filho;
 
@@ -276,8 +271,7 @@ static StatusRemocao tratar_underflow_DISCIPLINA(Arv23_Disciplina **ponteiro_fil
     }
     return status_final;
 }
-
-static StatusRemocao remover_recursivo_DISCIPLINA(Arv23_Disciplina **ponteiro_no_atual, int codigo) {
+StatusRemocao remover_recursivo_DISCIPLINA(Arv23_Disciplina **ponteiro_no_atual, int codigo) {
     StatusRemocao status_final = OK;
     Arv23_Disciplina *no_atual = *ponteiro_no_atual;
 

@@ -152,15 +152,33 @@ void balancear_RB_aluno(Aluno **raiz){
     }
 }
 
-// Função auxiliar para imprimir informações de uma aluno
-void imprimir_aluno(Aluno *aluno){
-    if (aluno != NULL){
-        printf("------------------------\n");
-        printf("NOME: %s\n", aluno->nome);
-        printf("Matricula: %d\n", aluno->matricula);
-        printf("Codigo do curso: %d\n", aluno->codigo_Curso);
-        printf("Ano de ingresso: %d\n", aluno->ano_Ingresso);
-        printf("Semestre de ingresso: %d\n", aluno->semestre_Ingresso);
-        printf("------------------------\n");
+// Função para imprimir informações de um aluno de um curso
+void imprimir_alunos_por_curso(Aluno *raiz, int codigo_curso) {
+    if (raiz != NULL) {
+        // Percorre a subarvore esquerda
+        imprimir_alunos_por_curso(raiz->esq, codigo_curso);
+        
+        // Verifica se o no atual pertence ao curso desejado 
+        if (raiz->codigo_Curso == codigo_curso) {
+            printf("Matricula: %d | Nome: %s\n", raiz->matricula, raiz->nome);
+        }
+        
+        /* Percorre a subárvore direita */
+        imprimir_alunos_por_curso(raiz->dir, codigo_curso);
+    }
+}
+
+void imprimir_alunos_por_curso_ano(Aluno *raiz, int codigo_curso, int ano_ingressado) {
+    if (raiz != NULL) {
+        /* 1. Percorre toda a subárvore esquerda */
+        imprimir_alunos_por_curso_ano(raiz->esq, codigo_curso, ano_ingressado);
+        
+        /* 2. Visita o nó atual: verifica as duas condições simultaneamente */
+        if (raiz->codigo_Curso == codigo_curso && raiz->ano_Ingresso == ano_ingressado) {
+            printf("Matricula: %d | Nome: %s\n", raiz->matricula, raiz->nome);
+        }
+        
+        /* 3. Percorre toda a subárvore direita */
+        imprimir_alunos_por_curso_ano(raiz->dir, codigo_curso, ano_ingressado);
     }
 }

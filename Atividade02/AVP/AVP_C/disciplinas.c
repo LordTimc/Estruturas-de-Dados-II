@@ -36,19 +36,28 @@ Disciplina *cadastrou_disciplina(){
     disciplina = NULL;
     nome_displina = NULL;
 
-    printf("Entre com o nome da nova disciplina: ");
-    nome_displina = leitura_de_string();
+    if(pega_cod(cod_displina)){
+        printf("Entre com o nome da nova disciplina: ");
+        nome_displina = leitura_de_string();
+        
+        if(nome_displina != NULL){
+            printf("Entre com o numero do Bloco: ");
+            bloco = num_inteiro();
 
-    if(nome_displina != NULL){
-        cadastrou = pega_cod(cod_displina);
-        if(cadastrou){
-            // Fazer a alocação de memória de disciplina
-            disciplina = alocou_disciplina(cod_displina, nome_displina, bloco, carga_horaria);
+            if(bloco){
+                printf("Entre com a carga horaria: ");
+                carga_horaria = num_inteiro;
+                
+                if(carga_horaria)
+                    cadastrou = 1;
+            }
         }
     }
 
-    // Caso falhe
-    if(!cadastrou){
+    if(cadastrou){
+        // Fazer a alocação de memória de disciplina
+        disciplina = alocou_disciplina(cod_displina, nome_displina, bloco, carga_horaria);
+    }else{
         if(nome_displina != NULL){
             free(nome_displina);
         }

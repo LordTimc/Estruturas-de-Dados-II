@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "structs.h"
-#include "arv23_curso.h"
-#include "arv23_disciplina.h"
-#include "arv23_aluno.h"
-#include "operacoes.h"
+#include "../Arv23_H/structs.h"
+#include "../Arv23_H/arv23_curso.h"
+#include "../Arv23_H/arv23_disciplina.h"
+#include "../Arv23_H/arv23_aluno.h"
+#include "../Arv23_H/operacoes.h"
 
 void mensagens_remocao(StatusRemocao status) {
     switch (status) {

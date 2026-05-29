@@ -96,6 +96,7 @@ Aluno *cadastrar_aluno(){
     return novo_aluno;
 }
 
+// ROTACOES
 void rotacao_esquerda_aluno(Aluno **raiz){
     Aluno *aux;
 
@@ -139,7 +140,7 @@ void trocar_cor_aluno(Aluno *raiz){
         raiz->dir->cor = !(raiz->dir->cor);
 }
 
-void balancear_RB_aluno(Aluno **raiz){
+void balancear_VP_aluno(Aluno **raiz){
     if (*raiz != NULL){
         if (Cor_aluno((*raiz)->esq) == BLACK && Cor_aluno((*raiz)->dir) == RED)
             rotacao_esquerda_aluno(raiz);

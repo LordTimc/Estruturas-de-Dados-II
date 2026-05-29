@@ -4,10 +4,15 @@
 
 #include "../AVP_H/structs.h"
 #include "../AVP_H/disciplinas.h"
+#include "../AVP_H/curso.h"
 #include "../AVP_H/auxiliares.h"
 
+// FUNÇÕES DE CRIAÇÃO
+
 // Função para alocar um novo curso
-Disciplina *alocou_disciplina(int *codigo, char *nome, int *bloco, int *ch){
+// Recebe código, nome, bloco e carga horária
+// Retorna um ponteiro para a nova disciplina criada
+Disciplina *aloca_disciplina(int *codigo, char *nome, int *bloco, int *ch){
 
     // Inicializa novo ponteiro
     Disciplina *novo = (Disciplina*) malloc(sizeof(Disciplina));
@@ -24,7 +29,10 @@ Disciplina *alocou_disciplina(int *codigo, char *nome, int *bloco, int *ch){
     return novo;
 }
 
-Disciplina *cadastrou_disciplina(){
+// Realiza o cadastro de uma disciplina com entrada de dados do usuário
+// Valida as entradas e, se tudo estiver correto, cria a disciplina
+// Retorna ponteiro para a disciplina criada ou NULL em caso de erro
+Disciplina *cadastra_disciplina(){
     int cadastrou = 0;
 
     Disciplina *disciplina;
@@ -46,7 +54,7 @@ Disciplina *cadastrou_disciplina(){
 
             if(bloco){
                 printf("Entre com a carga horaria: ");
-                carga_horaria = num_inteiro;
+                carga_horaria = num_inteiro();
                 
                 if(carga_horaria)
                     cadastrou = 1;
@@ -56,7 +64,7 @@ Disciplina *cadastrou_disciplina(){
 
     if(cadastrou){
         // Fazer a alocação de memória de disciplina
-        disciplina = alocou_disciplina(cod_displina, nome_displina, bloco, carga_horaria);
+        disciplina = aloca_disciplina(cod_displina, nome_displina, bloco, carga_horaria);
     }else{
         if(nome_displina != NULL){
             free(nome_displina);
@@ -65,30 +73,38 @@ Disciplina *cadastrou_disciplina(){
     return disciplina;
 }
 
-int *inseriu_no_disciplina(Disciplina **raiz, Disciplina *novo){
+// FUNÇÕES DE INSERÇÃO
+
+// Insere um nó disciplina na árvore rubro-negra
+// Realiza inserção recursiva e balanceamento da árvore
+// Retorna 1 se inseriu com sucesso, 0 caso contrário
+int insere_no_disciplina(Disciplina **raiz, Disciplina *novo){
     int inseriu = 0;
 
     if (raiz == NULL){
         *raiz = novo;
         inseriu = 1;
     }
-    else if(novo < (*raiz)->cod_disciplina){
-        inseriu = inserir_disciplina(&((*raiz)->esq), novo);
+    else if(novo->cod_disciplina < (*raiz)->cod_disciplina){
+        inseriu = insere_disciplina(&((*raiz)->esq), novo);
     }else{
-        inseriu = inserir_disciplina(&((*raiz)->dir), novo);
+        inseriu = insere_disciplina(&((*raiz)->dir), novo);
     }
 
     if(inseriu){
-        balancear_VP_disciplina(raiz);
+        balancea_VP_disciplina(raiz);
     }
 
     return inseriu;
 }
 
-int inseriu_disciplina(Disciplina **raiz, Disciplina *nova){
+// Função principal de inserção na árvore
+// Garante que a raiz permaneça preta após inserção
+// Retorna 1 se inserção foi bem-sucedida
+int insere_disciplina(Disciplina **raiz, Disciplina *nova){
     int sucesso = 0;
 
-    sucesso = inseriu_no_disciplina(*raiz, nova);
+    sucesso = insere_no_disciplina(*raiz, nova);
     if((*raiz) != NULL){
         (*raiz)->cor = BLACK;
     }
@@ -97,8 +113,10 @@ int inseriu_disciplina(Disciplina **raiz, Disciplina *nova){
 }
 
 // ROTAÇÕES
-void rotacao_esq_disciplina(Aluno **raiz){
-    Aluno *aux;
+
+// Realiza rotação à esquerda na árvore
+void rotacao_esq_disciplina(Disciplina **raiz){
+    Disciplina *aux;
 
     aux = (*raiz)->dir;
     (*raiz)->dir = aux->esq;
@@ -109,8 +127,9 @@ void rotacao_esq_disciplina(Aluno **raiz){
     (*raiz)->esq->cor = RED;
 }
 
-void rotacao_dir_disciplina(Aluno **raiz){
-    Aluno *aux;
+// Realiza rotação à direita na árvore
+void rotacao_dir_disciplina(Disciplina **raiz){
+    Disciplina *aux;
 
     aux = (*raiz)->esq;
     (*raiz)->esq = aux->dir;
@@ -121,7 +140,11 @@ void rotacao_dir_disciplina(Aluno **raiz){
     (*raiz)->dir->cor = RED;
 }
 
-int cor_disciplina(Aluno *aluno){
+// CONTROLE DE CORES
+
+// Retorna a cor do nó
+// Se o nó for NULL, considera como preto
+int cor_disciplina(Disciplina *aluno){
     int cor;
     if (aluno == NULL)
         cor = BLACK;
@@ -130,7 +153,8 @@ int cor_disciplina(Aluno *aluno){
     return cor;
 }
 
-void troca_cor_disciplina(Aluno *raiz){
+// Inverte a cor do nó e de seus filhos
+void troca_cor_disciplina(Disciplina *raiz){
     raiz->cor = !(raiz->cor);
 
     if (raiz->esq != NULL)
@@ -140,44 +164,26 @@ void troca_cor_disciplina(Aluno *raiz){
         raiz->dir->cor = !(raiz->dir->cor);
 }
 
+// BALANCEAMENTO
+
+// Realiza o balanceamento da árvore rubro-negra após inserção ou remoção
 void balancea_VP_disciplina(Disciplina **raiz){
     if(*raiz != NULL){
         if(cor_disciplina((*raiz)->dir) == RED && cor_disciplina((*raiz)->esq) == BLACK)
-            rota_esq_disciplina(raiz);
+            rotacao_esq_disciplina(raiz);
 
         if(cor_disciplina((*raiz)->esq) == RED && cor_disciplina((*raiz)->esq->esq) == RED)
-            rota_dir_disciplina(raiz);
+            rotacao_dir_disciplina(raiz);
     
         if(cor_disciplina((*raiz)->esq) == RED && cor_disciplina((*raiz)->dir) == RED)
             troca_cor_disciplina(*raiz);
     }
 }
 
-// Funcao auxiliar para buscar um curso pelo codigo
-Curso* busca_curso(Curso *raiz, int cod_curso) {
-    Curso *atual = raiz;
-    Curso *resultado = NULL;
 
-    // enquanto houver nos na arvore e o resultado nao for encontrado
-    while (atual != NULL && resultado == NULL) {
-        
-        // Verifica se o codigo do no atual eh exatamente o que o usuario busca
-        if (atual->cod_curso == cod_curso) {
-            resultado = atual; // Guarda o ponteiro do curso e quebra a condicao do while
-        } 
-        // Se o codigo for menor que o atual, vai para a esquerd
-        else if (cod_curso < atual->cod_curso) {
-            atual = atual->esq;
-        } 
-        // Se o codigo for maior que o atual, vai para direita
-        else {
-            atual = atual->dir;
-        }
-    }
-    return resultado;
-}
 
 // Funcao recursiva auxiliar para percorrer as disciplinas em ordem crescente
+// Imprime todas as disciplinas ordenadas pelo código
 void percorre_disciplinas_em_ordem(Disciplina *raiz) {
     if (raiz != NULL) {
         percorre_disciplinas_em_ordem(raiz->esq);
@@ -187,49 +193,6 @@ void percorre_disciplinas_em_ordem(Disciplina *raiz) {
     }
 }
 
-// 1. Imprimir a arvore de disciplinas em ordem crescente pelo codigo das disciplinas dado o codigo do curso
-void imprime_disciplinas_ordem_crescente(Curso *raiz_cursos, int cod_curso) {
-    Curso *curso_encontrado = busca_curso(raiz_cursos, cod_curso);
-
-    if (curso_encontrado != NULL) {
-        printf("\n--- Disciplinas do Curso: %s ---\n", curso_encontrado->nome);
-        percorre_disciplinas_em_ordem(curso_encontrado->raiz_disciplinas);
-    } else {
-        printf("Curso com o codigo %d nao foi encontrado.\n", cod_curso);
-    }
-}
-
-// 2. Imprimir os dados de uma disciplina dado o codigo dela e do curso ao qual ela pertence
-void imprime_dados_disciplina(Curso *raiz_cursos, int cod_curso, int cod_disciplina) {
-    Curso *curso_encontrado = busca_curso(raiz_cursos, cod_curso);
-
-    if (curso_encontrado != NULL) {
-        Disciplina *atual = curso_encontrado->raiz_disciplinas;
-        Disciplina *disciplina_encontrada = NULL;
-
-        while (atual != NULL && disciplina_encontrada == NULL) {
-            if (atual->cod_disciplina == cod_disciplina) {
-                disciplina_encontrada = atual;
-            } else if (cod_disciplina < atual->cod_disciplina) {
-                atual = atual->esq;
-            } else {
-                atual = atual->dir;
-            }
-        }
-
-        if (disciplina_encontrada != NULL) {
-            printf("\n--- Dados da Disciplina ---\n");
-            printf("Codigo: %d\n", disciplina_encontrada->cod_disciplina);
-            printf("Nome: %s\n", disciplina_encontrada->nome);
-            printf("Bloco: %d\n", disciplina_encontrada->bloco);
-            printf("Carga Horaria: %d\n", disciplina_encontrada->carga_horaria);
-        } else {
-            printf("Disciplina com o codigo %d nao existe neste curso.\n", cod_disciplina);
-        }
-    } else {
-        printf("Curso com o codigo %d nao foi encontrado.\n", cod_curso);
-    }
-}
 
 // Funcao recursiva auxiliar para filtrar disciplinas por bloco
 void percorre_por_bloco(Disciplina *raiz, int bloco) {
@@ -243,17 +206,6 @@ void percorre_por_bloco(Disciplina *raiz, int bloco) {
     }
 }
 
-// 3. Imprimir as disciplinas de um determinado bloco de um curso, dado o bloco e o codigo do curso
-void imprime_disciplinas_por_bloco(Curso *raiz_cursos, int cod_curso, int bloco){
-    Curso *curso_encontrado = busca_curso(raiz_cursos, cod_curso);
-
-    if (curso_encontrado != NULL) {
-        printf("\n--- Disciplinas do Bloco %d do Curso: %s ---\n", bloco, curso_encontrado->nome);
-        percorre_por_bloco(curso_encontrado->raiz_disciplinas, bloco);
-    } else {
-        printf("Curso com o codigo %d nao foi encontrado.\n", cod_curso);
-    }
-}
 
 // Funcao recursiva auxiliar para filtrar disciplinas por carga horaria
 void percorre_por_carga_horaria(Disciplina *raiz, int carga_horaria){
@@ -267,28 +219,15 @@ void percorre_por_carga_horaria(Disciplina *raiz, int carga_horaria){
     }
 }
 
-// 4. Imprimir todas as disciplinas de um determinado curso com a mesma carga horaria
-void imprime_disciplinas_por_carga_horaria(Curso *raiz_cursos, int cod_curso, int carga_horaria){
-    Curso *curso_encontrado = busca_curso(raiz_cursos, cod_curso);
-
-    if (curso_encontrado != NULL) {
-        printf("\n--- Disciplinas com %d horas do Curso: %s ---\n", carga_horaria, curso_encontrado->nome);
-        percorre_por_carga_horaria(curso_encontrado->raiz_disciplinas, carga_horaria);
-    } else {
-        printf("Curso com o codigo %d nao foi encontrado.\n", cod_curso);
-    }
-}
 
 // LIBERACAO
-// Funcao para desalocar completamente uma disciplina
+// Funcao para desalocar uma disciplina
+// Após liberar, o ponteiro é definido como NULL
 void libera_no_disciplina(Disciplina **raiz){
     if (*raiz != NULL){
-        if ((*raiz)->nome != NULL)
-        {
-            free(*raiz);
-            *raiz = NULL;
+        if ((*raiz)->nome != NULL){
+            free((*raiz)->nome);
         }
-
         free(*raiz);
         *raiz = NULL;
     }
@@ -297,29 +236,39 @@ void libera_no_disciplina(Disciplina **raiz){
 // Funcao para desalocar toda a árvore de disciplina
 void libera_arvore_disciplina(Disciplina **raiz){
     if (*raiz != NULL){
-        liberar_arvore_disciplina(&((*raiz)->esq));
-        liberar_arvore_disciplina(&((*raiz)->dir));
-        liberar_no_disciplina(raiz);
+        libera_arvore_disciplina(&((*raiz)->esq));
+        libera_arvore_disciplina(&((*raiz)->dir));
+        libera_no_disciplina(raiz);
     }
 }
 
-// 
+// Funcao que verifica se uma disciplina existe na árvore pelo código
+// Retorna 1 se encontrar, 0 caso contrário
 int consulta_disciplina(Disciplina *raiz, int codigo_disc){
-    int resultado = 0;
+    int resultado = 0; 
 
     if (raiz != NULL){
-        if (raiz->cod_disciplina == codigo_disc)
+        // Caso 1: encontrou a disciplina 
+        if (codigo_disc == raiz->cod_disciplina)
             resultado = 1;
-        else if (raiz->cod_disciplina < codigo_disc)
+        // Caso 2: o codigo do no atual eh menor que o procurado
+        // Entao vai pra subarvore esquerda 
+        else if (codigo_disc < raiz->cod_disciplina)
             resultado = consulta_disciplina(raiz->esq, codigo_disc);
+        // Caso 3: o codigo do no atual eh maior que o procurado
+        // Entao vaai pra subarvore direita
         else
             resultado = consulta_disciplina(raiz->dir, codigo_disc);
     }
+    // Retorna 1 (encontrado) ou 0 (não encontrado)
     return resultado;
 }
 
-// REMOCAO 
+// FUNÇÕES AUXILIARES
+
 // Funcao auxiliar para encontrar o no com o menor codigo em uma subarvore
+// Percorre sempre para a esquerda até encontrar o menor elemento
+// Retorna o ponteiro para a menor disciplina
 Disciplina* encontra_menor_disciplina(Disciplina *no) {
     Disciplina *menor = no;
     
@@ -332,33 +281,31 @@ Disciplina* encontra_menor_disciplina(Disciplina *no) {
     return menor;
 }
 
-void troca_informacoes_disciplinas(Disciplina *disciplina1, Disciplina *disciplina2){
-    if (disciplina1 != NULL && disciplina2 != NULL)
-    {
-        // Troca os nomes
-        char *temp_nome = disciplina1->nome;
-        strcpy(disciplina1->nome, disciplina2->nome);
-        strcpy(disciplina2->nome, temp_nome);
+// Funcao que substitui as informacoes do no que o usuario quer apagar pelas informacoes do sucessor em-ordem (o menor no da subarvore direita) e depois apaga esse sucessor la na base da arvore, onde eh estruturalmente muito mais simples.
+// Troca nome, código, bloco e carga horária
+void substitui_informacoes_disciplinas(Disciplina *no_atual, Disciplina *sucessor){
+    if (no_atual != NULL && sucessor != NULL){
+        // 1. Copia o nome do sucessor para o no atual
+        strcpy(no_atual->nome, sucessor->nome);
 
-        // Troca os cod_disciplina
-        disciplina1->cod_disciplina = disciplina2->cod_disciplina;
-
-        // Troca os blocos
-        disciplina1->bloco = disciplina2->bloco;
-
-        // Troca as cargas_horarias
-        disciplina1->carga_horaria = disciplina2->carga_horaria;
+        // 2. Copia as informacoes numericas do sucessor para o no atual
+        no_atual->cod_disciplina = sucessor->cod_disciplina;
+        no_atual->bloco = sucessor->bloco;
+        no_atual->carga_horaria  = sucessor->carga_horaria;
     }
+// NAO se copia os ponteiros (esq, dir, pai) e NEM a cor,
+// pois 'no_atual' precisa manter a sua posicao fisica e a sua cor 
+// na arvore para nao quebrar a estrutura e as regras de balancear.
+
 }
 
 // Função para mover um nó vermelho para a esquerda durante a remoção
 void move2_esquerda_disciplina(Disciplina **raiz){
     troca_cor_disciplina(*raiz);
 
-    if ((*raiz)->dir != NULL && cor_disciplina((*raiz)->dir->esq) == RED)
-    {
-        rotacao_direita_disciplina(&((*raiz)->dir));
-        rotacao_esquerda_disciplina(raiz);
+    if ((*raiz)->dir != NULL && cor_disciplina((*raiz)->dir->esq) == RED){
+        rotacao_dir_disciplina(&((*raiz)->dir));
+        rotacao_esq_disciplina(raiz);
         troca_cor_disciplina(*raiz);
     }
 }
@@ -369,15 +316,18 @@ void move2_direita_disciplina(Disciplina **raiz){
 
     if ((*raiz)->esq != NULL && cor_disciplina((*raiz)->esq->esq) == RED)
     {
-        rotacao_direita_disciplina(raiz);
+        rotacao_dir_disciplina(raiz);
         troca_cor_disciplina(*raiz);
     }
 }
 
+// REMOÇÃO AUXILIAR
+
 // Funcao para remover a menor disciplina da arvore
+// Utilizado como parte do processo de remoção de um nó com dois filhos
 void remove_menor_disciplina_arv(Disciplina **raiz){
     if ((*raiz)->esq == NULL)
-        liberar_no_disciplina(raiz);
+        libera_no_disciplina(raiz);
     else
     {
         if (cor_disciplina((*raiz)->esq) == BLACK && cor_disciplina((*raiz)->esq->esq) == BLACK)
@@ -389,6 +339,8 @@ void remove_menor_disciplina_arv(Disciplina **raiz){
 }
 
 // Funcao recursiva para remover o no da disciplina
+// Percorre a árvore, encontra o nó e realiza a remoção com balanceamento
+// Retorna 1 se removeu com sucesso, 0 caso contrário
 int remove_disciplina_no(Disciplina **raiz, int cod_disciplina) {
     int removeu = 1;
 
@@ -415,8 +367,11 @@ int remove_disciplina_no(Disciplina **raiz, int cod_disciplina) {
                 }
 
                 if (cod_disciplina == (*raiz)->cod_disciplina) {
+                    // Encontra o menor no da subarvore direita (sucessor em-ordem)
                     Disciplina *menor = encontra_menor_disciplina((*raiz)->dir);
-                    troca_informacoes_disciplinas(*raiz, menor);
+                    // O no atual ganha a identidade do menor (sucessor), mas mantem sua cor e ponteiros
+                    substitui_informacoes_disciplinas(*raiz, menor);
+                    // Agora removeu-se o menor no na base da arvore
                     remove_menor_disciplina_arv(&((*raiz)->dir));
                 } else {
                     removeu = remove_disciplina_no(&((*raiz)->dir), cod_disciplina);
@@ -435,12 +390,15 @@ int remove_disciplina_no(Disciplina **raiz, int cod_disciplina) {
     return removeu;
 }
 
-// Função principal para remoção - mantém a raiz preta
-int remover_disciplina_arvore(Disciplina **raiz, int *codigo){
+// Função principal para remocao - mantem a raiz preta
+// Primeiro verifica se a disciplina existe
+// Garante que a raiz permaneça preta após a remoção
+// Retorna 1 se removeu, 0 caso contrário
+int remove_disciplina_arvore(Disciplina **raiz, int codigo){
     int removeu = consulta_disciplina(*raiz, codigo);
 
     if (removeu)
-        removeu = remover_disciplina_no(raiz, codigo);
+        removeu = remove_disciplina_no(raiz, codigo);
 
     if (*raiz != NULL)
         (*raiz)->cor = BLACK;

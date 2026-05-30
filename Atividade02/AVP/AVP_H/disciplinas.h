@@ -7,7 +7,7 @@
 // =========================
 
 // Aloca memória para uma nova disciplina e inicializa seus campos
-Disciplina *aloca_disciplina(int *codigo, char *nome, int *bloco, int *ch);
+Disciplina *aloca_disciplina(int codigo, char *nome, int bloco, int ch);
 
 // Realiza o cadastro de uma disciplina com entrada de dados do usuário
 Disciplina *cadastra_disciplina();
@@ -22,36 +22,6 @@ int insere_no_disciplina(Disciplina **raiz, Disciplina *novo);
 
 // Função principal de inserção na árvore
 int insere_disciplina(Disciplina **raiz, Disciplina *nova);
-
-
-// =========================
-// ROTAÇÕES (ÁRVORE RUBRO-NEGRA)
-// =========================
-
-// Realiza rotação à esquerda na árvore
-void rotacao_esq_disciplina(Disciplina **raiz);
-
-// Realiza rotação à direita na árvore
-void rotacao_dir_disciplina(Disciplina **raiz);
-
-
-// =========================
-// CONTROLE DE CORES
-// =========================
-
-// Retorna a cor do nó
-int cor_disciplina(Disciplina *aluno);
-
-// Inverte a cor do nó e de seus filhos
-void troca_cor_disciplina(Disciplina *raiz);
-
-
-// =========================
-// BALANCEAMENTO
-// =========================
-
-// Realiza o balanceamento da árvore rubro-negra após inserção ou remoção
-void balancea_VP_disciplina(Disciplina **raiz);
 
 
 // =========================

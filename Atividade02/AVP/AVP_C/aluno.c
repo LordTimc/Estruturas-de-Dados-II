@@ -5,6 +5,7 @@
 
 #include "../AVP_H/auxiliares.h"
 #include "../AVP_H/structs.h"
+#include "../AVP_H/suporteAVP.h"
 
 // FUNÇÕES DE CRIAÇÃO
 
@@ -28,7 +29,7 @@ Aluno *cadastra_aluno(){
     int cadastrou = 0;
 
     Aluno *novo_aluno;
-    int matricula;
+    int matricula = 0;
     char *nome;
     int codigo;
     int ano;
@@ -81,8 +82,7 @@ Aluno *cadastra_aluno(){
 int insere_no_aluno(Aluno **raiz, Aluno *novo_aluno){
     int inseriu = 0;
 
-    if (*raiz == NULL)
-    {
+    if (*raiz == NULL){
         *raiz = novo_aluno;
         inseriu = 1;
     }
@@ -107,62 +107,7 @@ int insere_aluno(Aluno **raiz, Aluno *novo_aluno){
     return inseriu;
 }
 
-// ROTACOES
-void rotacao_esq_aluno(Aluno **raiz){
-    Aluno *aux;
 
-    aux = (*raiz)->dir;
-    (*raiz)->dir = aux->esq;
-    aux->esq = (*raiz);
-    (*raiz) = aux;
-
-    (*raiz)->cor = (*raiz)->esq->cor;
-    (*raiz)->esq->cor = RED;
-}
-
-void rotacao_dir_aluno(Aluno **raiz){
-    Aluno *aux;
-
-    aux = (*raiz)->esq;
-    (*raiz)->esq = aux->dir;
-    aux->dir = (*raiz);
-    (*raiz) = aux;
-
-    (*raiz)->cor = (*raiz)->dir->cor;
-    (*raiz)->dir->cor = RED;
-}
-
-int cor_aluno(Aluno *aluno){
-    int cor;
-    if (aluno == NULL)
-        cor = BLACK;
-    else
-        cor = aluno->cor;
-    return cor;
-}
-
-void troca_cor_aluno(Aluno *raiz){
-    raiz->cor = !(raiz->cor);
-
-    if (raiz->esq != NULL)
-        raiz->esq->cor = !(raiz->esq->cor);
-
-    if (raiz->dir != NULL)
-        raiz->dir->cor = !(raiz->dir->cor);
-}
-
-void balancea_VP_aluno(Aluno **raiz){
-    if (*raiz != NULL){
-        if (cor_aluno((*raiz)->esq) == BLACK && cor_aluno((*raiz)->dir) == RED)
-            rotacao_esq_aluno(raiz);
-
-        if (cor_aluno((*raiz)->esq) == RED && cor_aluno((*raiz)->esq->esq) == RED)
-            rotacao_dir_aluno(raiz);
-
-        if (cor_aluno((*raiz)->esq) == RED && cor_aluno((*raiz)->dir) == RED)
-            troca_cor_aluno(*raiz);
-    }
-}
 
 // Função para imprimir informações de um aluno de um curso
 void imprime_alunos_por_curso(Aluno *raiz, int codigo_curso) {

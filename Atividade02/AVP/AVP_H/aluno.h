@@ -26,36 +26,6 @@ int insere_aluno(Aluno **raiz, Aluno *novo_aluno);
 
 
 // =========================
-// ROTAÇÕES (ÁRVORE RUBRO-NEGRA)
-// =========================
-
-// Realiza rotacao para a esquerda no no apontado por raiz
-void rotacao_esq_aluno(Aluno **raiz);
-
-// Realiza rotacao para a direita no no apontado por raiz
-void rotacao_dir_aluno(Aluno **raiz);
-
-
-// =========================
-// CONTROLE DE CORES
-// =========================
-
-// Retorna a cor do no, tratando NULL como BLACK
-int cor_aluno(Aluno *aluno);
-
-// Inverte a cor do no raiz e de seus dois filhos
-void troca_cor_aluno(Aluno *raiz);
-
-
-// =========================
-// BALANCEAMENTO
-// =========================
-
-// Aplica as correcoes necessarias para manter as propriedades da arvore Rubro-Negra
-void balancea_VP_aluno(Aluno **raiz);
-
-
-// =========================
 // IMPRESSÃO
 // =========================
 

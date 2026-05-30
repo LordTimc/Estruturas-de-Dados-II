@@ -1,56 +1,54 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-// ===== enum de status de remoção =====
-typedef enum {
-    OK,
-    UNDERFLOW,
-    INFO_NAO_ENCONTRADA,
-    SUCESSOR_NAO_ENCONTRADO,
-    ARVORE_VAZIA,
-    NAO_FOI_POSSIVEL_T_UNDERFLOW
-} StatusRemocao;
+typedef struct Disciplina Disciplina;
+typedef struct Curso Curso;
+typedef struct Aluno Aluno;
+
+typedef struct Arv23_Disciplina Arv23_Disciplina;
+typedef struct Arv23_Curso Arv23_Curso;
+typedef struct Arv23_Aluno Arv23_Aluno;
 
 // ===== Estruturas de Informação =====
-typedef struct ALUNO {
+typedef struct Aluno {
     int matricula;
     char nome[100];
     int cod_curso;
     int ano_ingresso;
     int semestre_ingresso;
-} ALUNO;
+} Aluno;
 
-typedef struct DISCIPLINA {
+typedef struct Disciplina {
     int codigo;
     char nome[100];
     int bloco;
     int carga_horaria;
-} DISCIPLINA;
+} Disciplina;
 
 // Nó de Disciplina precisa ser declarado antes de Curso
 typedef struct Arv23_Disciplina {
-    DISCIPLINA info1, info2;
+    Disciplina info1, info2;
     int nInfo;
     struct Arv23_Disciplina *esq, *cen, *dir;
 } Arv23_Disciplina;
 
-typedef struct CURSO {
+typedef struct Curso {
     int codigo;
     char nome[100];
     int qtd_blocos;
     int semanas;
     Arv23_Disciplina *arv_disciplinas;
-} CURSO;
+} Curso;
 
 // ===== Árvores 2-3 =====
 typedef struct Arv23_Curso {
-    CURSO info1, info2;
+    Curso info1, info2;
     int nInfo;
     struct Arv23_Curso *esq, *cen, *dir;
 } Arv23_Curso;
 
 typedef struct Arv23_Aluno {
-    ALUNO info1, info2;
+    Aluno info1, info2;
     int nInfo;
     struct Arv23_Aluno *esq, *cen, *dir;
 } Arv23_Aluno;

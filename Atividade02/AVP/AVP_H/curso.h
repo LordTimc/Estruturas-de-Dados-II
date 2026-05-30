@@ -26,36 +26,6 @@ int insere_curso(Curso **raiz, Curso *novo_curso);
 
 
 // =========================
-// ROTAÇÕES (ÁRVORE RUBRO-NEGRA)
-// =========================
-
-// Realiza uma rotacao para a esquerda no no apontado por raiz
-void rotacao_esq_curso(Curso **raiz);
-
-// Realiza uma rotacao para a direita no no apontado por raiz
-void rotacao_dir_curso(Curso **raiz);
-
-
-// =========================
-// CONTROLE DE CORES
-// =========================
-
-// Retorna a cor de um no, tratando NULL como preto
-int cor_curso(Curso *curso);
-
-// Inverte a cor do no raiz e de seus dois filhos
-void troca_cor_curso(Curso *raiz);
-
-
-// =========================
-// BALANCEAMENTO
-// =========================
-
-// Verifica e corrige violacoes da arvore Rubro-Negra apos insercao
-void balancea_VP_curso(Curso **raiz);
-
-
-// =========================
 // LIBERAÇÃO DE MEMÓRIA
 // =========================
 

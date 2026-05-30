@@ -6,6 +6,7 @@
 
 #include "../AVP_H/auxiliares.h"
 #include "../AVP_H/structs.h"
+#include "../AVP_H/suporteAVP.h"
 
 
 Curso *aloca_curso(int cod, char *nome, int qtd_blocos, int semanas){
@@ -33,7 +34,7 @@ Curso *aloca_curso(int cod, char *nome, int qtd_blocos, int semanas){
 Curso *cadastra_curso() {
     Curso *novo = NULL;
     char *nome = NULL;
-    int codigo, blocos, semanas;
+    int codigo = 0, blocos, semanas;
     int cadastrou = 0;
 
     printf("Digite o codigo do curso: ");
@@ -93,59 +94,6 @@ int insere_curso(Curso **raiz, Curso *novo_curso){
     return inseriu;
 }
 
-void rotacao_esq_curso(Curso **raiz){
-    Curso *aux = (*raiz)->dir;
-
-    (*raiz)->dir = aux->esq;
-    aux->esq = *raiz;
-    *raiz = aux;
-
-    (*raiz)->cor = (*raiz)->esq->cor;
-    (*raiz)->esq->cor = RED;
-}
-
-void rotacao_dir_curso(Curso **raiz){
-    Curso *aux = (*raiz)->esq;
-
-    (*raiz)->esq = aux->dir;
-    aux->dir = *raiz;
-    *raiz = aux;
-
-    (*raiz)->cor = (*raiz)->dir->cor;
-    (*raiz)->dir->cor = RED;
-}
-
-int cor_curso(Curso *curso){
-    int cor;
-    if (curso == NULL)
-        cor = BLACK;
-    else
-        cor = curso->cor;
-    return cor;
-}
-
-void troca_cor_curso(Curso *raiz){
-    raiz->cor = !(raiz->cor);
-
-    if (raiz->esq)
-        raiz->esq->cor = !(raiz->esq->cor);
-
-    if (raiz->dir)
-        raiz->dir->cor = !(raiz->dir->cor);
-}
-
-void balancea_VP_curso(Curso **raiz){
-    if (*raiz != NULL){
-        if (cor_curso((*raiz)->esq) == BLACK && cor_curso((*raiz)->dir) == RED)
-            rotacao_esq_curso(raiz);
-
-        if (cor_curso((*raiz)->esq) == RED && cor_curso((*raiz)->esq->esq) == RED)
-            rotacao_dir_curso(raiz);
-
-        if (cor_curso((*raiz)->esq) == RED && cor_curso((*raiz)->dir) == RED)
-            troca_cor_curso(*raiz);
-    }
-}
 
 // Libera a memoria de um unico no de curso e aponta para NULL
 void libera_no_curso(Curso **raiz){

@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../AVP_H/structs.h"
 #include "../AVP_H/disciplinas.h"
 #include "../AVP_H/curso.h"
+
 #include "../AVP_H/auxiliares.h"
+#include "../AVP_H/structs.h"
+#include "../AVP_H/suporteAVP.h"
 
 // FUNÇÕES DE CRIAÇÃO
 
@@ -36,7 +38,7 @@ Disciplina *cadastra_disciplina(){
     int cadastrou = 0;
 
     Disciplina *disciplina;
-    int cod_displina;
+    int cod_displina = 0;
     char *nome_displina;
     int bloco;
     int carga_horaria;
@@ -44,7 +46,10 @@ Disciplina *cadastra_disciplina(){
     disciplina = NULL;
     nome_displina = NULL;
 
-    if(pega_cod(cod_displina)){
+    printf("Entre com o codigo da nova disciplina: ");
+    cod_displina = num_inteiro();
+
+    if(cod_displina){
         printf("Entre com o nome da nova disciplina: ");
         nome_displina = leitura_de_string();
         
@@ -111,76 +116,6 @@ int insere_disciplina(Disciplina **raiz, Disciplina *nova){
 
     return sucesso; 
 }
-
-// ROTAÇÕES
-
-// Realiza rotação à esquerda na árvore
-void rotacao_esq_disciplina(Disciplina **raiz){
-    Disciplina *aux;
-
-    aux = (*raiz)->dir;
-    (*raiz)->dir = aux->esq;
-    aux->esq = (*raiz);
-    (*raiz) = aux;
-
-    (*raiz)->cor = (*raiz)->esq->cor;
-    (*raiz)->esq->cor = RED;
-}
-
-// Realiza rotação à direita na árvore
-void rotacao_dir_disciplina(Disciplina **raiz){
-    Disciplina *aux;
-
-    aux = (*raiz)->esq;
-    (*raiz)->esq = aux->dir;
-    aux->dir = (*raiz);
-    (*raiz) = aux;
-
-    (*raiz)->cor = (*raiz)->dir->cor;
-    (*raiz)->dir->cor = RED;
-}
-
-// CONTROLE DE CORES
-
-// Retorna a cor do nó
-// Se o nó for NULL, considera como preto
-int cor_disciplina(Disciplina *aluno){
-    int cor;
-    if (aluno == NULL)
-        cor = BLACK;
-    else
-        cor = aluno->cor;
-    return cor;
-}
-
-// Inverte a cor do nó e de seus filhos
-void troca_cor_disciplina(Disciplina *raiz){
-    raiz->cor = !(raiz->cor);
-
-    if (raiz->esq != NULL)
-        raiz->esq->cor = !(raiz->esq->cor);
-
-    if (raiz->dir != NULL)
-        raiz->dir->cor = !(raiz->dir->cor);
-}
-
-// BALANCEAMENTO
-
-// Realiza o balanceamento da árvore rubro-negra após inserção ou remoção
-void balancea_VP_disciplina(Disciplina **raiz){
-    if(*raiz != NULL){
-        if(cor_disciplina((*raiz)->dir) == RED && cor_disciplina((*raiz)->esq) == BLACK)
-            rotacao_esq_disciplina(raiz);
-
-        if(cor_disciplina((*raiz)->esq) == RED && cor_disciplina((*raiz)->esq->esq) == RED)
-            rotacao_dir_disciplina(raiz);
-    
-        if(cor_disciplina((*raiz)->esq) == RED && cor_disciplina((*raiz)->dir) == RED)
-            troca_cor_disciplina(*raiz);
-    }
-}
-
-
 
 // Funcao recursiva auxiliar para percorrer as disciplinas em ordem crescente
 // Imprime todas as disciplinas ordenadas pelo código

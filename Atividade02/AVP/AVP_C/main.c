@@ -4,8 +4,11 @@
 #include "../AVP_H/aluno.h"
 #include "../AVP_H/curso.h"
 #include "../AVP_H/disciplinas.h"
-#include "../AVP_H/structs.h"
+
 #include "../AVP_H/auxiliares.h"
+#include "../AVP_H/structs.h"
+#include "../AVP_H/suporteAVP.h"
+
 #include "../AVP_H/main.h"
 
 void menu(){

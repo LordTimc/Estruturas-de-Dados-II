@@ -38,23 +38,23 @@ Aluno *cadastra_aluno(){
     nome = NULL;
 
     printf("Digite a matricula do aluno: ");
-    matricula = digitar_int();
+    matricula = num_inteiro();
 
     if(matricula){
         printf("Digite o nome do aluno: ");
-        nome = ler_string();
+        nome = leitura_de_string();
 
         if(nome != NULL){
             printf("Digite o codigo do curso do aluno: ");
-            codigo = digitar_int();
+            codigo = num_inteiro();
 
             if(codigo){
                 printf("Digite o ano de ingresso: ");
-                ano = digitar_int();
+                ano = num_inteiro();
 
                 if(ano){
                     printf("Digite o semestre de ingresso: ");
-                    semestre = digitar_int();
+                    semestre = num_inteiro();
 
                     if(semestre)
                         cadastrou = 1;
@@ -64,7 +64,7 @@ Aluno *cadastra_aluno(){
     }
 
     if(cadastrou){
-        novo_aluno = aloca_Aluno(nome, matricula, codigo, ano, semestre);
+        novo_aluno = aloca_aluno(nome, matricula, codigo, ano, semestre);
     } else {
         if(nome != NULL){
             free(nome);

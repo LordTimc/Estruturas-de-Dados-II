@@ -37,19 +37,19 @@ Curso *cadastra_curso() {
     int cadastrou = 0;
 
     printf("Digite o codigo do curso: ");
-    codigo = digitar_int();
+    codigo = num_inteiro();
 
     if (codigo) {
         printf("Digite o nome do curso: ");
-        nome = ler_string();
+        nome = leitura_de_string();
 
         if (nome != NULL) {
             printf("Digite a quantidade de blocos: ");
-            blocos = digitar_int();
+            blocos = num_inteiro();
 
             if (blocos) {
                 printf("Digite semanas por disciplina: ");
-                semanas = digitar_int();
+                semanas = num_inteiro();
 
                 if (semanas)
                     cadastrou = 1;
@@ -251,7 +251,7 @@ int conta_alunos_por_curso(Aluno *raiz, int cod_curso) {
 
 // --- FUNcaO PRINCIPAL PARA MOSTRAR O RESULTADO ---
 void mostra_qtd_alunos_por_curso(Aluno *raiz, int cod_curso) {
-    int total_alunos = contar_alunos_por_curso(raiz, cod_curso);
+    int total_alunos = conta_alunos_por_curso(raiz, cod_curso);
 
     if (total_alunos > 0) {
         printf("O curso com codigo %d possui %d aluno(s) matriculado(s).\n", cod_curso, total_alunos);

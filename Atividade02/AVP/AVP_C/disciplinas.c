@@ -12,7 +12,7 @@
 // Função para alocar um novo curso
 // Recebe código, nome, bloco e carga horária
 // Retorna um ponteiro para a nova disciplina criada
-Disciplina *aloca_disciplina(int *codigo, char *nome, int *bloco, int *ch){
+Disciplina *aloca_disciplina(int codigo, char *nome, int bloco, int ch){
 
     // Inicializa novo ponteiro
     Disciplina *novo = (Disciplina*) malloc(sizeof(Disciplina));
@@ -81,14 +81,14 @@ Disciplina *cadastra_disciplina(){
 int insere_no_disciplina(Disciplina **raiz, Disciplina *novo){
     int inseriu = 0;
 
-    if (raiz == NULL){
+    if (*raiz == NULL){
         *raiz = novo;
         inseriu = 1;
     }
     else if(novo->cod_disciplina < (*raiz)->cod_disciplina){
-        inseriu = insere_disciplina(&((*raiz)->esq), novo);
+        inseriu = insere_no_disciplina(&((*raiz)->esq), novo);
     }else{
-        inseriu = insere_disciplina(&((*raiz)->dir), novo);
+        inseriu = insere_no_disciplina(&((*raiz)->dir), novo);
     }
 
     if(inseriu){
@@ -104,7 +104,7 @@ int insere_no_disciplina(Disciplina **raiz, Disciplina *novo){
 int insere_disciplina(Disciplina **raiz, Disciplina *nova){
     int sucesso = 0;
 
-    sucesso = insere_no_disciplina(*raiz, nova);
+    sucesso = insere_no_disciplina(raiz, nova);
     if((*raiz) != NULL){
         (*raiz)->cor = BLACK;
     }

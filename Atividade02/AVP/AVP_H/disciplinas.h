@@ -1,9 +1,7 @@
 #ifndef DISCIPLINA_H
 #define DISCIPLINA_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "../AVP_H/structs.h"
 // =========================
 // FUNÇÕES DE CRIAÇÃO
 // =========================
@@ -88,14 +86,14 @@ void libera_arvore_disciplina(Disciplina **raiz);
 
 
 // =========================
-// CONSULTA (BUSCA BOOLEANA)
+// CONSULTA 
 // =========================
 
 // Verifica se uma disciplina existe na árvore pelo código
 int consulta_disciplina(Disciplina *raiz, int codigo_disc);
 
 // =========================
-// FUNÇÕES AUXILIARES
+// FUNÇÕES AUXILIARES PARA REMOCAO
 // =========================
 
 // Encontra o nó com o menor código em uma subárvore

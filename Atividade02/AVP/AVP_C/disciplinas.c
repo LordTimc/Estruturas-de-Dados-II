@@ -221,23 +221,23 @@ void percorre_por_carga_horaria(Disciplina *raiz, int carga_horaria){
 
 
 // LIBERACAO
-// Funcao para desalocar uma disciplina
-// Após liberar, o ponteiro é definido como NULL
+// Libera a memoria de um unico no de disciplina e aponta para NULL
 void libera_no_disciplina(Disciplina **raiz){
-    if (*raiz != NULL){
-        if ((*raiz)->nome != NULL){
-            free((*raiz)->nome);
-        }
-        free(*raiz);
-        *raiz = NULL;
-    }
+    // Libera o no e anula o ponteiro
+    free(*raiz);
+    *raiz = NULL;
 }
 
-// Funcao para desalocar toda a árvore de disciplina
+// Libera recursivamente todos os nos da arvore de disciplinas
 void libera_arvore_disciplina(Disciplina **raiz){
     if (*raiz != NULL){
-        libera_arvore_disciplina(&((*raiz)->esq));
-        libera_arvore_disciplina(&((*raiz)->dir));
+        // Percorre e libera a subarvore esquerda
+        libera_arvore_disciplina(&(*raiz)->esq);
+
+        // Percorre e libera a subarvore direita
+        libera_arvore_disciplina(&(*raiz)->dir);
+
+        // Libera o no atual
         libera_no_disciplina(raiz);
     }
 }
@@ -296,7 +296,6 @@ void substitui_informacoes_disciplinas(Disciplina *no_atual, Disciplina *sucesso
 // NAO se copia os ponteiros (esq, dir, pai) e NEM a cor,
 // pois 'no_atual' precisa manter a sua posicao fisica e a sua cor 
 // na arvore para nao quebrar a estrutura e as regras de balancear.
-
 }
 
 // Função para mover um nó vermelho para a esquerda durante a remoção
@@ -314,8 +313,7 @@ void move2_esquerda_disciplina(Disciplina **raiz){
 void move2_direita_disciplina(Disciplina **raiz){
     troca_cor_disciplina(*raiz);
 
-    if ((*raiz)->esq != NULL && cor_disciplina((*raiz)->esq->esq) == RED)
-    {
+    if ((*raiz)->esq != NULL && cor_disciplina((*raiz)->esq->esq) == RED){
         rotacao_dir_disciplina(raiz);
         troca_cor_disciplina(*raiz);
     }
@@ -328,8 +326,8 @@ void move2_direita_disciplina(Disciplina **raiz){
 void remove_menor_disciplina_arv(Disciplina **raiz){
     if ((*raiz)->esq == NULL)
         libera_no_disciplina(raiz);
-    else
-    {
+    else{
+        // garante que existe um no vermelho no caminho a esquerda
         if (cor_disciplina((*raiz)->esq) == BLACK && cor_disciplina((*raiz)->esq->esq) == BLACK)
             move2_esquerda_disciplina(raiz);
 

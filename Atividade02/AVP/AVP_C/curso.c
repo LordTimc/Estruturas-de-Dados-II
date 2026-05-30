@@ -7,39 +7,11 @@
 #include "../AVP_H/auxiliares.h"
 #include "../AVP_H/structs.h"
 
-int inserir_no_curso(Curso **raiz, Curso *novo_curso){
-    int inseriu = 0;
-
-    if (*raiz == NULL)
-    {
-        *raiz = novo_curso;
-        inseriu = 1;
-    }
-    else if (novo_curso->cod_curso < (*raiz)->cod_curso)
-        inseriu = inserir_no_curso(&((*raiz)->esq), novo_curso);
-    else if (novo_curso->cod_curso > (*raiz)->cod_curso)
-        inseriu = inserir_no_curso(&((*raiz)->dir), novo_curso);
-
-    if (inseriu)
-        balancear_RB_curso(raiz);
-
-    return inseriu;
-}
-
-int inserir_curso(Curso **raiz, Curso *novo_curso){
-    int inseriu = inserir_no_curso(raiz, novo_curso);
-
-    if (*raiz != NULL)
-        (*raiz)->cor = BLACK;
-
-    return inseriu;
-}
 
 Curso *aloca_curso(int cod, char *nome, int qtd_blocos, int semanas){
     Curso *curso = (Curso *)malloc(sizeof(Curso));
 
-    if (curso != NULL)
-    {
+    if (curso != NULL){
         curso->cod_curso = cod;
         strcpy(curso->nome, nome);
 
@@ -49,6 +21,7 @@ Curso *aloca_curso(int cod, char *nome, int qtd_blocos, int semanas){
         curso->raiz_disciplinas = NULL;
 
         curso->cor = RED;
+
         curso->esq = NULL;
         curso->dir = NULL;
         curso->pai = NULL;
@@ -57,38 +30,70 @@ Curso *aloca_curso(int cod, char *nome, int qtd_blocos, int semanas){
     return curso;
 }
 
-Curso *cadastrar_curso(){
+Curso *cadastra_curso() {
     Curso *novo = NULL;
-    char *nome;
-    int cod, blocos, semanas;
-    int ok = 1;
+    char *nome = NULL;
+    int codigo, blocos, semanas;
+    int cadastrou = 0;
 
     printf("Digite o codigo do curso: ");
-    cod = digitar_int();
+    codigo = digitar_int();
 
-    printf("Digite o nome do curso: ");
-    nome = ler_string();
+    if (codigo) {
+        printf("Digite o nome do curso: ");
+        nome = ler_string();
 
-    if (nome == NULL)
-        ok = 0;
+        if (nome != NULL) {
+            printf("Digite a quantidade de blocos: ");
+            blocos = digitar_int();
 
-    if (ok){
-        printf("Digite a quantidade de blocos: ");
-        blocos = digitar_int();
+            if (blocos) {
+                printf("Digite semanas por disciplina: ");
+                semanas = digitar_int();
 
-        printf("Digite semanas por disciplina: ");
-        semanas = digitar_int();
+                if (semanas)
+                    cadastrou = 1;
+            }
+        }
     }
-
-    if (ok)
-        novo = aloca_curso(cod, nome, blocos, semanas);
-    else if (nome != NULL)
-        free(nome);
+    if (cadastrou) {
+        novo = aloca_curso(codigo, nome, blocos, semanas);
+    } else {
+        if (nome != NULL)
+            free(nome);
+    }
 
     return novo;
 }
 
-void rotacao_esquerda_curso(Curso **raiz){
+int insere_no_curso(Curso **raiz, Curso *novo_curso){
+    int inseriu = 0;
+
+    if (*raiz == NULL){
+        *raiz = novo_curso;
+        inseriu = 1;
+    }
+    else if (novo_curso->cod_curso < (*raiz)->cod_curso)
+        inseriu = insere_no_curso(&((*raiz)->esq), novo_curso);
+    else if (novo_curso->cod_curso > (*raiz)->cod_curso)
+        inseriu = insere_no_curso(&((*raiz)->dir), novo_curso);
+
+    if (inseriu)
+        balancea_VP_curso(raiz);
+
+    return inseriu;
+}
+
+int insere_curso(Curso **raiz, Curso *novo_curso){
+    int inseriu = insere_no_curso(raiz, novo_curso);
+
+    if (*raiz != NULL)
+        (*raiz)->cor = BLACK;
+
+    return inseriu;
+}
+
+void rotacao_esq_curso(Curso **raiz){
     Curso *aux = (*raiz)->dir;
 
     (*raiz)->dir = aux->esq;
@@ -99,7 +104,7 @@ void rotacao_esquerda_curso(Curso **raiz){
     (*raiz)->esq->cor = RED;
 }
 
-void rotacao_direita_curso(Curso **raiz){
+void rotacao_dir_curso(Curso **raiz){
     Curso *aux = (*raiz)->esq;
 
     (*raiz)->esq = aux->dir;
@@ -110,7 +115,7 @@ void rotacao_direita_curso(Curso **raiz){
     (*raiz)->dir->cor = RED;
 }
 
-int cor_aluno(Curso *curso){
+int cor_curso(Curso *curso){
     int cor;
     if (curso == NULL)
         cor = BLACK;
@@ -119,7 +124,7 @@ int cor_aluno(Curso *curso){
     return cor;
 }
 
-void trocar_cor_curso(Curso *raiz){
+void troca_cor_curso(Curso *raiz){
     raiz->cor = !(raiz->cor);
 
     if (raiz->esq)
@@ -129,21 +134,102 @@ void trocar_cor_curso(Curso *raiz){
         raiz->dir->cor = !(raiz->dir->cor);
 }
 
-void balancear_RB_curso(Curso **raiz){
+void balancea_VP_curso(Curso **raiz){
     if (*raiz != NULL){
         if (cor_curso((*raiz)->esq) == BLACK && cor_curso((*raiz)->dir) == RED)
-            rotacao_esquerda_curso(raiz);
+            rotacao_esq_curso(raiz);
 
         if (cor_curso((*raiz)->esq) == RED && cor_curso((*raiz)->esq->esq) == RED)
-            rotacao_direita_curso(raiz);
+            rotacao_dir_curso(raiz);
 
         if (cor_curso((*raiz)->esq) == RED && cor_curso((*raiz)->dir) == RED)
-            trocar_cor_curso(*raiz);
+            troca_cor_curso(*raiz);
+    }
+}
+
+// Libera a memoria de um unico no de curso e aponta para NULL
+void libera_no_curso(Curso **raiz){
+    // Libera o no e anula o ponteiro
+    free(*raiz);
+    *raiz = NULL;
+}
+
+// Libera recursivamente todos os nos da arvore de cursos e suas disciplinas
+void libera_arvore_curso(Curso **raiz){
+    if (*raiz != NULL){
+        // Percorre e libera a subarvore esquerda
+        libera_arvore_curso(&(*raiz)->esq);
+
+        // Percorre e libera a subarvore direita
+        libera_arvore_curso(&(*raiz)->dir);
+
+        // Libera a arvore de disciplinas vinculada ao curso atual
+        libera_arvore_disciplina(&(*raiz)->raiz_disciplinas);
+
+        // Libera o no atual
+        libera_no_curso(raiz);
+    }
+}
+
+// Funcao auxiliar para encontrar o no com o menor codigo em uma subarvore
+// Percorre sempre para a esquerda até encontrar o menor elemento
+// Retorna o ponteiro para o menor curso
+Curso* encontra_menor_curso(Curso *no) {
+    Curso *menor = no;
+    
+    if (menor != NULL) {
+        while (menor->esq != NULL) {
+            menor = menor->esq;
+        }
+    }
+    
+    return menor;
+}
+
+// Funcao que substitui as informacoes do no que o usuario quer apagar pelas informacoes do sucessor em-ordem (o menor no da subarvore direita) e depois apaga esse sucessor la na base da arvore, onde eh estruturalmente muito mais simples.
+void substitui_informacoes_curso(Curso *no_atual, Curso *sucessor){
+    if (no_atual != NULL && sucessor != NULL){
+
+        // 1. Copia o nome do sucessor para o nó atual
+        strcpy(no_atual->nome, sucessor->nome);
+
+        // 2. Copia as informacoes numericas
+        no_atual->cod_curso = sucessor->cod_curso;
+        no_atual->quantidade_blocos = sucessor->quantidade_blocos;
+        no_atual->semanas_por_disciplina = sucessor->semanas_por_disciplina;
+
+        // 3. Copia a arvore de disciplinas (ponteiro)
+        no_atual->raiz_disciplinas = sucessor->raiz_disciplinas;
+    }
+
+// NAO se copia os ponteiros (esq, dir, pai) e NEM a cor,
+// pois 'no_atual' precisa manter a sua posicao fisica e a sua cor 
+// na arvore para nao quebrar a estrutura e as regras de balancear.
+}
+
+// Função para mover um nó vermelho para a esquerda durante a remoção
+void move2_esquerda_curso(Curso **raiz){
+    troca_cor_curso(*raiz);
+
+    if ((*raiz)->dir != NULL && cor_curso((*raiz)->dir->esq) == RED){
+        rotacao_dir_curso(&((*raiz)->dir));
+        rotacao_esq_curso(raiz);
+        troca_cor_curso(*raiz);
+    }
+}
+
+// Funcao para mover um no vermelho para a direita durante a remocao
+void move2_direita_curso(Curso **raiz){
+    troca_cor_curso(*raiz);
+
+    if ((*raiz)->esq != NULL && cor_curso((*raiz)->esq->esq) == RED){
+        rotacao_dir_curso(raiz);
+        troca_cor_curso(*raiz);
     }
 }
 
 // --- FUNCAO AUXILIAR DE CONTAGEM  ---
-int contar_alunos_por_curso(Aluno *raiz, int cod_curso) {
+int conta_alunos_por_curso(Aluno *raiz, int cod_curso) {
     int total = 0;
 
     if (raiz != NULL) {
@@ -156,15 +242,15 @@ int contar_alunos_por_curso(Aluno *raiz, int cod_curso) {
         
         // Soma o aluno atual com os resultados das subarvores esquerda e direita
         total = atual + 
-                contar_alunos_por_curso(raiz->esq, cod_curso) + 
-                contar_alunos_por_curso(raiz->dir, cod_curso);
+                conta_alunos_por_curso(raiz->esq, cod_curso) + 
+                conta_alunos_por_curso(raiz->dir, cod_curso);
     }
 
     return total; 
 }
 
 // --- FUNcaO PRINCIPAL PARA MOSTRAR O RESULTADO ---
-void mostrar_qtd_alunos_por_curso(Aluno *raiz, int cod_curso) {
+void mostra_qtd_alunos_por_curso(Aluno *raiz, int cod_curso) {
     int total_alunos = contar_alunos_por_curso(raiz, cod_curso);
 
     if (total_alunos > 0) {
@@ -175,11 +261,11 @@ void mostrar_qtd_alunos_por_curso(Aluno *raiz, int cod_curso) {
 }
 
 // --- FUNCAO PARA IMPRIMIR OS CURSOS EM ORDEM CRESCENTE ---
-void imprimir_cursos_crescente(Curso *raiz) {
+void imprime_cursos_crescente(Curso *raiz) {
     
     if (raiz != NULL) {
         // 1. Visita a subarvore esquerda 
-        imprimir_cursos_crescente(raiz->esq);
+        imprime_cursos_crescente(raiz->esq);
         
         // 2. Visita a raiz atual 
         printf("Codigo: %-5d | Nome: %-30s | Blocos: %d\n", 
@@ -188,11 +274,11 @@ void imprimir_cursos_crescente(Curso *raiz) {
                raiz->quantidade_blocos);
         
         // 3. Visita a subarvore direita 
-        imprimir_cursos_crescente(raiz->dir);
+        imprime_cursos_crescente(raiz->dir);
     }
 }
 
-void imprimir_curso_por_codigo(Curso *raiz, int cod_curso) {
+void imprime_curso_por_codigo(Curso *raiz, int cod_curso) {
     Curso *atual = raiz;
     int encontrado = 0;
 
@@ -259,7 +345,7 @@ void lista_cursos_por_qtd_blocos(Curso *raiz, int qtd_blocos) {
 // BUSCA
 // =========================
 
-// Funcao auxiliar para buscar um curso pelo codigo
+// Funcao auxiliar para buscar um curso pelo codigo e verifica se ele existe
 // Essa funcao será usado na funcao imprime_disciplinas_ordem_crescente junto com a funcao percorre_disciplinas_em_ordem para conseguir 
 Curso* busca_curso(Curso *raiz, int cod_curso) {
     Curso *atual = raiz;
@@ -352,77 +438,120 @@ void imprime_disciplinas_por_carga_horaria(Curso *raiz_cursos, int cod_curso, in
     }
 }
 
-Curso* remover_curso(Curso *raiz, int cod_curso) {
-    Curso *curso = NULL;
-    Curso *resultado = raiz;
+// REMOCAO
+// Funcao que remove o nó com o menor cod_curso da árvore.
+void remove_menor_curso(Curso **raiz){
+    
+    // verifica se a arvore nao esta vazia
+    if (*raiz != NULL){
 
-    // 1. Buscar curso
-    curso = busca_curso(raiz, cod_curso);
-
-    // 2. Verifica se existe
-    if (curso != NULL) {
-
-        // 3. Verifica se tem disciplinas
-        if (curso->raiz_disciplinas == NULL) {
-
-            Curso *pai = curso->pai;
-            Curso *filho = NULL;
-
-            // CASO 1: folha
-            if (curso->esq == NULL && curso->dir == NULL) {
-
-                if (pai == NULL) {
-                    resultado = NULL; // era raiz
-                } else {
-                    if (pai->esq == curso) {
-                        pai->esq = NULL;
-                    } else {
-                        pai->dir = NULL;
-                    }
-                }
+        // caso base: encontrou o menor (nao tem filho a esquerda)
+        if ((*raiz)->esq == NULL){
+            libera_no_curso(raiz);     
+        }
+        else{
+            // garante que existe um no vermelho no caminho a esquerda
+            if (cor_curso((*raiz)->esq) == BLACK &&
+                cor_curso((*raiz)->esq->esq) == BLACK){
+                move2_esquerda_curso(raiz);
             }
-
-            // CASO 2: um filho
-            else if (curso->esq == NULL || curso->dir == NULL) {
-
-                if (curso->esq != NULL) {
-                    filho = curso->esq;
-                } else {
-                    filho = curso->dir;
-                }
-
-                if (pai == NULL) {
-                    resultado = filho;
-                } else {
-                    if (pai->esq == curso) {
-                        pai->esq = filho;
-                    } else {
-                        pai->dir = filho;
-                    }
-                }
-
-                filho->pai = pai;
-            }
-
-            // CASO 3: dois filhos
-            else {
-                Curso *sucessor = curso->dir;
-
-                while (sucessor->esq != NULL) {
-                    sucessor = sucessor->esq;
-                }
-
-                // copia dados
-                curso->cod_curso = sucessor->cod_curso;
-                strcpy(curso->nome, sucessor->nome);
-
-                // remove sucessor (recursivo simplificado)
-                curso->dir = remover_curso(curso->dir, sucessor->cod_curso);
-            }
-
-            free(curso);
+            remove_menor_curso(&((*raiz)->esq));
+            balancea_VP_curso(raiz);
         }
     }
+}
 
-    return resultado;
+int remove_curso(Curso **raiz, int cod_curso) {
+    int removeu = 1;
+
+    if ((*raiz) != NULL) {
+        
+        // Se encontrou logo de início e tem disciplinas, aborta a remoção
+        if (cod_curso == (*raiz)->cod_curso && (*raiz)->raiz_disciplinas != NULL) {
+            removeu = 0; 
+        }
+        // Caminha para a subárvore esquerda
+        else if (cod_curso < (*raiz)->cod_curso) {
+            if ((*raiz)->esq != NULL) {
+                if (cor_curso((*raiz)->esq) == BLACK && cor_curso((*raiz)->esq->esq) == BLACK) {
+                    move2_esquerda_curso(raiz);
+                }
+            }
+            removeu = remove_curso(&((*raiz)->esq), cod_curso);
+        } 
+        // Caminha para a direita ou encontrou o nó correspondente
+        else {
+            // Garante a inclinação correta da árvore para a esquerda
+            if (cor_curso((*raiz)->esq) == RED) {
+                rotacao_dir_curso(raiz);
+            }
+
+            // Caso a rotação tenha trazido o nó alvo para a raiz local
+            if (cod_curso == (*raiz)->cod_curso && (*raiz)->raiz_disciplinas != NULL) {
+                removeu = 0;
+            }
+            // CASO 1: Encontrou o nó, ele NÃO tem disciplinas e é uma folha (sem filho à direita)
+            else if (cod_curso == (*raiz)->cod_curso && (*raiz)->dir == NULL) {
+                free(*raiz);
+                *raiz = NULL;
+            } 
+            // CASO 2: O nó possui filhos à direita ou o alvo está mais abaixo
+            else {
+                if ((*raiz)->dir != NULL) {
+                    if (cor_curso((*raiz)->dir) == BLACK && cor_curso((*raiz)->dir->esq) == BLACK) {
+                        move2_direita_curso(raiz);
+                    }
+                }
+
+                // Encontrou o nó a ser removido (garantido como nó interno)
+                if (cod_curso == (*raiz)->cod_curso) {
+                    // Verifica novamente se o nó atual possui disciplinas após o movimento da árvore
+                    if ((*raiz)->raiz_disciplinas != NULL) {
+                        removeu = 0;
+                    } else {
+                        // Busca o sucessor em-ordem (menor da subárvore direita)
+                        Curso *menor = encontra_menor_curso((*raiz)->dir);
+                        
+                        // O nó atual adota a identidade do sucessor.
+                        // A função substitui_informacoes deve copiar os dados E também o ponteiro raiz_disciplinas do sucessor!
+                        substitui_informacoes_curso(*raiz, menor);
+                        
+                        // Elimina o nó menor físico duplicado que ficou na base da árvore
+                        remove_menor_curso(&((*raiz)->dir));
+                    }
+                } 
+                // Continua a busca descendo pela subárvore direita
+                else {
+                    removeu = remove_curso(&((*raiz)->dir), cod_curso);
+                }
+            }
+        }
+
+        //Mesmo que a remoção tenha sido negada (removeu = 0),
+        // se a árvore sofreu rotações temporárias na descida, precisamos balancear na subida!
+        if (*raiz != NULL) {
+            balancea_VP_curso(raiz);
+        }
+        
+    } else {
+        removeu = 0; // Curso não encontrado
+    }
+    return removeu;
+}
+
+// Função principal para remoção de curso - garante a integridade da árvore
+int remove_curso_arvore(Curso **raiz, int cod_curso) {
+    // Verifica se o curso sequer existe na árvore antes de tentar mexer na estrutura
+    Curso *encontrado = busca_curso(*raiz, cod_curso);
+
+    int removeu = 0;
+    if (encontrado != NULL) {  // Comparação explícita com NULL
+        removeu = remove_curso(raiz, cod_curso);
+    }
+
+    if (*raiz != NULL) {
+        //Garante que a raiz permaneça preta após as modificações
+        (*raiz)->cor = BLACK;
+    }
+    return removeu; // Retorna 1 se removeu com sucesso, ou 0 caso contrário
 }

@@ -1,4 +1,79 @@
+#ifndef ALUNO_H
+#define ALUNO_H
+
 #include "../AVP_H/structs.h"
 
-int inserir_no_aluno(Aluno **raiz, Aluno *novo_aluno);
-int inserir_aluno(Aluno **raiz, Aluno *novo_aluno);
+// =========================
+// FUNÇÕES DE CRIAÇÃO
+// =========================
+
+// Aloca e inicializa um novo no de aluno com os dados fornecidos
+Aluno *aloca_aluno(char *nome_aluno, int mat, int codigo, int ano, int semestre);
+
+// Coleta os dados do usuario e retorna um novo aluno alocado, ou NULL se falhar
+Aluno *cadastra_aluno();
+
+
+// =========================
+// FUNÇÕES DE INSERÇÃO
+// =========================
+
+// Insere recursivamente um no na arvore e aciona o balanceamento
+int insere_no_aluno(Aluno **raiz, Aluno *novo_aluno);
+
+// Insere um aluno na arvore e garante que a raiz permaneca preta
+int insere_aluno(Aluno **raiz, Aluno *novo_aluno);
+
+
+// =========================
+// ROTAÇÕES (ÁRVORE RUBRO-NEGRA)
+// =========================
+
+// Realiza rotacao para a esquerda no no apontado por raiz
+void rotacao_esq_aluno(Aluno **raiz);
+
+// Realiza rotacao para a direita no no apontado por raiz
+void rotacao_dir_aluno(Aluno **raiz);
+
+
+// =========================
+// CONTROLE DE CORES
+// =========================
+
+// Retorna a cor do no, tratando NULL como BLACK
+int cor_aluno(Aluno *aluno);
+
+// Inverte a cor do no raiz e de seus dois filhos
+void troca_cor_aluno(Aluno *raiz);
+
+
+// =========================
+// BALANCEAMENTO
+// =========================
+
+// Aplica as correcoes necessarias para manter as propriedades da arvore Rubro-Negra
+void balancea_VP_aluno(Aluno **raiz);
+
+
+// =========================
+// IMPRESSÃO
+// =========================
+
+// Imprime todos os alunos pertencentes a um curso especifico
+void imprime_alunos_por_curso(Aluno *raiz, int codigo_curso);
+
+// Imprime todos os alunos de um curso que ingressaram em um ano especifico
+void imprime_alunos_por_curso_ano(Aluno *raiz, int codigo_curso, int ano_ingressado);
+
+
+// =========================
+// LIBERAÇÃO DE MEMÓRIA
+// =========================
+
+// Libera a memoria de um unico no de aluno e aponta para NULL
+void libera_no_aluno(Aluno **raiz);
+
+// Libera recursivamente todos os nos da arvore de alunos
+void libera_arvore_aluno(Aluno **raiz);
+
+#endif

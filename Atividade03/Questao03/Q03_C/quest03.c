@@ -96,8 +96,20 @@ int main() {
     grafo[2][4] = 0.4;
     grafo[3][4] = 0.8;
 
-    int origem = 0;
-    int destino = 4;
+    int origem, destino; // Agora apenas declaramos as variáveis
+
+    // Interagindo com o usuário
+    printf("Digite o vertice de origem (0 a %d): ", V - 1);
+    scanf("%d", &origem);
+
+    printf("Digite o vertice de destino (0 a %d): ", V - 1);
+    scanf("%d", &destino);
+
+    // Verificação básica para evitar que o usuário digite vértices que não existem
+    if (origem < 0 || origem >= V || destino < 0 || destino >= V) {
+        printf("Erro: Vertice invalido. Por favor, digite valores entre 0 e %d.\n", V - 1);
+        return 1; // Encerra o programa com erro
+    }
 
     caminhoMaisConfiavel(grafo, origem, destino, V);
 
